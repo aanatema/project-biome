@@ -1,3 +1,5 @@
+// TODO : add router ? add delete and post route route
+
 import express, { type Request, type Response } from "express";
 import { bookList } from "./src/books";
 
