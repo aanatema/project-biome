@@ -53,7 +53,7 @@ app.post("/post", (req, res) => {
     res.send("example");
 });
 // delete the book
-app.delete("/delete", (req, res) => {
+app.delete("/delete/isbn/:isbn/reviews/:reviewId", (req, res) => {
     res.end();
 });
 app.listen(PORT, () => {

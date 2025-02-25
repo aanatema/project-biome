@@ -63,7 +63,8 @@ app.post("/post", (req: Request, res: Response) => {
 });
 
 // delete the book
-app.delete("/delete", (req: Request, res: Response) => {
+app.delete("/delete/isbn/:isbn/reviews/:reviewId", (req: Request, res: Response) => {
+  
   res.end();
 });
 
