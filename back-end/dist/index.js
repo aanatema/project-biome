@@ -52,8 +52,12 @@ app.get("/", (req, res) => {
 app.post("/post", (req, res) => {
     res.send("example");
 });
-// delete the book
+// delete a specific review linked to a specific isbn, need to work on it 
 app.delete("/delete/isbn/:isbn/reviews/:reviewId", (req, res) => {
+    const { isbn, reviewId } = req.params;
+    const book = books_1.bookList.find((book) => book.isbn === isbn);
+    const bookReviews = book === null || book === void 0 ? void 0 : book.reviews.find((review) => review.reviewId === reviewId);
+    res.json({ bookReviews });
     res.end();
 });
 app.listen(PORT, () => {
