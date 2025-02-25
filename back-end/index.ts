@@ -39,7 +39,7 @@ app.get("/books_list/author/:author", (req: Request, res: Response) => {
 });
 
 app.get(
-  "/books_list/:isbn/reviews",
+  "/books_list/isbn/:isbn/reviews/:reviewId",
   (req: Request, res: Response) => {
     const { isbn, reviewId } = req.params;
     const book = bookList.find((book) => book.isbn === isbn);

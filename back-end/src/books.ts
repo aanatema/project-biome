@@ -20,11 +20,11 @@ export const bookList: Books[] = [
     [
       {
         reviewId: '1',
-        review: "The Priory of the Orange Tree is a 2019 fantasy novel by writer Samantha Shannon.[1] The novel was published on 26 February 2019 by Bloomsbury Publishing.",
+        review: "this is one review.",
       },
       {
         reviewId: '2',
-        review: "The Priory of the Orange Tree is a 2019 fantasy novel by writer Samantha Shannon.[1] The novel was published on 26 February 2019 by Bloomsbury Publishing.",
+        review: "second review",
       },
     ],
   },

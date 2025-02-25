@@ -36,7 +36,7 @@ app.get("/books_list/author/:author", (req, res) => {
     const bookByAuthor = books_1.bookList.find((book) => book.author === author);
     res.json({ bookByAuthor });
 });
-app.get("/books_list/:isbn/reviews", (req, res) => {
+app.get("/books_list/isbn/:isbn/reviews/:reviewId", (req, res) => {
     const { isbn, reviewId } = req.params;
     const book = books_1.bookList.find((book) => book.isbn === isbn);
     const bookReviews = book === null || book === void 0 ? void 0 : book.reviews.find((review) => review.reviewId === reviewId);
