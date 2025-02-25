@@ -22,7 +22,7 @@ app.get("/books_list/isbn/:isbn", (req, res) => {
     }
     else {
         res.status(404);
-        console.log('nothing here');
+        console.log("nothing here");
         res.end();
     }
 });
@@ -35,6 +35,12 @@ app.get("/books_list/author/:author", (req, res) => {
     const author = req.params.author;
     const bookByAuthor = books_1.bookList.find((book) => book.author === author);
     res.json({ bookByAuthor });
+});
+app.get("/books_list/:isbn/reviews", (req, res) => {
+    const { isbn, reviewId } = req.params;
+    const book = books_1.bookList.find((book) => book.isbn === isbn);
+    const bookReviews = book === null || book === void 0 ? void 0 : book.reviews.find((review) => review.reviewId === reviewId);
+    res.json({ bookReviews });
 });
 // localhost:3000 home page
 app.get("/", (req, res) => {
