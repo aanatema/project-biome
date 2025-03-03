@@ -5,12 +5,10 @@ import { bookList } from "./src/books";
 
 const app = express();
 const PORT = 3000;
-
 // model : app.METHOD(PATH,HANDLER)
 
 app.get("/books_list", (req: Request, res: Response) => {
-  res.json({ result: bookList });
-  console.log(bookList);
+  res.json({bookList});
 });
 
 // get by...
