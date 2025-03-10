@@ -4,7 +4,10 @@ import "./App.css";
 
 function App() {
   
-  const [books, setBooks] = useState<Books[]>([]); // const [formData, setFormData] = useEffect({isbn: '', title: '', author:'', review: ''});
+  const [books, setBooks] = useState<Books[]>([]); 
+  // by default the books aren't displayed
+  const [showBooks, setShowBooks] = useState(false);
+  // const [formData, setFormData] = useEffect({isbn: '', title: '', author:'', review: ''});
 
   // const postBtn = document.getElementById('post');
   // const getBtn = document.getElementById('get');
@@ -15,16 +18,14 @@ function App() {
     try {
       const response = await fetch("http://localhost:3000/books_list");
       const data: Books[] = await response.json(); 
+      // why are we doing that
       if (Array.isArray(data)) {
         setBooks(data);
       }
     } catch (error) {
-      console.error("Erreur lors de la récupération des livres", error);
+      console.error("Error, failed to fetch the books", error);
     }
   };
-  useEffect(() => {
-    fetchBooks();
-  }, []);
 
   return (
     <>
@@ -48,7 +49,9 @@ function App() {
         </button>
         {/* <button id="get" onClick={fetchBooks}> GET REVIEW</button> */}
       </div>
-      {console.log("Book state:", books)}{" "}
+      {/* making sure books are displayed, PROBLEM, it looks like its rendered several times */}
+      {console.log("Books", books)}
+      {/* PROBLEM, books are already displayed instead of waiting for button click */}
       <ul>
         {Array.isArray(books) &&
           books.map((book, index) => (
