@@ -2,27 +2,30 @@
 
 import express, { type Request, type Response } from "express";
 import { bookList } from "./src/books";
+import cors from 'cors';
 
 const app = express();
 const PORT = 3000;
+// maybe change this to be more secure ? localhost:3000 doesn't work
+app.use(cors({
+ origin: "http://localhost:5173",
+}))
 
 // model : app.METHOD(PATH,HANDLER)
-
 app.get("/books_list", (req: Request, res: Response) => {
-  res.json({ result: bookList });
-  console.log(bookList);
+  res.json(bookList);
 });
 
 // get by...
 app.get("/books_list/isbn/:isbn", (req: Request, res: Response) => {
   const isbn = req.params.isbn;
   const bookByIsbn = bookList.find((book) => book.isbn === isbn);
-  if ( bookByIsbn) {
+  if (bookByIsbn) {
     res.json({ bookByIsbn });
   } else {
     res.status(404);
-    console.log('nothing here')
-    res.end()
+    console.log("nothing here");
+    res.end();
   }
 });
 
@@ -38,6 +41,18 @@ app.get("/books_list/author/:author", (req: Request, res: Response) => {
   res.json({ bookByAuthor });
 });
 
+app.get(
+  "/books_list/isbn/:isbn/reviews/:reviewId",
+  (req: Request, res: Response) => {
+    const { isbn, reviewId } = req.params;
+    const book = bookList.find((book) => book.isbn === isbn);
+    const bookReviews = book?.reviews.find(
+      (review) => review.reviewId === reviewId
+    );
+    res.json({ bookReviews });
+  }
+);
+
 // localhost:3000 home page
 app.get("/", (req: Request, res: Response) => {
   res.send("this is a get request");
@@ -51,7 +66,8 @@ app.post("/post", (req: Request, res: Response) => {
 });
 
 // delete the book
-app.delete("/delete", (req: Request, res: Response) => {
+app.delete("/delete/isbn/:isbn/reviews/:reviewId", (req: Request, res: Response) => {
+  
   res.end();
 });
 
