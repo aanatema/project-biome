@@ -14,9 +14,9 @@ function App() {
   const fetchBooks = async () => {
     try {
       const response = await fetch("http://localhost:3000/books_list");
-      const data: Books[] = await response.json(); // ✅ Assurer le type des données
+      const data: Books[] = await response.json(); 
       if (Array.isArray(data)) {
-        setBooks(data.bookList);
+        setBooks(data);
       }
     } catch (error) {
       console.error("Erreur lors de la récupération des livres", error);
@@ -44,7 +44,6 @@ function App() {
       <div>
         <button id="post"> POST BOOK </button>
         <button id="get" onClick={fetchBooks}>
-          {" "}
           GET BOOK
         </button>
         {/* <button id="get" onClick={fetchBooks}> GET REVIEW</button> */}
@@ -54,12 +53,12 @@ function App() {
         {Array.isArray(books) &&
           books.map((book, index) => (
             <li key={index}>
-              {book.isbn} - {book.title}
+             ISBN: {book.isbn} - TITLE: {book.title}
             </li>
           ))}
       </ul>
     </>
-  );
+  ) 
 }
 
 export default App;
