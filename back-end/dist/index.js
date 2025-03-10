@@ -10,7 +10,7 @@ const app = (0, express_1.default)();
 const PORT = 3000;
 // model : app.METHOD(PATH,HANDLER)
 app.get("/books_list", (req, res) => {
-    res.json({ bookList: books_1.bookList });
+    res.json(books_1.bookList);
 });
 // get by...
 app.get("/books_list/isbn/:isbn", (req, res) => {

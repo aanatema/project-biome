@@ -8,7 +8,7 @@ const PORT = 3000;
 // model : app.METHOD(PATH,HANDLER)
 
 app.get("/books_list", (req: Request, res: Response) => {
-  res.json({bookList});
+  res.json(bookList);
 });
 
 // get by...
