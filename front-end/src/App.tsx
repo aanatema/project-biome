@@ -27,9 +27,10 @@ function App() {
     }
   };
 
+
   return (
     <>
-      <div>
+      <div id='form-component'>
         <p>isbn</p>
         <input id="isbn" className="content" />
 
@@ -41,7 +42,10 @@ function App() {
 
         <p>review</p>
         <textarea id="review" className="content" />
+
+        <button> SUBMIT</button>
       </div>
+
       <div>
         <button id="post"> POST BOOK </button>
         <button id="get" onClick={fetchBooks}> GET BOOK </button>

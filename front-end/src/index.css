@@ -66,3 +66,13 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+#form-component {
+  border: 1px solid #535bf2;
+  padding : 4px;
+  margin:10px;
+}
+
+button {
+  margin: 10px;
+}
