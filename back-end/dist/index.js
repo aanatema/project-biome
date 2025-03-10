@@ -9,9 +9,9 @@ const books_1 = require("./src/books");
 const cors_1 = __importDefault(require("cors"));
 const app = (0, express_1.default)();
 const PORT = 3000;
-// maybe change this to be more secure ? 
+// maybe change this to be more secure ? localhost:3000 doesn't work
 app.use((0, cors_1.default)({
-    origin: "http://localhost:3000/books_list",
+    origin: "http://localhost:5173",
 }));
 // model : app.METHOD(PATH,HANDLER)
 app.get("/books_list", (req, res) => {

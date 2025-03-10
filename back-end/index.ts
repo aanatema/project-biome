@@ -8,7 +8,7 @@ const app = express();
 const PORT = 3000;
 // maybe change this to be more secure ? localhost:3000 doesn't work
 app.use(cors({
- origin: "*",
+ origin: "http://localhost:5173",
 }))
 
 // model : app.METHOD(PATH,HANDLER)
