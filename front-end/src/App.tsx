@@ -3,8 +3,7 @@ import type { Books } from "../../back-end/src/books.ts";
 import "./App.css";
 
 function App() {
-  
-  const [books, setBooks] = useState<Books[]>([]); 
+  const [books, setBooks] = useState<Books[]>([]);
   // by default the books aren't displayed
   const [showBooks, setShowBooks] = useState(false);
   // const [formData, setFormData] = useEffect({isbn: '', title: '', author:'', review: ''});
@@ -17,10 +16,11 @@ function App() {
   const fetchBooks = async () => {
     try {
       const response = await fetch("http://localhost:3000/books_list");
-      const data: Books[] = await response.json(); 
+      const data: Books[] = await response.json();
       // why are we doing that
       if (Array.isArray(data)) {
         setBooks(data);
+        setShowBooks(true);
       }
     } catch (error) {
       console.error("Error, failed to fetch the books", error);
@@ -44,24 +44,21 @@ function App() {
       </div>
       <div>
         <button id="post"> POST BOOK </button>
-        <button id="get" onClick={fetchBooks}>
-          GET BOOK
-        </button>
+        <button id="get" onClick={fetchBooks}> GET BOOK </button>
+        <button onClick={() => setShowBooks(false)}> CLEAR LIST </button>
         {/* <button id="get" onClick={fetchBooks}> GET REVIEW</button> */}
       </div>
-      {/* making sure books are displayed, PROBLEM, it looks like its rendered several times */}
-      {console.log("Books", books)}
-      {/* PROBLEM, books are already displayed instead of waiting for button click */}
-      <ul>
-        {Array.isArray(books) &&
-          books.map((book, index) => (
-            <li key={index}>
-             ISBN: {book.isbn} - TITLE: {book.title}
+      {showBooks && (
+        <ul>
+          {books.map((book) => (
+            <li key={book.isbn}>
+              {book.title} - {book.author}
             </li>
           ))}
-      </ul>
+        </ul>
+      )}
     </>
-  ) 
+  );
 }
 
 export default App;
