@@ -2,11 +2,16 @@
 
 import express, { type Request, type Response } from "express";
 import { bookList } from "./src/books";
+import cors from 'cors';
 
 const app = express();
 const PORT = 3000;
-// model : app.METHOD(PATH,HANDLER)
+// maybe change this to be more secure ? localhost:3000 doesn't work
+app.use(cors({
+ origin: "*",
+}))
 
+// model : app.METHOD(PATH,HANDLER)
 app.get("/books_list", (req: Request, res: Response) => {
   res.json(bookList);
 });

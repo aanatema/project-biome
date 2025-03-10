@@ -6,8 +6,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const books_1 = require("./src/books");
+const cors_1 = __importDefault(require("cors"));
 const app = (0, express_1.default)();
 const PORT = 3000;
+// maybe change this to be more secure ? 
+app.use((0, cors_1.default)({
+    origin: "http://localhost:3000/books_list",
+}));
 // model : app.METHOD(PATH,HANDLER)
 app.get("/books_list", (req, res) => {
     res.json(books_1.bookList);
