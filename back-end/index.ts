@@ -12,6 +12,8 @@ app.use(cors({
 }))
 
 // model : app.METHOD(PATH,HANDLER)
+
+// GET REQUESTS
 app.get("/books_list", (req: Request, res: Response) => {
   res.json(bookList);
 });
@@ -60,8 +62,11 @@ app.get("/", (req: Request, res: Response) => {
   res.json({ content: "this is some content", url: req.url });
 });
 
+// POST REQUESTS
 // add a book
-app.post("/post", (req: Request, res: Response) => {
+app.post("/post/book", (req: Request, res: Response) => {
+  const {isbn, title, author, review} = req.body; 
+  console.log('book added : ', req.body);
   res.send("example");
 });
 
