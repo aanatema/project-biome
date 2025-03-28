@@ -14,6 +14,7 @@ app.use((0, cors_1.default)({
     origin: "http://localhost:5173",
 }));
 // model : app.METHOD(PATH,HANDLER)
+// GET REQUESTS
 app.get("/books_list", (req, res) => {
     res.json(books_1.bookList);
 });
@@ -52,8 +53,11 @@ app.get("/", (req, res) => {
     // example of json format
     res.json({ content: "this is some content", url: req.url });
 });
+// POST REQUESTS
 // add a book
-app.post("/post", (req, res) => {
+app.post("/post/book", (req, res) => {
+    const { isbn, title, author, review } = req.body;
+    console.log('book added : ', req.body);
     res.send("example");
 });
 // delete the book

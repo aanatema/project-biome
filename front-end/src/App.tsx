@@ -1,17 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import type { Books } from "../../back-end/src/books.ts";
 import "./App.css";
+import { BookForm } from "./BookForm.tsx";
 
 function App() {
   const [books, setBooks] = useState<Books[]>([]);
   // by default the books aren't displayed
   const [showBooks, setShowBooks] = useState(false);
-  // const [formData, setFormData] = useEffect({isbn: '', title: '', author:'', review: ''});
-
-  // const postBtn = document.getElementById('post');
-  // const getBtn = document.getElementById('get');
-
-  // const content = document.getElementsByClassName('content');
 
   const fetchBooks = async () => {
     try {
@@ -27,28 +22,16 @@ function App() {
     }
   };
 
-
   return (
     <>
-      <div id='form-component'>
-        <p>isbn</p>
-        <input id="isbn" className="content" />
-
-        <p>title</p>
-        <input id="title" className="content" />
-
-        <p>author</p>
-        <input id="author" className="content" />
-
-        <p>review</p>
-        <textarea id="review" className="content" />
-
-        <button> SUBMIT</button>
-      </div>
+      <BookForm />
 
       <div>
         <button id="post"> POST BOOK </button>
-        <button id="get" onClick={fetchBooks}> GET BOOK </button>
+        <button id="get" onClick={fetchBooks}>
+          {" "}
+          GET BOOK{" "}
+        </button>
         <button onClick={() => setShowBooks(false)}> CLEAR LIST </button>
         {/* <button id="get" onClick={fetchBooks}> GET REVIEW</button> */}
       </div>
