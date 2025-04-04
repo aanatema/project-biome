@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { Books } from "../../back-end/src/books.ts";
 import "./App.css";
 import { BookForm } from "./BookForm.tsx";
+import { RegisterForm } from "./RegisterForm.tsx";
 
 function App() {
   const [books, setBooks] = useState<Books[]>([]);
@@ -24,6 +25,7 @@ function App() {
 
   return (
     <>
+      <RegisterForm />
       <BookForm />
 
       <div>
