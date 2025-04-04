@@ -22,8 +22,26 @@ export function BookForm() {
 
   // data is an object with the properties of BookFormProps and the values that will be added through the form
   // async to imitate data being sent to the server
-  const onSubmit: SubmitHandler<BookFormProps> = (data) => {
-    console.log("book form", data);
+  const onSubmit: SubmitHandler<BookFormProps> = async (data) => {
+    const bookData = {
+      isbn: data.isbn,
+      title: data.title,
+      author: data.author,
+      reviews: [{ review: data.reviews[0] }],
+    };
+
+    const response = await fetch("http://localhost:3000/new_media/new_book", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(bookData),
+    });
+
+    if(!response.ok) return console.error("server errorf or newBook"); 
+
+    const json = await response.json()
+    console.log("book created", json);
   };
 
   // NOT WORKING FOR NOW GO BACK LATER
@@ -50,7 +68,7 @@ export function BookForm() {
 
       <input {...register("title")} type="text" placeholder="title" />
       <input {...register("author")} type="text" placeholder="author" />
-      <input {...register("reviews")} type="text" placeholder="review" />
+      <input {...register("reviews.0.review")} type="text" placeholder="review" />
 
       <button disabled={isSubmitting} type="submit">
         {isSubmitting ? "Saving..." : "Submit"}
