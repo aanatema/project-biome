@@ -14,8 +14,26 @@ export function RegisterForm() {
     formState: { errors },
   } = useForm<UserProps>();
 
-  const onSubmit: SubmitHandler<UserProps> = (data) => {
-    console.log(data);
+  const onSubmit: SubmitHandler<UserProps> = async (data) => {
+
+    const newUserData = {
+      username : data.username,
+      email: data.email
+    };
+    
+    const response = await fetch("http://localhost:3000/new_user", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newUserData),
+    });
+
+    if(!response.ok) return console.error("server error for newUser"); 
+
+    const json = await response.json()
+
+    console.log(json);
   };
 
   return (
