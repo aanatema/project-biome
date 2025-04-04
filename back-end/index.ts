@@ -32,7 +32,7 @@ app.post("/new_user", async (req: Request, res: Response) => {
       },
     });
     res.status(201).json({ newUser });
-    console.log({ newUser });
+    console.log("newuser index file", newUser );
   } catch (error) {
     console.error("Something happened during the user's creation", error);
     res
@@ -41,8 +41,9 @@ app.post("/new_user", async (req: Request, res: Response) => {
   }
 });
 
-app.post("/new_media/new_book", async(req:Request, res: Response) => {
-  const { isbn, title, author } = req.body;
+app.post("/new_media/new_book", async (req: Request, res: Response) => {
+  const { isbn, title, author, reviews } = req.body;
+
   try {
     const newBook = await prisma.media.create({
       data: {
@@ -54,15 +55,26 @@ app.post("/new_media/new_book", async(req:Request, res: Response) => {
             author,
           },
         },
+        // PROBLEM with review because of the review author id
+        // reviews: {
+        //   create: reviews.map((review: any) => ({
+        //     content: review.review,
+        //     rating: 5,
+        //     review_author: {id: "8afd13a0-f7f8-40ba-a354-58dcb9f0b275"},
+        //   })),
+        // },
       },
     });
     res.status(201).json({ newBook });
-    console.log(newBook)
-  }catch (error){
-    console.error("Something happened during the creation of a new book", error)
+    console.log("newBook index file", newBook);
+  } catch (error) {
+    console.error(
+      "Something happened during the creation of a new book",
+      error
+    );
     res.status(500);
   }
-})
+});
 
 // add a book
 app.post("/post/book", (req: Request, res: Response) => {
@@ -119,8 +131,6 @@ app.get("/", (req: Request, res: Response) => {
   // example of json format
   res.json({ content: "this is some content", url: req.url });
 });
-
-
 
 // delete the book
 app.delete(
