@@ -1,4 +1,5 @@
 import { type SubmitHandler, useForm } from "react-hook-form";
+import "./forms.css"
 
 export type UserProps = {
   username: string;
@@ -38,11 +39,11 @@ export function LoginForm() {
 
   return (
     <form
-      className="register-form"
+      className="auth-form login-form"
       onSubmit={handleSubmit(onSubmit)}
       method="GET"
     >
-      <label>
+      <label className="auth-label login-label">
         USERNAME
         <input
           {...register("username", { required: "Incorrect username" })}
@@ -51,7 +52,7 @@ export function LoginForm() {
         />
         {errors.username && <p>{errors.username.message}</p>}
       </label>
-      <label>
+      <label className="auth-label login-label">
         EMAIL
         <input
           {...register("email", { required: "Incorrect email" })}

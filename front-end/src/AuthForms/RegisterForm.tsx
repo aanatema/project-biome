@@ -1,4 +1,5 @@
 import { type SubmitHandler, useForm } from "react-hook-form";
+import "./forms.css"
 
 export type UserProps = {
   username: string;
@@ -38,7 +39,7 @@ export function RegisterForm() {
 
   return (
     <form
-      className="register-form"
+      className="auth-form register-form"
       onSubmit={handleSubmit(onSubmit)}
       method="POST"
     >
