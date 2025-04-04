@@ -23,7 +23,7 @@ export function BookForm() {
   // data is an object with the properties of BookFormProps and the values that will be added through the form
   // async to imitate data being sent to the server
   const onSubmit: SubmitHandler<BookFormProps> = (data) => {
-    console.log(data);
+    console.log("book form", data);
   };
 
   // NOT WORKING FOR NOW GO BACK LATER
@@ -32,26 +32,28 @@ export function BookForm() {
   // const isbnOrIssnRegex = /^(97(8|9))?\d{9}(\d|X)$|^ISSN\s?\d{4}-\d{3}[\dX]$/;
 
   return (
-  
-    <form className="book-form" onSubmit={handleSubmit(onSubmit)}>
+    <form className="book-form" onSubmit={handleSubmit(onSubmit)} method="POST">
       {/* the ... is the spread operator, it takes the properties of 'isbn', passing through 'register' to add them to this input  */}
-      <input
-        {...register("isbn", {
-          required: "ISBN / ISSN may be missing or incorrect",
-          // pattern: isbnOrIssnRegex,
-        })}
-        type="text"
-        placeholder="isbn or issn"
-      />
+      <label>
+        ISBN
+        <input
+          {...register("isbn", {
+            required: "ISBN / ISSN may be missing or incorrect",
+            // pattern: isbnOrIssnRegex,
+          })}
+          type="text"
+          placeholder="isbn or issn"
+        />
+        {errors.isbn && <p>{errors.isbn.message}</p>}
+      </label>
       {/* linked to the required string */}
-      {errors.isbn && <p>{errors.isbn.message}</p>}
 
       <input {...register("title")} type="text" placeholder="title" />
       <input {...register("author")} type="text" placeholder="author" />
       <input {...register("reviews")} type="text" placeholder="review" />
 
       <button disabled={isSubmitting} type="submit">
-        {isSubmitting ? 'Saving...' : 'Submit'}
+        {isSubmitting ? "Saving..." : "Submit"}
       </button>
     </form>
   );
