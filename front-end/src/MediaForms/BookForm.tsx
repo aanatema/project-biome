@@ -1,4 +1,5 @@
 import { type SubmitHandler, useForm } from "react-hook-form";
+import './forms.css'
 
 export type Review = {
   reviewId: string;
@@ -52,7 +53,7 @@ export function BookForm() {
   return (
     <form className="book-form" onSubmit={handleSubmit(onSubmit)} method="POST">
       {/* the ... is the spread operator, it takes the properties of 'isbn', passing through 'register' to add them to this input  */}
-      <label>
+      <label className="book-label">
         ISBN
         <input
           {...register("isbn", {
@@ -65,10 +66,18 @@ export function BookForm() {
         {errors.isbn && <p>{errors.isbn.message}</p>}
       </label>
       {/* linked to the required string */}
-
+      <label className="book-label title-label">
+        TITLE
       <input {...register("title")} type="text" placeholder="title" />
+      </label>
+      <label className="book-label author-label">
+        AUTHOR
       <input {...register("author")} type="text" placeholder="author" />
+      </label>
+      <label className="book-label review-label">
+        REVIEW
       <input {...register("reviews.0.review")} type="text" placeholder="review" />
+      </label>
 
       <button disabled={isSubmitting} type="submit">
         {isSubmitting ? "Saving..." : "Submit"}
