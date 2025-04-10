@@ -1,5 +1,5 @@
 import { type SubmitHandler, useForm } from "react-hook-form";
-import './forms.css'
+import "./forms.css";
 
 export type Review = {
   reviewId: string;
@@ -39,11 +39,13 @@ export function BookForm() {
       body: JSON.stringify(bookData),
     });
 
-    if(!response.ok) return console.error("server errorf or newBook"); 
+    if (!response.ok) return console.error("server errorf or newBook");
 
-    const json = await response.json()
+    const json = await response.json();
     console.log("book created", json);
   };
+
+  
 
   // NOT WORKING FOR NOW GO BACK LATER
   // const isbnRegex = /^(97(8|9))?\d{9}(\d|X)$/;
@@ -51,37 +53,55 @@ export function BookForm() {
   // const isbnOrIssnRegex = /^(97(8|9))?\d{9}(\d|X)$|^ISSN\s?\d{4}-\d{3}[\dX]$/;
 
   return (
-    <form className="book-form" onSubmit={handleSubmit(onSubmit)} method="POST">
-      {/* the ... is the spread operator, it takes the properties of 'isbn', passing through 'register' to add them to this input  */}
-      <label className="book-label">
-        ISBN
-        <input
-          {...register("isbn", {
-            required: "ISBN / ISSN may be missing or incorrect",
-            // pattern: isbnOrIssnRegex,
-          })}
-          type="text"
-          placeholder="isbn or issn"
-        />
-        {errors.isbn && <p>{errors.isbn.message}</p>}
-      </label>
-      {/* linked to the required string */}
-      <label className="book-label title-label">
-        TITLE
-      <input {...register("title")} type="text" placeholder="title" />
-      </label>
-      <label className="book-label author-label">
-        AUTHOR
-      <input {...register("author")} type="text" placeholder="author" />
-      </label>
-      <label className="book-label review-label">
-        REVIEW
-      <input {...register("reviews.0.review")} type="text" placeholder="review" />
-      </label>
+    <>
+      <form className="search-book-by">
+        <label> SEARCH BOOK
+          <input/>
+        </label>
+      </form>
+      <form
+        className="book-form"
+        onSubmit={handleSubmit(onSubmit)}
+        method="POST"
+      >
+        {/* the ... is the spread operator, it takes the properties of 'isbn', passing through 'register' to add them to this input  */}
+        <label className="book-label">
+          ISBN
+          <input
+            {...register("isbn", {
+              required: "ISBN / ISSN may be missing or incorrect",
+              // pattern: isbnOrIssnRegex,
+            })}
+            type="text"
+            placeholder="isbn or issn"
+          />
+          {errors.isbn && <p>{errors.isbn.message}</p>}
+        </label>
+        {/* linked to the required string */}
+        <label className="book-label title-label">
+          TITLE
+          <input {...register("title")} type="text" placeholder="title" />
+        </label>
+        <label className="book-label author-label">
+          AUTHOR
+          <input {...register("author")} type="text" placeholder="author" />
+        </label>
+        <label className="book-label review-label">
+          REVIEW
+          <input
+            {...register("reviews.0.review")}
+            type="text"
+            placeholder="review"
+          />
+        </label>
 
-      <button disabled={isSubmitting} type="submit">
-        {isSubmitting ? "Saving..." : "Submit"}
-      </button>
-    </form>
+        <button disabled={isSubmitting} type="submit">
+          {isSubmitting ? "Saving..." : "Submit"}
+        </button>
+
+        <button type="submit" > SEARCH </button>
+
+      </form>
+    </>
   );
 }
