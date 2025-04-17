@@ -1,0 +1,52 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  username  String
+  email     String   @unique
+  createdAt DateTime @default(now())
+  reviews   Review[]
+}
+
+model Media {
+  id        String    @id @default(cuid())
+  type      MediaType
+  createdAt DateTime  @default(now())
+  book      Book?
+  reviews   Review[]
+
+  @@index([type])
+}
+
+model Book {
+  id      String   @id @default(uuid())
+  isbn    String   @unique
+  title   String
+  author  String
+  media   Media    @relation(fields: [id], references: [id])
+  reviews Review[]
+}
+
+model Review {
+  id            String   @id @default(uuid())
+  content       String
+  mediaId       String
+  bookId        String?
+  createdAt     DateTime @default(now())
+  userId        String
+  rating        Float
+  Book          Book?    @relation(fields: [bookId], references: [id])
+  media         Media    @relation(fields: [mediaId], references: [id])
+  review_author User     @relation(fields: [userId], references: [id])
+}
+
+enum MediaType {
+  BOOK
+}
