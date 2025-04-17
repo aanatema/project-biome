@@ -1,5 +1,5 @@
 import { type SubmitHandler, useForm } from "react-hook-form";
-import "./forms.css"
+import "./styles/forms.css"
 
 export type UserProps = {
   username: string;
@@ -63,7 +63,7 @@ export function LoginForm() {
       </label>
 
       {/* LATER */}
-      {/* <label>
+      <label>
         PASSWORD
         <input
           {...register("password", { required: "Incorrect password" })}
@@ -71,7 +71,7 @@ export function LoginForm() {
           placeholder="password"
         />
         {errors.password && <p>{errors.password.message}</p>}
-      </label> */}
+      </label>
 
       <button type="submit"> CONFIRM </button>
     </form>

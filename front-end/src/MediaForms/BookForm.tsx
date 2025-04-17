@@ -1,5 +1,5 @@
 import { type SubmitHandler, useForm } from "react-hook-form";
-import "./forms.css";
+import "./styles/forms.css";
 
 export type Review = {
   reviewId: string;
@@ -31,6 +31,7 @@ export function BookForm() {
       reviews: [{ review: data.reviews[0] }],
     };
 
+    // send the new book
     const response = await fetch("http://localhost:3000/books/new_book", {
       method: "POST",
       headers: {
@@ -54,11 +55,6 @@ export function BookForm() {
 
   return (
     <>
-      <form className="search-book-by">
-        <label> SEARCH BOOK
-          <input/>
-        </label>
-      </form>
       <form
         className="book-form"
         onSubmit={handleSubmit(onSubmit)}
