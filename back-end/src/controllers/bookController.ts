@@ -102,11 +102,9 @@ export async function bookByAuthor(req: Request, res: Response) {
     }
   } catch (error) {
     console.error("Error while fetching author:", error);
-    res
-      .status(500)
-      .json({
-        error: "Something happened when retrieving a book by its author",
-      });
+    res.status(500).json({
+      error: "Something happened when retrieving a book by its author",
+    });
   }
 }
 
@@ -126,11 +124,9 @@ export async function bookByTitle(req: Request, res: Response) {
     }
   } catch (error) {
     console.error("Error while fetching a book by its title:", error);
-    res
-      .status(500)
-      .json({
-        error: "Something happened when retrieving a book by its title",
-      });
+    res.status(500).json({
+      error: "Something happened when retrieving a book by its title",
+    });
   }
 }
 
