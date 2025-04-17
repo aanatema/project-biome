@@ -22,7 +22,7 @@ export function LoginForm() {
       email: data.email
     };
     
-    const response = await fetch("http://localhost:3000/new_user", {
+    const response = await fetch("http://localhost:3000/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
