@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.post("/new_user", createUser);
 // LOGIC TO BE DONE IN THE CONTROLLER FILE
-router.post("login_user", loginUser);
+router.post("/login_user", loginUser);
 router.post("/modify_user", modifyUser);
 
 export default router;

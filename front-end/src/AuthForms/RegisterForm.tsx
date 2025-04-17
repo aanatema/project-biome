@@ -22,7 +22,7 @@ export function RegisterForm() {
       email: data.email
     };
     
-    const response = await fetch("http://localhost:3000/new_user", {
+    const response = await fetch("http://localhost:3000/users/new_user", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
