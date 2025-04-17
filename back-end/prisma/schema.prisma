@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -15,49 +9,42 @@ datasource db {
 
 model User {
   id        String   @id @default(uuid())
-  username  String 
+  username  String
   email     String   @unique
-  password  String
   createdAt DateTime @default(now())
-
-  reviews Review[]
+  reviews   Review[]
 }
 
 model Media {
   id        String    @id @default(cuid())
   type      MediaType
   createdAt DateTime  @default(now())
-
-  book    Book?
-  reviews Review[]
+  book      Book?
+  reviews   Review[]
 
   @@index([type])
 }
 
 model Book {
-  id    String @id @default(uuid())
-  media Media  @relation(fields: [id], references: [id])
-
+  id      String   @id @default(uuid())
   isbn    String   @unique
   title   String
   author  String
+  media   Media    @relation(fields: [id], references: [id])
   reviews Review[]
 }
 
 model Review {
-  id        String   @id @default(uuid())
-  content   String
-  rating    Float
-  createdAt DateTime @default(now())
-
-  bookId String?
-  Book   Book?   @relation(fields: [bookId], references: [id])
-
+  id            String   @id @default(uuid())
+  content       String
+  mediaId       String
+  bookId        String?
+  createdAt     DateTime @default(now())
   userId        String
-  review_author User   @relation(fields: [userId], references: [id])
-
-  mediaId String
-  media   Media  @relation(fields: [mediaId], references: [id])
+  rating        Float
+  Book          Book?    @relation(fields: [bookId], references: [id])
+  media         Media    @relation(fields: [mediaId], references: [id])
+  review_author User     @relation(fields: [userId], references: [id])
 }
 
 enum MediaType {
