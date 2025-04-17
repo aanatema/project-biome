@@ -29,12 +29,11 @@ function App() {
       <BookForm />
 
       <div>
-        <button id="post"> POST BOOK </button>
-        <button id="get" onClick={fetchBooks}>
+        <button type="submit" id="get" onClick={fetchBooks}>
           {" "}
           GET BOOK{" "}
         </button>
-        <button onClick={() => setShowBooks(false)}> CLEAR LIST </button>
+        <button type="submit" onClick={() => setShowBooks(false)}> CLEAR LIST </button>
         {/* <button id="get" onClick={fetchBooks}> GET REVIEW</button> */}
       </div>
       {showBooks && (
