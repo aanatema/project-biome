@@ -22,7 +22,7 @@ export function BookForm() {
   } = useForm<BookFormProps>();
 
   // data is an object with the properties of BookFormProps and the values that will be added through the form
-  // async to imitate data being sent to the server
+  // async to take into account data being sent to the server
   const onSubmit: SubmitHandler<BookFormProps> = async (data) => {
     const bookData = {
       isbn: data.isbn,
@@ -31,7 +31,7 @@ export function BookForm() {
       reviews: [{ review: data.reviews[0] }],
     };
 
-    const response = await fetch("http://localhost:3000/new_media/new_book", {
+    const response = await fetch("http://localhost:3000/books/new_book", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -39,7 +39,7 @@ export function BookForm() {
       body: JSON.stringify(bookData),
     });
 
-    if (!response.ok) return console.error("server errorf or newBook");
+    if (!response.ok) return console.error("server error in newBook");
 
     const json = await response.json();
     console.log("book created", json);

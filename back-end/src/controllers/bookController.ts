@@ -3,6 +3,7 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
+// POST REQUESTS
 export async function newBookMedia(req: Request, res: Response) {
   const { isbn, title, author, reviews } = req.body;
 
@@ -37,6 +38,7 @@ export async function newBookMedia(req: Request, res: Response) {
   }
 }
 
+// GET REQUESTS
 export async function allBooks(req: Request, res: Response) {
   // retrieve the potentials parameters
   const { isbn, title, author, reviews } = req.query;
@@ -71,7 +73,7 @@ export async function bookByIsbn(req: Request, res: Response) {
     });
 
     if (book) {
-      res.status(200).json({ bookByIsbn });
+      res.status(200).json({ book });
     } else {
       res.status(404).json({ message: "Nothing was found" });
       res.end();
@@ -83,3 +85,64 @@ export async function bookByIsbn(req: Request, res: Response) {
       .json({ error: "Something happened when retrieving a book by its ISBN" });
   }
 }
+
+export async function bookByAuthor(req: Request, res: Response) {
+  const author = req.params.author;
+
+  try {
+    const book = await prisma.book.findMany({
+      where: { author },
+      include: { reviews: true },
+    });
+    if (book) {
+      res.status(200).json({ book });
+    } else {
+      res.status(404).json({ message: "No author was found" });
+      res.end();
+    }
+  } catch (error) {
+    console.error("Error while fetching author:", error);
+    res
+      .status(500)
+      .json({
+        error: "Something happened when retrieving a book by its author",
+      });
+  }
+}
+
+export async function bookByTitle(req: Request, res: Response) {
+  const title = req.params.title;
+
+  try {
+    const book = await prisma.book.findMany({
+      where: { title },
+      include: { reviews: true },
+    });
+    if (book) {
+      res.status(200).json({ book });
+    } else {
+      res.status(404).json({ message: "No book with this title was found" });
+      res.end();
+    }
+  } catch (error) {
+    console.error("Error while fetching a book by its title:", error);
+    res
+      .status(500)
+      .json({
+        error: "Something happened when retrieving a book by its title",
+      });
+  }
+}
+
+// DELETE REQUESTS
+// export async function deleteReview(req: Request, res: Response){
+//   const review = req.params.reviewId
+
+//   try {
+//     const review = await prisma.review.delete({
+//       where: {review}
+//     })
+//   } catch(error){
+
+//   }
+// }
