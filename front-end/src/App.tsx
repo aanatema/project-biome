@@ -11,8 +11,9 @@ function App() {
 
   const fetchBooks = async () => {
     try {
-      const response = await fetch("http://localhost:3000/books_list");
-      const data: Books[] = await response.json();
+      const response = await fetch("http://localhost:3000/books/books_list");
+      const json = await response.json();
+      const data: Books[] = json.books;
       // why are we doing that
       if (Array.isArray(data)) {
         setBooks(data);
@@ -33,7 +34,10 @@ function App() {
           {" "}
           GET BOOK{" "}
         </button>
-        <button type="submit" onClick={() => setShowBooks(false)}> CLEAR LIST </button>
+        <button type="submit" onClick={() => setShowBooks(false)}>
+          {" "}
+          CLEAR LIST{" "}
+        </button>
         {/* <button id="get" onClick={fetchBooks}> GET REVIEW</button> */}
       </div>
       {showBooks && (
