@@ -1,5 +1,5 @@
 import { type SubmitHandler, useForm } from "react-hook-form";
-import "./styles/forms.css"
+import "./styles/forms.css";
 
 export type UserProps = {
   username: string;
@@ -8,7 +8,6 @@ export type UserProps = {
 };
 
 export function LoginForm() {
-
   const {
     register,
     handleSubmit,
@@ -16,13 +15,13 @@ export function LoginForm() {
   } = useForm<UserProps>();
 
   const onSubmit: SubmitHandler<UserProps> = async (data) => {
-
     const existingUser = {
-      username : data.username,
-      email: data.email
+      username: data.username,
+      email: data.email,
+      password: data.password,
     };
-    
-    const response = await fetch("http://localhost:3000/login", {
+
+    const response = await fetch("http://localhost:3000/users/login_user", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -30,9 +29,9 @@ export function LoginForm() {
       body: JSON.stringify(existingUser),
     });
 
-    if(!response.ok) return console.error("server error for newUser"); 
+    if (!response.ok) return console.error("server error for newUser");
 
-    const json = await response.json()
+    const json = await response.json();
 
     console.log(json);
   };

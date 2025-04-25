@@ -19,7 +19,8 @@ export function RegisterForm() {
 
     const newUserData = {
       username : data.username,
-      email: data.email
+      email: data.email,
+      password: data.password
     };
     
     const response = await fetch("http://localhost:3000/users/new_user", {
