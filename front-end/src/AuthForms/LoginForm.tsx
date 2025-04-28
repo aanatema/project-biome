@@ -29,7 +29,7 @@ export function LoginForm() {
       body: JSON.stringify(existingUser),
     });
 
-    if (!response.ok) return console.error("server error for newUser");
+    if (!response.ok) return console.error("Server error for newUser, check documentation to resolve");
 
     const json = await response.json();
 
