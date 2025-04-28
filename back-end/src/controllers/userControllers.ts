@@ -59,7 +59,6 @@ export async function loginUser(req: Request, res: Response) {
     }
 
     res.status(200).json({ userLoginData });
-    console.log("user connected!");
   } catch (error) {
     console.error("Something happened during the user connection", error);
     res
