@@ -17,12 +17,13 @@ const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
 function createUser(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { username, email } = req.body;
+        const { username, email, password } = req.body;
         try {
             const newUser = yield prisma.user.create({
                 data: {
                     username,
                     email,
+                    password,
                 },
             });
             res.status(201).json({ newUser });
@@ -38,11 +39,22 @@ function createUser(req, res) {
 // TODO
 function loginUser(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { username, email } = req.body;
+        const { username, email, password } = req.body;
         try {
-            const userLoginData = yield prisma.user.findUnique;
+            const userLoginData = yield prisma.user.findUnique({
+                where: {
+                    username: username ? String(username) : "",
+                    email: email ? String(email) : "",
+                    password: password ? String(password) : "",
+                },
+            });
+            res.status(200).json({ userLoginData });
         }
         catch (error) {
+            console.error("Something happened during the user connection", error);
+            res
+                .status(500)
+                .json({ error: "Something happened during the user connection" });
         }
     });
 }
@@ -53,7 +65,6 @@ function modifyUser(req, res) {
         try {
             const userLoginData = yield prisma.user.update;
         }
-        catch (error) {
-        }
+        catch (error) { }
     });
 }

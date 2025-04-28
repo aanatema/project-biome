@@ -120,9 +120,7 @@ function bookByAuthor(req, res) {
         }
         catch (error) {
             console.error("Error while fetching author:", error);
-            res
-                .status(500)
-                .json({
+            res.status(500).json({
                 error: "Something happened when retrieving a book by its author",
             });
         }
@@ -146,9 +144,7 @@ function bookByTitle(req, res) {
         }
         catch (error) {
             console.error("Error while fetching a book by its title:", error);
-            res
-                .status(500)
-                .json({
+            res.status(500).json({
                 error: "Something happened when retrieving a book by its title",
             });
         }
