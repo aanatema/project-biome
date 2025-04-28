@@ -1,6 +1,7 @@
 // what we send to create a new user
 
 import type { Request, Response } from "express";
+import bcrypt from "bcrypt";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
@@ -9,11 +10,14 @@ export async function createUser(req: Request, res: Response) {
   const { username, email, password } = req.body;
 
   try {
+    // hash and add 10 salt rounds to the password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     const newUser = await prisma.user.create({
       data: {
         username,
         email,
-        password,
+        password: hashedPassword,
       },
     });
 
@@ -28,17 +32,34 @@ export async function createUser(req: Request, res: Response) {
 
 // TODO
 export async function loginUser(req: Request, res: Response) {
-  const { username, email, password } = req.body;
+  const { email, password } = req.body;
 
   try {
+    // the email is unique, 1 email = 1 account
     const userLoginData = await prisma.user.findUnique({
       where: {
-        username: username ? String(username) : "",
         email: email ? String(email) : "",
-        password: password ? String(password) : "",
       },
     });
+
+    // make sure there is a password
+    if (!userLoginData || !userLoginData.password) {
+      return res
+        .status(401)
+        .json({ error: "User not found" });
+    }
+
+    const validPassword = await bcrypt.compare(
+      password,
+      userLoginData.password
+    );
+
+    if (!validPassword) {
+      return res.status(401).json({ error: "Invalid credentials" });
+    }
+
     res.status(200).json({ userLoginData });
+    console.log("user connected!");
   } catch (error) {
     console.error("Something happened during the user connection", error);
     res
