@@ -1,8 +1,8 @@
-// TODO : add router ? add delete and post route route
+import dotenv from "dotenv";
+dotenv.config();
 
 import express, { type Request, type Response } from "express";
 import cors from "cors";
-
 import userRoutes from "./routes/userRoutes";
 import bookRoutes from "./routes/bookRoutes";
 
