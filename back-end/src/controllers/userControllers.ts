@@ -25,7 +25,7 @@ export async function createUser(req: Request, res: Response) {
         password: hashedPassword,
       },
     });
-    // creating a new object user without the user password
+    // creating a new object user without the user password, deconstruction + exclusion
     // security measure to avoid sending it to the client
     const {password: _password, ...userWithoutPassword} = newUser
 
@@ -44,27 +44,29 @@ export async function loginUser(req: Request, res: Response) {
 
   try {
     // the email is unique, 1 email = 1 account
-    const userLoginData = await prisma.user.findUnique({
+    const userLogin = await prisma.user.findUnique({
       where: {
         email: email ? String(email) : "",
       },
     });
 
     // make sure there is a password
-    if (!userLoginData || !userLoginData.password) {
+    if (!userLogin || !userLogin.password) {
       return res.status(401).json({ error: "User not found" });
     }
 
     const validPassword = await bcrypt.compare(
       password,
-      userLoginData.password
+      userLogin.password
     );
 
     if (!validPassword) {
       return res.status(401).json({ error: "Invalid credentials" });
     }
 
-    res.status(200).json({ userLoginData });
+    const {password: _password, ...userLoginWithoutPassword} = userLogin
+
+    res.status(200).json({ userLoginWithoutPassword });
   } catch (error) {
     console.error("Something happened during the user connection", error);
     res
@@ -78,6 +80,6 @@ export async function modifyUser(req: Request, res: Response) {
   const { username, email } = req.body;
 
   try {
-    const userLoginData = await prisma.user.update;
+    const userLogin = await prisma.user.update;
   } catch (error) {}
 }
