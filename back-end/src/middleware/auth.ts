@@ -35,12 +35,11 @@ export async function verifyToken(
   res: Response,
   next: NextFunction
 ) {
+
   // extract authorization header from HTTP request
   const authHeader = req.headers.authorization;
-
   if (!authHeader) return res.status(401).json({ error: "No token provided" });
-
-  // extract only the token
+  // extract only the token from the header
   const token = authHeader.split(" ")[1];
 
   // check that the token exists
@@ -50,7 +49,7 @@ export async function verifyToken(
   if (!refreshToken) throw new Error("refresh token undefined");
 
   try {
-    // check if the signature match the one sent, if it has not been modified
+    // check if the signature has not been modified
     const decoded = verify(token, accessToken) as { email: string };
     const user = await prisma.user.findUnique({
       where: {
@@ -58,7 +57,7 @@ export async function verifyToken(
       },
     });
     // if user found, attached to user else undefined
-    // usefull for modify a user account
+    // useful for modify a user account
     req.user = user ?? undefined;
     next();
   } catch (err) {
