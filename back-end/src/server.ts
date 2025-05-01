@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 dotenv.config();
-
+import cookieParser from "cookie-parser";
 import express, { type Request, type Response } from "express";
 import cors from "cors";
 import userRoutes from "./routes/userRoutes";
@@ -13,7 +13,8 @@ app.use(
   express.json(),
   cors({
     origin: "http://localhost:5173",
-  })
+  }), 
+  cookieParser(),
 );
 
 // REQUESTS
