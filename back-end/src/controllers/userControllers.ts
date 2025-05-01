@@ -2,7 +2,11 @@
 import type { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import { PrismaClient } from "@prisma/client";
-import { generateAccessToken, type ExpressRequest } from "../middleware/auth";
+import {
+  generateAccessToken,
+  generateRefreshToken,
+  type ExpressRequest,
+} from "../middleware/auth";
 
 const prisma = new PrismaClient();
 
@@ -20,15 +24,22 @@ export async function createUser(req: Request, res: Response) {
         password: hashedPassword,
       },
     });
-    // creating a new object user without the user password, deconstruction + exclusion
-    // security measure to avoid sending it to the client
-    // the spread operator ...variable, allow us to copy an already existing object
-    // without having to rewrite all elements we want by hand, we exclude pswd but still want the other infos
+
+    // creates a new object user without the user password, deconstruction + exclusion
     const { password: _password, ...userWithoutPassword } = newUser;
+
+    const accessToken = generateAccessToken(userWithoutPassword);
+    const refreshToken = generateRefreshToken(userWithoutPassword);
+
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: true, //HTTPS mandatory in prod
+      sameSite: "strict", // anti CSRF
+      maxAge: 15 * 24 * 60 * 60 * 1000, //15d in ms
+    });
+
     // second spread to flatten the object, no direct visual imbrication
-    res
-      .status(201)
-      .json({ ...userWithoutPassword, token: generateAccessToken(userWithoutPassword) });
+    res.status(201).json({ ...userWithoutPassword, token: accessToken });
   } catch (error) {
     console.error("Something happened during the user's creation", error);
     res
@@ -41,7 +52,7 @@ export async function loginUser(req: ExpressRequest, res: Response) {
   const { email, password } = req.body;
 
   try {
-    // the email is unique, 1 email = 1 account
+    // 1 email = 1 account
     const userLogin = await prisma.user.findUnique({
       where: {
         email: email,
@@ -63,7 +74,10 @@ export async function loginUser(req: ExpressRequest, res: Response) {
 
     res
       .status(200)
-      .json({ ...userLoginWithoutPassword, token: generateAccessToken(userLogin) });
+      .json({
+        ...userLoginWithoutPassword,
+        token: generateAccessToken(userLogin),
+      });
   } catch (error) {
     console.error("Something happened during the user connection", error);
     res
@@ -81,6 +95,8 @@ export async function modifyUser(req: Request, res: Response) {
     res.status(200).json({ message: "modifyUser not implemented yet" });
   } catch (error) {
     console.error("Error in modifyUser", error);
-    res.status(500).json({ error: "Something happened during user modification" });
+    res
+      .status(500)
+      .json({ error: "Something happened during user modification" });
   }
 }
