@@ -8,7 +8,7 @@ import prisma from "../lib/prisma";
 import type { User } from "@prisma/client";
 
 // here instead of in types bc error in loginUser email and pswd
-//cfix that later
+// fix that later
 export interface ExpressRequest extends Request {
   user?: User;
 }
@@ -94,3 +94,5 @@ export async function modifyUser(req: Request, res: Response) {
       .json({ error: "Something happened during user modification" });
   }
 }
+
+// delete user
