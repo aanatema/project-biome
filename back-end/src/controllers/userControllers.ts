@@ -5,6 +5,9 @@ import { PrismaClient } from "@prisma/client";
 import {
   generateAccessToken,
   generateRefreshToken,
+  generateTokens,
+  refreshTokenCookie,
+  sanitizeUser,
   type ExpressRequest,
 } from "../middleware/auth";
 
@@ -25,19 +28,10 @@ export async function createUser(req: Request, res: Response) {
       },
     });
 
-    // creates a new object user without the user password, deconstruction + exclusion
-    const { password: _password, ...userWithoutPassword } = newUser;
+    const userWithoutPassword = sanitizeUser(newUser);
+    const { accessToken, refreshToken } = generateTokens(userWithoutPassword);
 
-    const accessToken = generateAccessToken(userWithoutPassword);
-    const refreshToken = generateRefreshToken(userWithoutPassword);
-
-    res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      secure: true, //HTTPS mandatory in prod
-      sameSite: "strict", // anti CSRF
-      maxAge: 15 * 24 * 60 * 60 * 1000, //15d in ms
-    });
-
+    res.cookie("refreshToken", refreshToken, refreshTokenCookie);
     // second spread to flatten the object, no direct visual imbrication
     res.status(201).json({ ...userWithoutPassword, token: accessToken });
   } catch (error) {
@@ -70,13 +64,15 @@ export async function loginUser(req: ExpressRequest, res: Response) {
       return res.status(401).json({ error: "Invalid credentials" });
     }
 
-    const { password: _password, ...userLoginWithoutPassword } = userLogin;
+    const userWithoutPassword = sanitizeUser(userLogin);
+    const { accessToken, refreshToken } = generateTokens(userWithoutPassword);
 
+    res.cookie("refreshToken", refreshToken, refreshTokenCookie);
     res
       .status(200)
       .json({
-        ...userLoginWithoutPassword,
-        token: generateAccessToken(userLogin),
+        ...userWithoutPassword,
+        token: accessToken,
       });
   } catch (error) {
     console.error("Something happened during the user connection", error);
