@@ -1,8 +1,8 @@
 import "./App.css";
 import { BookForm } from "./MediaForms/BookForm.tsx";
-import { RegisterForm } from "./AuthForms/RegisterForm.tsx";
-import { LoginForm } from "./AuthForms/LoginForm.tsx";
-import { BooksLibrary } from "./Books/BooksLibrary.tsx";
+import { RegisterForm } from "./authForms/RegisterForm.tsx";
+import { LoginForm } from "./authForms/LoginForm.tsx";
+import { BooksLibrary } from "./books/BooksLibrary.tsx";
 
 function App() {
 
