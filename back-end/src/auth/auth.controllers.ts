@@ -3,7 +3,7 @@ import { generateAccessToken } from "./auth.tokens";
 import { verify } from "jsonwebtoken";
 import prisma from "../lib/prisma";
 
-export async function refreshAccessTooken(req: Request, res: Response) {
+export async function refreshAccessToken(req: Request, res: Response) {
   const refreshToken = process.env.REFRESH_TOKEN_SECRET;
   if (!refreshToken)
     throw new Error("refresh token undefined in refreshAccessToken func");
