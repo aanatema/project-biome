@@ -7,7 +7,7 @@ export type UserProps = {
   password?: string;
 };
 
-export function LoginForm() {
+export default function LoginForm() {
   const {
     register,
     handleSubmit,

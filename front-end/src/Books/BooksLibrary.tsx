@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { Books } from "../../../back-end/src/books.ts";
-export function BooksLibrary() {
+export default function BooksLibrary() {
   const [books, setBooks] = useState<Books[]>([]);
   // by default the books aren't displayed
   const [showBooks, setShowBooks] = useState(false);
