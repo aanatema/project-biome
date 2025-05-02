@@ -8,17 +8,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __rest = (this && this.__rest) || function (s, e) {
-    var t = {};
-    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
-        t[p] = s[p];
-    if (s != null && typeof Object.getOwnPropertySymbols === "function")
-        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
-                t[p[i]] = s[p[i]];
-        }
-    return t;
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -27,33 +16,26 @@ exports.createUser = createUser;
 exports.loginUser = loginUser;
 exports.modifyUser = modifyUser;
 const bcrypt_1 = __importDefault(require("bcrypt"));
-const client_1 = require("@prisma/client");
-const auth_1 = require("../middleware/auth");
-const prisma = new client_1.PrismaClient();
+const auth_tokens_1 = require("../auth/auth.tokens");
+const auth_utils_1 = require("../auth/auth.utils");
+const auth_cookies_1 = require("../auth/auth.cookies");
+const prisma_1 = __importDefault(require("../lib/prisma"));
 function createUser(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const { username, email, password } = req.body;
         try {
             // hash and add 10 salt rounds to the password
             const hashedPassword = yield bcrypt_1.default.hash(password, 10);
-            const newUser = yield prisma.user.create({
+            const newUser = yield prisma_1.default.user.create({
                 data: {
                     username,
                     email,
                     password: hashedPassword,
                 },
             });
-            // creates a new object user without the user password, deconstruction + exclusion
-            const { password: _password } = newUser, userWithoutPassword = __rest(newUser, ["password"]);
-            const accessToken = (0, auth_1.generateAccessToken)(userWithoutPassword);
-            const refreshToken = (0, auth_1.generateRefreshToken)(userWithoutPassword);
-            // refreshtoken send through httpOnly cookie 
-            res.cookie("refreshToken", refreshToken, {
-                httpOnly: true,
-                secure: true, //HTTPS mandatory in prod
-                sameSite: "strict", // anti CSRF
-                maxAge: 15 * 24 * 60 * 60 * 1000, //15d in ms
-            });
+            const userWithoutPassword = (0, auth_utils_1.sanitizeUser)(newUser);
+            const { accessToken, refreshToken } = (0, auth_tokens_1.generateTokens)(userWithoutPassword);
+            res.cookie("refreshToken", refreshToken, auth_cookies_1.refreshTokenCookie);
             // second spread to flatten the object, no direct visual imbrication
             res.status(201).json(Object.assign(Object.assign({}, userWithoutPassword), { token: accessToken }));
         }
@@ -70,7 +52,7 @@ function loginUser(req, res) {
         const { email, password } = req.body;
         try {
             // 1 email = 1 account
-            const userLogin = yield prisma.user.findUnique({
+            const userLogin = yield prisma_1.default.user.findUnique({
                 where: {
                     email: email,
                 },
@@ -83,10 +65,10 @@ function loginUser(req, res) {
             if (!validPassword) {
                 return res.status(401).json({ error: "Invalid credentials" });
             }
-            const { password: _password } = userLogin, userLoginWithoutPassword = __rest(userLogin, ["password"]);
-            res
-                .status(200)
-                .json(Object.assign(Object.assign({}, userLoginWithoutPassword), { token: (0, auth_1.generateAccessToken)(userLogin) }));
+            const userWithoutPassword = (0, auth_utils_1.sanitizeUser)(userLogin);
+            const { accessToken, refreshToken } = (0, auth_tokens_1.generateTokens)(userWithoutPassword);
+            res.cookie("refreshToken", refreshToken, auth_cookies_1.refreshTokenCookie);
+            res.status(200).json(Object.assign(Object.assign({}, userWithoutPassword), { token: accessToken }));
         }
         catch (error) {
             console.error("Something happened during the user connection", error);
@@ -112,3 +94,4 @@ function modifyUser(req, res) {
         }
     });
 }
+// delete user
