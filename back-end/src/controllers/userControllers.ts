@@ -1,17 +1,17 @@
 // what we send to create a new user
 import type { Request, Response } from "express";
 import bcrypt from "bcrypt";
-import { PrismaClient } from "@prisma/client";
-import {
-  generateAccessToken,
-  generateRefreshToken,
-  generateTokens,
-  refreshTokenCookie,
-  sanitizeUser,
-  type ExpressRequest,
-} from "../middleware/auth";
+import { generateTokens } from "../auth/auth.tokens";
+import { sanitizeUser } from "../auth/auth.utils";
+import { refreshTokenCookie } from "../auth/auth.cookies";
+import prisma from "../lib/prisma";
+import type { User } from "@prisma/client";
 
-const prisma = new PrismaClient();
+// here instead of in types bc error in loginUser email and pswd
+//cfix that later
+export interface ExpressRequest extends Request {
+  user?: User;
+}
 
 export async function createUser(req: Request, res: Response) {
   const { username, email, password } = req.body;
@@ -68,12 +68,10 @@ export async function loginUser(req: ExpressRequest, res: Response) {
     const { accessToken, refreshToken } = generateTokens(userWithoutPassword);
 
     res.cookie("refreshToken", refreshToken, refreshTokenCookie);
-    res
-      .status(200)
-      .json({
-        ...userWithoutPassword,
-        token: accessToken,
-      });
+    res.status(200).json({
+      ...userWithoutPassword,
+      token: accessToken,
+    });
   } catch (error) {
     console.error("Something happened during the user connection", error);
     res
