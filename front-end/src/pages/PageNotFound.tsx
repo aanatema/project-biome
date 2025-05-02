@@ -7,6 +7,4 @@ export default function PageNotFound() {
       <Link to="/">Homepage</Link>
     </div>
   );
-
-  // do a page refresh
 }
