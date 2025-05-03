@@ -1,15 +1,11 @@
-import { Link } from "react-router-dom";
+import LogRegisterForm from "@/components/LogRegisterForm";
+import NavigationMenuDemo from "@/components/Navbar";
 
 export default function HomePage() {
   return (
-    <div>
-      Home Page 
-      <Link to="/">Homepage</Link>
-      <Link to="/register">Register</Link>
-      <Link to="/login">Login</Link>
-      <Link to="/new-book">Add Book</Link>
-    </div>
+    <>
+    <NavigationMenuDemo/>
+    <LogRegisterForm/>
+    </>
   );
-
-  // do a page refresh
 }
