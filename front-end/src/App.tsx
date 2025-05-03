@@ -4,7 +4,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import PageNotFound from "./pages/PageNotFound.tsx";
 import { RegisterForm } from "./authForms/RegisterForm.tsx";
 import LoginForm from "./authForms/LoginForm.tsx";
-import HomePage from "./pages/homepage.tsx";
+import HomePage from "./pages/HomePage.tsx";
 
 const router = createBrowserRouter([
   { path: "/", element: <HomePage />, errorElement: <PageNotFound /> },
