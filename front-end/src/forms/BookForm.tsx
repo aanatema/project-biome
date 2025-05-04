@@ -1,3 +1,15 @@
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@radix-ui/react-label";
 import { type SubmitHandler, useForm } from "react-hook-form";
 
 export type Review = {
@@ -17,7 +29,7 @@ export function BookForm() {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<BookFormProps>();
 
   // data is an object with the properties of BookFormProps and the values that will be added through the form
@@ -45,58 +57,60 @@ export function BookForm() {
     console.log("book created", json);
   };
 
-  
-
   // NOT WORKING FOR NOW GO BACK LATER
   // const isbnRegex = /^(97(8|9))?\d{9}(\d|X)$/;
   // const issnRegex = /^ISSN\s?\d{4}-\d{3}[\dX]$/;
   // const isbnOrIssnRegex = /^(97(8|9))?\d{9}(\d|X)$|^ISSN\s?\d{4}-\d{3}[\dX]$/;
 
   return (
-    <>
-      <form
-        className="book-form"
-        onSubmit={handleSubmit(onSubmit)}
-        method="POST"
-      >
-        {/* the ... is the spread operator, it takes the properties of 'isbn', passing through 'register' to add them to this input  */}
-        <label className="book-label">
-          ISBN
-          <input
-            {...register("isbn", {
-              required: "ISBN / ISSN may be missing or incorrect",
-              // pattern: isbnOrIssnRegex,
-            })}
-            type="text"
-            placeholder="isbn or issn"
-          />
-          {errors.isbn && <p>{errors.isbn.message}</p>}
-        </label>
-        {/* linked to the required string */}
-        <label className="book-label title-label">
-          TITLE
-          <input {...register("title")} type="text" placeholder="title" />
-        </label>
-        <label className="book-label author-label">
-          AUTHOR
-          <input {...register("author")} type="text" placeholder="author" />
-        </label>
-        <label className="book-label review-label">
-          REVIEW
-          <input
-            {...register("reviews.0.review")}
-            type="text"
-            placeholder="review"
-          />
-        </label>
-
-        <button disabled={isSubmitting} type="submit">
-          {isSubmitting ? "Saving..." : "Submit"}
-        </button>
-
-        <button type="submit" > SEARCH </button>
-
-      </form>
-    </>
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <Card>
+        <CardHeader>
+          <CardTitle>New book</CardTitle>
+          <CardDescription>Add your latest reading!</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-2">
+          <div className="space-y-1">
+            <Label htmlFor="ISBN">ISBN</Label>
+            <Input
+              id="isbn"
+              placeholder="978-0-316-54142-8"
+              {...register("isbn", { required: "Incorrect isbn" })}
+            />
+            {errors.isbn && <p>{errors.isbn.message}</p>}
+          </div>
+          <div className="space-y-1">
+            <Label htmlFor="title">Title</Label>
+            <Input
+              id="title"
+              placeholder="The Bone Shard Daughter"
+              {...register("title", { required: "Incorrect title" })}
+            />
+            {errors.title && <p>{errors.title.message}</p>}
+          </div>
+          <div className="space-y-1">
+            <Label htmlFor="author">Author</Label>
+            <Input
+              id="author"
+              placeholder="Andrea Stewart"
+              {...register("author", { required: "Incorrect author" })}
+            />
+            {errors.author && <p>{errors.author.message}</p>}
+          </div>
+          <div className="space-y-1">
+            <Label htmlFor="review">Review</Label>
+            <Textarea
+              id="review"
+              placeholder="Share your thoughts here"
+              {...register("reviews", { required: "Incorrect review" })}
+            />
+            {errors.reviews && <p>{errors.reviews.message}</p>}
+          </div>
+        </CardContent>
+        <CardFooter>
+          <Button className="w-full" type="submit">Add</Button>
+        </CardFooter>
+      </Card>
+    </form>
   );
 }
