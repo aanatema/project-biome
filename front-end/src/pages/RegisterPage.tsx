@@ -1,4 +1,4 @@
-import { RegisterForm } from "../authForms/RegisterForm";
+import { RegisterForm } from "../forms/RegisterForm";
 
 <>
   <RegisterForm />

@@ -1,5 +1,5 @@
-import LoginForm from "@/authForms/LoginForm";
-import { RegisterForm } from "@/authForms/RegisterForm";
+import LoginForm from "@/forms/LoginForm";
+import { RegisterForm } from "@/forms/RegisterForm";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function LogRegisterForm() {

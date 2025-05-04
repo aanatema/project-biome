@@ -1,4 +1,4 @@
-import LoginForm from "../authForms/LoginForm";
+import LoginForm from "../forms/LoginForm";
 
 <LoginForm />;
 <div>

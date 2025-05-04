@@ -1,8 +1,8 @@
 import "./App.css";
 import { BookForm } from "./MediaForms/BookForm.tsx";
 import PageNotFound from "./pages/PageNotFound.tsx";
-import { RegisterForm } from "./authForms/RegisterForm.tsx";
-import LoginForm from "./authForms/LoginForm.tsx";
+import { RegisterForm } from "./forms/RegisterForm.tsx";
+import LoginForm from "./forms/LoginForm.tsx";
 import HomePage from "./pages/HomePage.tsx";
 import { createBrowserRouter, RouterProvider } from "react-router";
 
