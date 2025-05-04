@@ -13,8 +13,9 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const components: { title: string; href: string; description: string }[] = [
   {
     title: "Alert Dialog",
