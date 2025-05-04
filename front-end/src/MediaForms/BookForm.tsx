@@ -1,5 +1,4 @@
 import { type SubmitHandler, useForm } from "react-hook-form";
-import "./styles/forms.css";
 
 export type Review = {
   reviewId: string;
