@@ -1,3 +1,4 @@
+import NavigationMenuDemo from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -63,54 +64,60 @@ export function BookForm() {
   // const isbnOrIssnRegex = /^(97(8|9))?\d{9}(\d|X)$|^ISSN\s?\d{4}-\d{3}[\dX]$/;
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <Card>
-        <CardHeader>
-          <CardTitle>New book</CardTitle>
-          <CardDescription>Add your latest reading!</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-2">
-          <div className="space-y-1">
-            <Label htmlFor="ISBN">ISBN</Label>
-            <Input
-              id="isbn"
-              placeholder="978-0-316-54142-8"
-              {...register("isbn", { required: "Incorrect isbn" })}
-            />
-            {errors.isbn && <p>{errors.isbn.message}</p>}
-          </div>
-          <div className="space-y-1">
-            <Label htmlFor="title">Title</Label>
-            <Input
-              id="title"
-              placeholder="The Bone Shard Daughter"
-              {...register("title", { required: "Incorrect title" })}
-            />
-            {errors.title && <p>{errors.title.message}</p>}
-          </div>
-          <div className="space-y-1">
-            <Label htmlFor="author">Author</Label>
-            <Input
-              id="author"
-              placeholder="Andrea Stewart"
-              {...register("author", { required: "Incorrect author" })}
-            />
-            {errors.author && <p>{errors.author.message}</p>}
-          </div>
-          <div className="space-y-1">
-            <Label htmlFor="review">Review</Label>
-            <Textarea
-              id="review"
-              placeholder="Share your thoughts here"
-              {...register("reviews", { required: "Incorrect review" })}
-            />
-            {errors.reviews && <p>{errors.reviews.message}</p>}
-          </div>
-        </CardContent>
-        <CardFooter>
-          <Button className="w-full" type="submit">Add</Button>
-        </CardFooter>
-      </Card>
-    </form>
+    <>
+      <NavigationMenuDemo />
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Card className="mt-10 w-140 justify-center">
+          <CardHeader>
+            <CardTitle>New book</CardTitle>
+            <CardDescription>Add your latest reading!</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            <div className="space-y-1">
+              <Label htmlFor="ISBN">ISBN*</Label>
+              <Input
+                id="isbn"
+                placeholder="978-0-316-54142-8"
+                {...register("isbn", { required: "Incorrect isbn" })}
+              />
+              {errors.isbn && <p>{errors.isbn.message}</p>}
+            </div>
+            <div className="space-y-1">
+              <Label htmlFor="title">Title*</Label>
+              <Input
+                id="title"
+                placeholder="The Bone Shard Daughter"
+                {...register("title", { required: "Incorrect title" })}
+              />
+              {errors.title && <p>{errors.title.message}</p>}
+            </div>
+            <div className="space-y-1">
+              <Label htmlFor="author">Author*</Label>
+              <Input
+                id="author"
+                placeholder="Andrea Stewart"
+                {...register("author", { required: "Incorrect author" })}
+              />
+              {errors.author && <p>{errors.author.message}</p>}
+            </div>
+            <div className="space-y-1">
+              <Label htmlFor="review">Review</Label>
+              <Textarea
+                id="review"
+                placeholder="Share your thoughts here"
+                {...register("reviews", { required: "Incorrect review" })}
+              />
+              {errors.reviews && <p>{errors.reviews.message}</p>}
+            </div>
+            <p>Fields with a star (*) are mandatory</p>
+          </CardContent>
+          <CardFooter>
+            <Button className="w-full" type="submit">
+              Add
+            </Button>
+          </CardFooter>
+        </Card>
+      </form>
+    </>
   );
 }
