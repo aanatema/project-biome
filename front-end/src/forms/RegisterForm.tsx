@@ -85,7 +85,7 @@ export function RegisterForm() {
           </div>
         </CardContent>
         <CardFooter>
-          <Button type="submit">Register</Button>
+          <Button className="w-full" type="submit">Register</Button>
         </CardFooter>
       </Card>
     </form>
