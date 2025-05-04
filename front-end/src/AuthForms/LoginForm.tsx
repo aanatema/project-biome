@@ -1,3 +1,7 @@
+import { Button } from "@/components/ui/button";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@radix-ui/react-label";
 import { type SubmitHandler, useForm } from "react-hook-form";
 
 export type UserProps = {
@@ -13,7 +17,7 @@ export default function LoginForm() {
     formState: { errors },
   } = useForm<UserProps>();
 
-  const onSubmit: SubmitHandler<UserProps> = async (data) => {
+  const onLoginSubmit: SubmitHandler<UserProps> = async (data) => {
     const existingUser = {
       username: data.username,
       email: data.email,
@@ -28,49 +32,45 @@ export default function LoginForm() {
       body: JSON.stringify(existingUser),
     });
 
-    if (!response.ok) return console.error("Server error for newUser, check documentation to resolve");
+    if (!response.ok)
+      return console.error(
+        "Server error for newUser, check documentation to resolve"
+      );
 
     const json = await response.json();
-
     console.log(json);
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      method="GET"
-    >
-      <label className="auth-label login-label">
-        USERNAME
-        <input
-          {...register("username", { required: "Incorrect username" })}
-          type="text"
-          placeholder="username"
-        />
-        {errors.username && <p>{errors.username.message}</p>}
-      </label>
-      <label className="auth-label login-label">
-        EMAIL
-        <input
-          {...register("email", { required: "Incorrect email" })}
-          type="text"
-          placeholder="email"
-        />
-        {errors.email && <p>{errors.email.message}</p>}
-      </label>
-
-      {/* LATER */}
-      <label>
-        PASSWORD
-        <input
-          {...register("password", { required: "Incorrect password" })}
-          type="password"
-          placeholder="password"
-        />
-        {errors.password && <p>{errors.password.message}</p>}
-      </label>
-
-      <button type="submit"> CONFIRM </button>
-    </form>
+    <form onSubmit={handleSubmit(onLoginSubmit)}>
+    <Card>
+      <CardHeader>
+        <CardTitle>Login</CardTitle>
+        <CardDescription>Log into your account</CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-2">
+        <div className="space-y-1">
+          <Label htmlFor="email">Email</Label>
+          <Input
+            id="email"
+            {...register("email", { required: "Incorrect email" })}
+          />
+          {errors.email && <p>{errors.email.message}</p>}
+        </div>
+        <div className="space-y-1">
+          <Label htmlFor="password">Password</Label>
+          <Input
+            id="password"
+            type="password"
+            {...register("password", { required: "Incorrect password" })}
+          />
+          {errors.password && <p>{errors.password.message}</p>}
+        </div>
+      </CardContent>
+      <CardFooter>
+        <Button type="submit">Connect</Button>
+      </CardFooter>
+    </Card>
+  </form>
   );
 }
