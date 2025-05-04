@@ -1,5 +1,5 @@
 import "./App.css";
-import { BookForm } from "./MediaForms/BookForm.tsx";
+import { BookForm } from "./forms/BookForm.tsx";
 import PageNotFound from "./pages/PageNotFound.tsx";
 import { RegisterForm } from "./forms/RegisterForm.tsx";
 import LoginForm from "./forms/LoginForm.tsx";

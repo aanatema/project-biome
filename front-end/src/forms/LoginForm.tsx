@@ -1,5 +1,12 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@radix-ui/react-label";
 import { type SubmitHandler, useForm } from "react-hook-form";
@@ -43,34 +50,39 @@ export default function LoginForm() {
 
   return (
     <form onSubmit={handleSubmit(onLoginSubmit)}>
-    <Card>
-      <CardHeader>
-        <CardTitle>Login</CardTitle>
-        <CardDescription>Log into your account</CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-2">
-        <div className="space-y-1">
-          <Label htmlFor="email">Email</Label>
-          <Input
-            id="email"
-            {...register("email", { required: "Incorrect email" })}
-          />
-          {errors.email && <p>{errors.email.message}</p>}
-        </div>
-        <div className="space-y-1">
-          <Label htmlFor="password">Password</Label>
-          <Input
-            id="password"
-            type="password"
-            {...register("password", { required: "Incorrect password" })}
-          />
-          {errors.password && <p>{errors.password.message}</p>}
-        </div>
-      </CardContent>
-      <CardFooter>
-        <Button type="submit">Connect</Button>
-      </CardFooter>
-    </Card>
-  </form>
+      <Card>
+        <CardHeader>
+          <CardTitle>Login</CardTitle>
+          <CardDescription>Log into your account</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-2">
+          <div className="space-y-1">
+            <Label htmlFor="email">Email</Label>
+            <Input
+              id="email"
+              {...register("email", { required: "Incorrect email" })}
+            />
+            {errors.email && <p>{errors.email.message}</p>}
+          </div>
+          <div className="space-y-1">
+            <Label htmlFor="password">Password</Label>
+            <Input
+              id="password"
+              type="password"
+              {...register("password", { required: "Incorrect password" })}
+            />
+            {errors.password && <p>{errors.password.message}</p>}
+          </div>
+
+          {/* IMPLEMENT LOGIC ABOUT SENDING AN EMAIL TO RESTER PASSWORD */}
+          <p>Forgot your password?</p>
+        </CardContent>
+        <CardFooter>
+          <Button className="w-full" type="submit">
+            Connect
+          </Button>
+        </CardFooter>
+      </Card>
+    </form>
   );
 }
