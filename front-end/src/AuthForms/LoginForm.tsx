@@ -37,7 +37,6 @@ export default function LoginForm() {
 
   return (
     <form
-      className="auth-form login-form"
       onSubmit={handleSubmit(onSubmit)}
       method="GET"
     >
