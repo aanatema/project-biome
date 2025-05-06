@@ -6,11 +6,9 @@ import { cn } from "@/lib/utils";
 // import { Icons } from "@/components/icons"
 import {
   NavigationMenu,
-  NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import { Link } from "react-router";
@@ -58,18 +56,12 @@ export default function NavigationMenuDemo() {
   return (
     <NavigationMenu>
       <NavigationMenuList>
-        <NavigationMenuItem>
-          <NavigationMenuTrigger>Account</NavigationMenuTrigger>
-          <NavigationMenuContent>
-            <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[100px] lg:grid-rows-[.75fr_1fr]">
-              <ListItem href="/login">
-                Login
-              </ListItem>
-              <ListItem href="/register">
-                Register
-              </ListItem>
-            </ul>
-          </NavigationMenuContent>
+      <NavigationMenuItem>
+          <Link to="/">
+            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+              Homepage
+            </NavigationMenuLink>
+          </Link>
         </NavigationMenuItem>
         <NavigationMenuItem>
           <Link to="/new-book">
@@ -79,9 +71,16 @@ export default function NavigationMenuDemo() {
           </Link>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <Link to="/">
+          <Link to="/library">
             <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-              Homepage
+              Library
+            </NavigationMenuLink>
+          </Link>
+        </NavigationMenuItem>
+        <NavigationMenuItem>
+          <Link to="/account">
+            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+              Account
             </NavigationMenuLink>
           </Link>
         </NavigationMenuItem>
