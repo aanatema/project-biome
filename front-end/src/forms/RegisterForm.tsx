@@ -50,7 +50,7 @@ export function RegisterForm() {
 
   return (
     <form onSubmit={handleSubmit(onRegisterSubmit)}>
-      <Card className="mt-10 w-140">
+      <Card className="w-140">
         <CardHeader>
           <CardTitle>Register</CardTitle>
           <CardDescription>No account yet ? Create yours here</CardDescription>

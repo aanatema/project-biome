@@ -50,7 +50,7 @@ export default function LoginForm() {
 
   return (
     <form onSubmit={handleSubmit(onLoginSubmit)}>
-      <Card className="mt-10 w-140">
+      <Card className="w-140">
         <CardHeader>
           <CardTitle>Login</CardTitle>
           <CardDescription>Log into your account</CardDescription>

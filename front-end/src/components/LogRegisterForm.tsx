@@ -4,7 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function LogRegisterForm() {
   return (
-    <Tabs defaultValue="login" className="w-[400px] bg-">
+    <Tabs defaultValue="login" className="mt-10 w-140 bg-">
       <TabsList className="grid w-full grid-cols-2">
         <TabsTrigger value="login">Login</TabsTrigger>
         <TabsTrigger value="register">Register</TabsTrigger>
