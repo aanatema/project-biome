@@ -6,8 +6,8 @@ import { RegisterForm } from "./forms/RegisterForm.tsx";
 import LoginForm from "./forms/LoginForm.tsx";
 import HomePage from "./pages/HomePage.tsx";
 import { createBrowserRouter, RouterProvider } from "react-router";
-import BookCard from "./components/BookCard.tsx";
 import AccountPage from "./pages/AccountPage.tsx";
+import LibraryPage from "./pages/LibraryPage.tsx";
 
 const router = createBrowserRouter([
   { path: "/", element: <HomePage />, errorElement: <PageNotFound /> },
@@ -28,7 +28,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/library",
-    element: <BookCard />,
+    element: <LibraryPage />,
     errorElement: <PageNotFound />,
   },
   {
