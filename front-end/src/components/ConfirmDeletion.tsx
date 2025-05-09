@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -8,6 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { DialogClose } from "@radix-ui/react-dialog";
 
 export function ConfirmDeletionDialog() {
   return (
@@ -19,14 +20,16 @@ export function ConfirmDeletionDialog() {
         <DialogHeader>
           <DialogTitle>Are you sure ?</DialogTitle>
           <DialogDescription>
-             This action is permanent. All of your data will be deleted and
-            cannot be retrieved. 
+            This action is permanent. All of your data will be deleted and
+            cannot be retrieved.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
           <div className="grid w-full grid-cols-2 gap-6 m-5">
-            <Button type="submit">Cancel</Button>
-            <Button variant="outline" type="submit">Confirm</Button>
+            <DialogClose className={buttonVariants({ variant: "default" })}>Cancel</DialogClose>
+            <Button variant="outline" type="submit">
+              Confirm
+            </Button>
           </div>
         </DialogFooter>
       </DialogContent>
