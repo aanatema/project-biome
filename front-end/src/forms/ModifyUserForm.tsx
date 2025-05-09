@@ -1,4 +1,4 @@
-import { ConfirmDeletionDialog } from "@/components/ConfirmDeletion";
+import { ConfirmDeletionDialog } from "@/components/userComponents/ConfirmDeletion";
 import { Button } from "@/components/ui/button";
 import {
   Card,

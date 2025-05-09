@@ -57,10 +57,11 @@ export function BookForm() {
       } finally {
         setIsLoading(false);
       }
+      if (watchedISBN === "") reset();
     };
 
     loadBookData();
-  }, [watchedISBN, setValue]);
+  }, [watchedISBN, setValue, reset]);
 
   // data is an object with the properties of BookFormProps and the values that will be added through the form
   // async to take into account data being sent to the server
@@ -149,7 +150,9 @@ export function BookForm() {
               <Button type="submit" disabled={isLoading}>
                 {isLoading ? "Loading..." : "Add"} Add
               </Button>
-              <Button variant="outline" type="reset">Clear form</Button>
+              <Button variant="outline" type="reset">
+                Clear form
+              </Button>
             </div>
           </CardFooter>
         </Card>

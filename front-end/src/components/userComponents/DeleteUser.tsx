@@ -1,6 +1,6 @@
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { type SubmitHandler, useForm } from "react-hook-form";
-import { ConfirmDeletionDialog } from "./ConfirmDeletion";
+import { ConfirmDeletionDialog } from "./userComponents/ConfirmDeletion";
 
 export type UserProps = {
   username: string;
