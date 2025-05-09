@@ -16,7 +16,7 @@ export default function BookCard() {
           <Label htmlFor="author">Book author</Label>
         </div>
         <div className="space-y-1">
-          <Label htmlFor="isbn">ISBNr</Label>
+          <Label htmlFor="isbn">ISBN</Label>
         </div>
       </CardContent>
       <CardFooter>

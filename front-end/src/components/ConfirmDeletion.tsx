@@ -25,7 +25,7 @@ export function ConfirmDeletionDialog() {
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <div className="grid w-full grid-cols-2 gap-6 m-5">
+          <div className="grid w-full grid-cols-2 gap-6 mt-5">
             <DialogClose className={buttonVariants({ variant: "default" })}>Cancel</DialogClose>
             <Button variant="outline" type="submit">
               Confirm

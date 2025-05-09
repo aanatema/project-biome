@@ -112,9 +112,14 @@ export function BookForm() {
             <p>Fields with a star (*) are mandatory</p>
           </CardContent>
           <CardFooter>
-            <Button className="w-full" type="submit">
-              Add
-            </Button>
+            <div className="grid w-full grid-cols-2 gap-6">
+              <Button type="submit">
+                Add
+              </Button>
+              <Button variant="outline">
+                Clear form
+              </Button>
+            </div>
           </CardFooter>
         </Card>
       </form>
