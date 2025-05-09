@@ -1,3 +1,4 @@
+import { ConfirmDeletionDialog } from "@/components/ConfirmDeletion";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -47,14 +48,13 @@ export function ModifyUserForm() {
     console.log(json);
 
     const confirmUserDeletion = async () => {
-      try{
-        const response = await fetch("http://localhost:3000/users/user_deletion", {
-
-        });
-      }catch(error){
-
-      }
-    }
+      try {
+        const response = await fetch(
+          "http://localhost:3000/users/user_deletion",
+          {}
+        );
+      } catch (error) {}
+    };
   };
 
   return (
@@ -107,11 +107,12 @@ export function ModifyUserForm() {
           </div>
         </CardContent>
         <CardFooter>
-          <div className="grid w-full grid-cols-2 gap-6"> 
-          <Button className="" type="submit">
-            Update
-          </Button>
-         </div>
+          <div className="grid w-full grid-cols-2 gap-6">
+            <Button className="" type="submit">
+              Update
+            </Button>
+            <ConfirmDeletionDialog />
+          </div>
         </CardFooter>
       </Card>
     </form>

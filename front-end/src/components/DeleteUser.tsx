@@ -1,6 +1,7 @@
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { Button } from "./ui/button";
 import { type SubmitHandler, useForm } from "react-hook-form";
+import { ConfirmDeletionDialog } from "./ConfirmDeletion";
 
 export type UserProps = {
   username: string;
@@ -38,9 +39,7 @@ export function RegisterForm() {
     const json = await response.json();
     console.log(json);
   };
-return (
-  <Button variant="outline" type="submit">
-  Delete account
-</Button>
-)
+  return (
+   <ConfirmDeletionDialog/>
+  );
 }
