@@ -12,6 +12,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@radix-ui/react-label";
 import { type SubmitHandler, useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
+import { openLibFetchByISBN } from "@/api/openLibrary";
 
 export type Review = {
   reviewId: string;
@@ -31,7 +33,34 @@ export function BookForm() {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
+    watch,
+    reset,
   } = useForm<BookFormProps>();
+
+  const [isLoading, setIsLoading] = useState(false);
+  const watchedISBN = watch("isbn");
+
+  useEffect(() => {
+    const loadBookData = async () => {
+      if (!watchedISBN || watchedISBN.length < 10) return;
+
+      try {
+        setIsLoading(true);
+        const book = await openLibFetchByISBN(watchedISBN);
+        if (book) {
+          setValue("title", book.title);
+          setValue("author", book.author);
+        }
+      } catch (err) {
+        console.error("Error fetching book data", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadBookData();
+  }, [watchedISBN, setValue]);
 
   // data is an object with the properties of BookFormProps and the values that will be added through the form
   // async to take into account data being sent to the server
@@ -56,6 +85,7 @@ export function BookForm() {
 
     const json = await response.json();
     console.log("book created", json);
+    reset();
   };
 
   // NOT WORKING FOR NOW GO BACK LATER
@@ -78,6 +108,7 @@ export function BookForm() {
               <Input
                 id="isbn"
                 placeholder="978-0-316-54142-8"
+                disabled={isLoading}
                 {...register("isbn", { required: "Incorrect isbn" })}
               />
               {errors.isbn && <p>{errors.isbn.message}</p>}
@@ -87,6 +118,7 @@ export function BookForm() {
               <Input
                 id="title"
                 placeholder="The Bone Shard Daughter"
+                disabled={isLoading}
                 {...register("title", { required: "Incorrect title" })}
               />
               {errors.title && <p>{errors.title.message}</p>}
@@ -96,6 +128,7 @@ export function BookForm() {
               <Input
                 id="author"
                 placeholder="Andrea Stewart"
+                disabled={isLoading}
                 {...register("author", { required: "Incorrect author" })}
               />
               {errors.author && <p>{errors.author.message}</p>}
@@ -105,7 +138,7 @@ export function BookForm() {
               <Textarea
                 id="review"
                 placeholder="Share your thoughts here"
-                {...register("reviews", { required: "Incorrect review" })}
+                {...register("reviews")}
               />
               {errors.reviews && <p>{errors.reviews.message}</p>}
             </div>
@@ -113,12 +146,10 @@ export function BookForm() {
           </CardContent>
           <CardFooter>
             <div className="grid w-full grid-cols-2 gap-6">
-              <Button type="submit">
-                Add
+              <Button type="submit" disabled={isLoading}>
+                {isLoading ? "Loading..." : "Add"} Add
               </Button>
-              <Button variant="outline">
-                Clear form
-              </Button>
+              <Button variant="outline" type="reset">Clear form</Button>
             </div>
           </CardFooter>
         </Card>
