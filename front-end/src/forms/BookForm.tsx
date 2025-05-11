@@ -14,6 +14,7 @@ import { Label } from "@radix-ui/react-label";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { openLibFetchByISBN } from "@/api/openLibrary";
+import { toast } from "sonner"
 
 export type Review = {
   reviewId: string;
@@ -73,7 +74,8 @@ export function BookForm() {
       reviews: [{ review: data.reviews[0] }],
     };
 
-    // send the new book
+    try { 
+      // send the new book
     const response = await fetch("http://localhost:3000/books/new_book", {
       method: "POST",
       headers: {
@@ -82,11 +84,20 @@ export function BookForm() {
       body: JSON.stringify(bookData),
     });
 
-    if (!response.ok) return console.error("server error in newBook");
+    if (!response.ok){
+      toast.error("Something happened, please try again")
+      return console.error("server error in newBook");
+    } 
 
     const json = await response.json();
     console.log("book created", json);
     reset();
+    toast.success("Your book has been added successfully!")
+
+  } catch (err) {
+    console.log(err);
+    toast.error("Something happened, please try again")
+  }
   };
 
   // NOT WORKING FOR NOW GO BACK LATER
