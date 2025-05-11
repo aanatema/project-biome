@@ -4,3 +4,11 @@
   padding: 2rem;
   /* text-align: center; */
 }
+
+.book-card:hover {
+  cursor: pointer;
+}
+
+button:hover{
+  cursor: pointer;
+}
