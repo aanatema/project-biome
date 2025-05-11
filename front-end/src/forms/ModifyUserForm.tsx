@@ -46,15 +46,6 @@ export function ModifyUserForm() {
 
     const json = await response.json();
     console.log(json);
-
-    const confirmUserDeletion = async () => {
-      try {
-        const response = await fetch(
-          "http://localhost:3000/users/user_deletion",
-          {}
-        );
-      } catch (error) {}
-    };
   };
 
   return (
