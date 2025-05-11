@@ -7,7 +7,7 @@ const express_1 = __importDefault(require("express"));
 const bookController_1 = require("../controllers/bookController");
 console.log("📚 bookRoutes loaded");
 const router = express_1.default.Router();
-router.post("/books_list/new_book", bookController_1.newBookMedia);
+router.post("/new_book", bookController_1.newBookMedia);
 router.get("/books_list", bookController_1.allBooks);
 router.get("/books_list/isbn/:isbn", bookController_1.bookByIsbn);
 router.get("/books_list/author/:author", bookController_1.bookByAuthor);

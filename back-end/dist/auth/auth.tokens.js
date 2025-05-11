@@ -1,0 +1,26 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.generateRefreshToken = exports.generateAccessToken = void 0;
+exports.generateTokens = generateTokens;
+const jsonwebtoken_1 = require("jsonwebtoken");
+function generateTokens(user) {
+    return {
+        accessToken: (0, exports.generateAccessToken)(user),
+        refreshToken: (0, exports.generateRefreshToken)(user),
+    };
+}
+const accessToken = process.env.ACCESS_TOKEN_SECRET;
+if (!accessToken)
+    throw new Error("access token undefined");
+// generate a jwt based on the user email, can be extended later, see if needed
+const generateAccessToken = (user) => {
+    return (0, jsonwebtoken_1.sign)({ email: user.email }, accessToken, { expiresIn: "30m" });
+};
+exports.generateAccessToken = generateAccessToken;
+const refreshToken = process.env.REFRESH_TOKEN_SECRET;
+if (!refreshToken)
+    throw new Error("refresh token undefined");
+const generateRefreshToken = (user) => {
+    return (0, jsonwebtoken_1.sign)({ email: user.email }, refreshToken, { expiresIn: "15d" });
+};
+exports.generateRefreshToken = generateRefreshToken;

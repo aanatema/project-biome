@@ -1,5 +1,4 @@
 "use strict";
-// what we send to create a new user
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -9,23 +8,36 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createUser = createUser;
 exports.loginUser = loginUser;
 exports.modifyUser = modifyUser;
-const client_1 = require("@prisma/client");
-const prisma = new client_1.PrismaClient();
+const bcrypt_1 = __importDefault(require("bcrypt"));
+const auth_tokens_1 = require("../auth/auth.tokens");
+const auth_utils_1 = require("../auth/auth.utils");
+const auth_cookies_1 = require("../auth/auth.cookies");
+const prisma_1 = __importDefault(require("../lib/prisma"));
 function createUser(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { username, email } = req.body;
+        const { username, email, password } = req.body;
         try {
-            const newUser = yield prisma.user.create({
+            // hash and add 10 salt rounds to the password
+            const hashedPassword = yield bcrypt_1.default.hash(password, 10);
+            const newUser = yield prisma_1.default.user.create({
                 data: {
                     username,
                     email,
+                    password: hashedPassword,
                 },
             });
-            res.status(201).json({ newUser });
+            const userWithoutPassword = (0, auth_utils_1.sanitizeUser)(newUser);
+            const { accessToken, refreshToken } = (0, auth_tokens_1.generateTokens)(userWithoutPassword);
+            res.cookie("refreshToken", refreshToken, auth_cookies_1.refreshTokenCookie);
+            // second spread to flatten the object, no direct visual imbrication
+            res.status(201).json(Object.assign(Object.assign({}, userWithoutPassword), { token: accessToken }));
         }
         catch (error) {
             console.error("Something happened during the user's creation", error);
@@ -35,14 +47,34 @@ function createUser(req, res) {
         }
     });
 }
-// TODO
 function loginUser(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { username, email } = req.body;
+        const { email, password } = req.body;
         try {
-            const userLoginData = yield prisma.user.findUnique;
+            // 1 email = 1 account
+            const userLogin = yield prisma_1.default.user.findUnique({
+                where: {
+                    email: email,
+                },
+            });
+            // make sure there is an email and a password matching in the db
+            if (!userLogin || !userLogin.password) {
+                return res.status(401).json({ error: "User not found" });
+            }
+            const validPassword = yield bcrypt_1.default.compare(password, userLogin.password);
+            if (!validPassword) {
+                return res.status(401).json({ error: "Invalid credentials" });
+            }
+            const userWithoutPassword = (0, auth_utils_1.sanitizeUser)(userLogin);
+            const { accessToken, refreshToken } = (0, auth_tokens_1.generateTokens)(userWithoutPassword);
+            res.cookie("refreshToken", refreshToken, auth_cookies_1.refreshTokenCookie);
+            res.status(200).json(Object.assign(Object.assign({}, userWithoutPassword), { token: accessToken }));
         }
         catch (error) {
+            console.error("Something happened during the user connection", error);
+            res
+                .status(500)
+                .json({ error: "Something happened during the user connection" });
         }
     });
 }
@@ -51,9 +83,15 @@ function modifyUser(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const { username, email } = req.body;
         try {
-            const userLoginData = yield prisma.user.update;
+            // Temporary stub
+            res.status(200).json({ message: "modifyUser not implemented yet" });
         }
         catch (error) {
+            console.error("Error in modifyUser", error);
+            res
+                .status(500)
+                .json({ error: "Something happened during user modification" });
         }
     });
 }
+// delete user

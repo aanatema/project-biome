@@ -52,7 +52,7 @@ export async function allBooks(req: Request, res: Response) {
         author: author ? String(author) : undefined,
       },
     });
-    res.status(200).json({ books });
+    res.status(200).json(books);
   } catch (error) {
     console.error("Error while retrieving the books", error);
     res

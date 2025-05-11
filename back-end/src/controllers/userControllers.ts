@@ -1,22 +1,39 @@
 // what we send to create a new user
-
 import type { Request, Response } from "express";
-import { PrismaClient } from "@prisma/client";
+import bcrypt from "bcrypt";
+import { generateTokens } from "../auth/auth.tokens";
+import { sanitizeUser } from "../auth/auth.utils";
+import { refreshTokenCookie } from "../auth/auth.cookies";
+import prisma from "../lib/prisma";
+import type { User } from "@prisma/client";
 
-const prisma = new PrismaClient();
+// here instead of in types bc error in loginUser email and pswd
+// fix that later
+export interface ExpressRequest extends Request {
+  user?: User;
+}
 
 export async function createUser(req: Request, res: Response) {
-  const { username, email } = req.body;
+  const { username, email, password } = req.body;
 
   try {
+    // hash and add 10 salt rounds to the password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     const newUser = await prisma.user.create({
       data: {
         username,
         email,
+        password: hashedPassword,
       },
     });
 
-    res.status(201).json({ newUser });
+    const userWithoutPassword = sanitizeUser(newUser);
+    const { accessToken, refreshToken } = generateTokens(userWithoutPassword);
+
+    res.cookie("refreshToken", refreshToken, refreshTokenCookie);
+    // second spread to flatten the object, no direct visual imbrication
+    res.status(201).json({ ...userWithoutPassword, token: accessToken });
   } catch (error) {
     console.error("Something happened during the user's creation", error);
     res
@@ -25,27 +42,57 @@ export async function createUser(req: Request, res: Response) {
   }
 }
 
-// TODO
-export async function loginUser(req: Request, res: Response){
-  const {username, email} = req.body;
+export async function loginUser(req: ExpressRequest, res: Response) {
+  const { email, password } = req.body;
 
-  try{
-    const userLoginData = await prisma.user.findUnique;
+  try {
+    // 1 email = 1 account
+    const userLogin = await prisma.user.findUnique({
+      where: {
+        email: email,
+      },
+    });
 
-  }catch(error){
+    // make sure there is an email and a password matching in the db
+    if (!userLogin || !userLogin.password) {
+      return res.status(401).json({ error: "User not found" });
+    }
 
+    const validPassword = await bcrypt.compare(password, userLogin.password);
+
+    if (!validPassword) {
+      return res.status(401).json({ error: "Invalid credentials" });
+    }
+
+    const userWithoutPassword = sanitizeUser(userLogin);
+    const { accessToken, refreshToken } = generateTokens(userWithoutPassword);
+
+    res.cookie("refreshToken", refreshToken, refreshTokenCookie);
+    res.status(200).json({
+      ...userWithoutPassword,
+      token: accessToken,
+    });
+  } catch (error) {
+    console.error("Something happened during the user connection", error);
+    res
+      .status(500)
+      .json({ error: "Something happened during the user connection" });
   }
 }
 
 // TODO
-export async function modifyUser(req: Request, res: Response){
-  const {username, email} = req.body;
+export async function modifyUser(req: Request, res: Response) {
+  const { username, email } = req.body;
 
-  try{
-    const userLoginData = await prisma.user.update;
-
-  }catch(error){
-
+  try {
+    // Temporary stub
+    res.status(200).json({ message: "modifyUser not implemented yet" });
+  } catch (error) {
+    console.error("Error in modifyUser", error);
+    res
+      .status(500)
+      .json({ error: "Something happened during user modification" });
   }
 }
 
+// delete user
