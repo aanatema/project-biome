@@ -22,10 +22,10 @@ export async function verifyToken(
 
   try {
     // check if the signature has not been modified
-    const decoded = verify(token, accessToken) as { email: string };
+    const decoded = verify(token, accessToken) as { id: string };
     const user = await prisma.user.findUnique({
       where: {
-        email: decoded.email,
+        email: decoded.id,
       },
     });
     // if user found, attached to user else undefined
