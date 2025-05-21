@@ -108,6 +108,7 @@ export function BookForm() {
   return (
     <>
       <NavigationMenuDemo />
+      <div className="flex flex-col items-center justify-center min-h-screen py-2"> 
       <form onSubmit={handleSubmit(onSubmit)}>
         <Card className="mt-10 w-140 justify-center">
           <CardHeader>
@@ -168,6 +169,7 @@ export function BookForm() {
           </CardFooter>
         </Card>
       </form>
+      </div>
     </>
   );
 }
