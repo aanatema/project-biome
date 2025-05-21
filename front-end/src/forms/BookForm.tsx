@@ -1,4 +1,3 @@
-import NavigationMenuDemo from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -107,13 +106,11 @@ export function BookForm() {
 
   return (
     <>
-      <NavigationMenuDemo />
-      <div className="flex flex-col items-center justify-center min-h-screen py-2"> 
       <form onSubmit={handleSubmit(onSubmit)}>
         <Card className="mt-10 w-140 justify-center">
           <CardHeader>
             <CardTitle>New book</CardTitle>
-            <CardDescription>Add your latest reading!</CardDescription>
+            <CardDescription className="m-3">Add the ISBN of your book and we'll fetch the infos for you!</CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
             <div className="space-y-1">
@@ -169,7 +166,6 @@ export function BookForm() {
           </CardFooter>
         </Card>
       </form>
-      </div>
     </>
   );
 }
