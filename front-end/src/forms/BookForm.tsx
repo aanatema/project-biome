@@ -157,7 +157,7 @@ export function BookForm() {
           <CardFooter>
             <div className="grid w-full grid-cols-2 gap-6">
               <Button type="submit" disabled={isLoading}>
-                {isLoading ? "Loading..." : "Add"} Add
+                {isLoading ? "Loading..." : "Add"}
               </Button>
               <Button variant="outline" type="reset">
                 Clear form

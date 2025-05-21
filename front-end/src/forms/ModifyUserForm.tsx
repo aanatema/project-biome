@@ -10,6 +10,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@radix-ui/react-label";
 import { type SubmitHandler, useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 export type UserProps = {
   username: string;
@@ -22,6 +23,7 @@ export function ModifyUserForm() {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<UserProps>();
 
   const onModifySubmit: SubmitHandler<UserProps> = async (data) => {
@@ -39,12 +41,13 @@ export function ModifyUserForm() {
       body: JSON.stringify(newUserData),
     });
 
-    if (!response.ok)
-      return console.error(
-        "Server error for newUser, check documentation to resolve"
-      );
+    if (!response.ok){
+      toast.error("Error while modifying your account, try again"); 
+      return console.error()
+    }
 
     const json = await response.json();
+    reset();
     console.log(json);
   };
 

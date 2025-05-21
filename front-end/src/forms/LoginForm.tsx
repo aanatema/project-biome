@@ -10,6 +10,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@radix-ui/react-label";
 import { type SubmitHandler, useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 export type UserProps = {
   username: string;
@@ -22,6 +23,7 @@ export default function LoginForm() {
     register,
     handleSubmit,
     formState: { errors },
+    reset
   } = useForm<UserProps>();
 
   const onLoginSubmit: SubmitHandler<UserProps> = async (data) => {
@@ -39,12 +41,17 @@ export default function LoginForm() {
       body: JSON.stringify(existingUser),
     });
 
-    if (!response.ok)
+    if (!response.ok) {
+      toast.error("Error logging in, verify your credentials");
       return console.error(
         "Server error for newUser, check documentation to resolve"
-      );
+      );  
+    }    
 
     const json = await response.json();
+    reset();
+    toast.success("You are now logged in");
+
     console.log(json);
   };
 
