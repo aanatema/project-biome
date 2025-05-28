@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/shadcnComponents/button";
 import {
   Card,
   CardHeader,
@@ -6,8 +6,8 @@ import {
   CardDescription,
   CardContent,
   CardFooter,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+} from "@/components/shadcnComponents/card";
+import { Input } from "@/components/shadcnComponents/input";
 import { useAuth } from "@/context/AuthContext";
 import { Label } from "@radix-ui/react-label";
 import { type SubmitHandler, useForm } from "react-hook-form";

@@ -10,7 +10,7 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu";
+} from "@/components/shadcnComponents/navigation-menu";
 import { Link } from "react-router";
 
 export default function NavigationMenuDemo() {

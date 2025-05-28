@@ -1,13 +1,13 @@
 import { ConfirmDeletionDialog } from "@/components/userComponents/ConfirmDeletion";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/shadcnComponents/button";
 import {
   Card,
   CardHeader,
   CardTitle,
   CardContent,
   CardFooter,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+} from "@/components/shadcnComponents/card";
+import { Input } from "@/components/shadcnComponents/input";
 import { Label } from "@radix-ui/react-label";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "sonner";
