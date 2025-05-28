@@ -63,7 +63,7 @@ export function BookForm() {
           setValue("author", googleData.author);
         } else {
         console.error("No book found for the given ISBN in both APIs");
-        toast.warning("No book found with this ISBN in our externarl resources");
+        toast.warning("No book found with this ISBN in our external resources", {duration: 5000});
         reset();
         }
       };
@@ -73,7 +73,6 @@ export function BookForm() {
       } finally {
         setIsLoading(false);
       }
-      if (watchedISBN === "") reset();
     };
 
     loadBookData();
