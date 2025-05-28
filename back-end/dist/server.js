@@ -12,8 +12,13 @@ const userRoutes_1 = __importDefault(require("./routes/userRoutes"));
 const bookRoutes_1 = __importDefault(require("./routes/bookRoutes"));
 const app = (0, express_1.default)();
 const PORT = 3000;
+// uses express to parse incoming requests
+// and allows cross-origin requests from the front-end
+// also parses cookies from incoming requests
+// credentials are set to true to allow cookies to be sent
 app.use(express_1.default.json(), (0, cors_1.default)({
     origin: "http://localhost:5173",
+    credentials: true,
 }), (0, cookie_parser_1.default)());
 // REQUESTS
 app.use("/users", userRoutes_1.default);
