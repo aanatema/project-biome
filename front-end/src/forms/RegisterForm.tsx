@@ -43,6 +43,7 @@ export function RegisterForm() {
 
     if (!response.ok){
       toast.error("Error while registering, verify your credentials");
+      reset();
       return console.error(
         "Server error for newUser, check documentation to resolve"
       );

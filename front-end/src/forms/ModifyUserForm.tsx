@@ -43,6 +43,7 @@ export function ModifyUserForm() {
 
     if (!response.ok){
       toast.error("Error while modifying your account, try again"); 
+      reset();
       return console.error()
     }
 
