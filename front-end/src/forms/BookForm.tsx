@@ -51,17 +51,23 @@ export function BookForm() {
         setIsLoading(true);
         // try open library first
         const openLibData = await openLibFetchByISBN(watchedISBN);
-        if (openLibData?.title && openLibData.author) {
+        if (openLibData?.title && openLibData?.author) {
           setValue("title", openLibData.title);
           setValue("author", openLibData.author);
+
         } else { // try google books
         console.log("Open Library didn't return data, trying Google Books");
         const googleData = await fetchGoogleBooks(watchedISBN);
         if (googleData) {
           setValue("title", googleData.title);
           setValue("author", googleData.author);
+        } else {
+        console.error("No book found for the given ISBN in both APIs");
+        toast.error("No book found for the given ISBN");
+        reset();
         }
-      }
+      };
+
       } catch (err) {
         console.error("Error fetching book data", err);
       } finally {
