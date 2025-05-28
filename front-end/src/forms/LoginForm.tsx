@@ -8,17 +8,21 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { useAuth } from "@/context/AuthContext";
 import { Label } from "@radix-ui/react-label";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
+
 export type UserProps = {
   username: string;
   email: string;
-  password?: string;
+  password: string;
 };
 
 export default function LoginForm() {
+  const { login } = useAuth(); // call Auth context 
+
   const {
     register,
     handleSubmit,
@@ -26,33 +30,14 @@ export default function LoginForm() {
     reset
   } = useForm<UserProps>();
 
-  const onLoginSubmit: SubmitHandler<UserProps> = async (data) => {
-    const existingUser = {
-      username: data.username,
-      email: data.email,
-      password: data.password,
-    };
-
-    const response = await fetch("http://localhost:3000/users/login_user", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(existingUser),
-    });
-
-    if (!response.ok) {
-      toast.error("Error logging in, verify your credentials");
-      return console.error(
-        "Server error for newUser, check documentation to resolve"
-      );  
-    }    
-
-    const json = await response.json();
-    reset();
-    toast.success("You are now logged in");
-
-    console.log(json);
+const onLoginSubmit: SubmitHandler<UserProps> = async (data) => {
+     try {
+      await login(data.email, data.password); // call auth context login method
+      toast.success("Logged in!");
+      reset();
+    } catch (error) {
+      toast.error("Login failed");
+    }
   };
 
   return (
