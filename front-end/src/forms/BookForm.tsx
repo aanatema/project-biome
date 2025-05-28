@@ -14,6 +14,7 @@ import { type SubmitHandler, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { openLibFetchByISBN } from "@/api/openLibrary";
 import { toast } from "sonner"
+import { fetchGoogleBooks } from "@/api/googleBooks";
 
 export type Review = {
   reviewId: string;
@@ -38,6 +39,7 @@ export function BookForm() {
     reset,
   } = useForm<BookFormProps>();
 
+  // setValue is used to set the value of the inputs
   const [isLoading, setIsLoading] = useState(false);
   const watchedISBN = watch("isbn");
 
@@ -47,11 +49,19 @@ export function BookForm() {
 
       try {
         setIsLoading(true);
-        const book = await openLibFetchByISBN(watchedISBN);
-        if (book) {
-          setValue("title", book.title);
-          setValue("author", book.author);
+        // try open library first
+        const openLibData = await openLibFetchByISBN(watchedISBN);
+        if (openLibData?.title && openLibData.author) {
+          setValue("title", openLibData.title);
+          setValue("author", openLibData.author);
+        } else { // try google books
+        console.log("Open Library didn't return data, trying Google Books");
+        const googleData = await fetchGoogleBooks(watchedISBN);
+        if (googleData) {
+          setValue("title", googleData.title);
+          setValue("author", googleData.author);
         }
+      }
       } catch (err) {
         console.error("Error fetching book data", err);
       } finally {
@@ -85,6 +95,7 @@ export function BookForm() {
 
     if (!response.ok){
       toast.error("Something happened, please try again")
+      reset();
       return console.error("server error in newBook");
     } 
 
