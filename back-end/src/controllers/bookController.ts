@@ -61,6 +61,29 @@ export async function allBooks(req: Request, res: Response) {
   }
 }
 
+export async function searchGoogleBooks(req: Request, res: Response) {
+  const query = req.query.q as string;
+  if (!query) {
+    return res.status(400).json({ error: "Query parameter is required" });
+  }
+  try {
+    const apiKey = process.env.GOOGLE_BOOKS_API_KEY;
+    const response = await fetch(
+      `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(
+        query
+      )}&key=${apiKey}`
+    );
+    const data = await response.json();
+    res.json(data);
+    console.log("Google Books API response:", data);
+  } catch {
+    console.error("Error fetching data from Google Books API");
+    res.status(500).json({
+      error: "Something happened when retrieving data from Google Books API",
+    });
+  }
+}
+
 export async function bookByIsbn(req: Request, res: Response) {
   const isbn = req.params.isbn;
 
