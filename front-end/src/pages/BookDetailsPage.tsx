@@ -1,3 +1,4 @@
+import ReviewCard from "@/components/bookComponents/ReviewCard";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
@@ -21,7 +22,7 @@ export default function BookDetailsPage() {
     
     const fetchBook = async () => {
       try {
-        const res = await fetch(`http://localhost:3000/books_list/isbn/${isbn}`);
+        const res = await fetch(`http://localhost:3000/books/isbn/${isbn}`);
         if (!res.ok) throw new Error("Book not found");
         const json = await res.json();
         setBook(json.book);
@@ -37,10 +38,6 @@ export default function BookDetailsPage() {
   if (!book) return <p className="text-center mt-10">Loading...</p>;
 
   return (
-    <div className="mt-10 mx-auto max-w-xl space-y-4">
-      <h1 className="text-2xl font-bold">{book.title}</h1>
-      <p><strong>Author:</strong> {book.author}</p>
-      <p><strong>ISBN:</strong> {book.isbn}</p>
-    </div>
+   <ReviewCard/>
   );
 }

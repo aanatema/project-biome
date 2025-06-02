@@ -16,16 +16,11 @@ import { openLibFetchByISBN } from "@/api/openLibrary";
 import { toast } from "sonner"
 import { fetchGoogleBooks } from "@/api/googleBooks";
 
-export type Review = {
-  reviewId: string;
-  review: string;
-};
-
 export type BookFormProps = {
   isbn: string;
   title: string;
   author: string;
-  reviews: Review[];
+  review?: string;
 };
 
 export function BookForm() {
@@ -85,7 +80,7 @@ export function BookForm() {
       isbn: data.isbn,
       title: data.title,
       author: data.author,
-      reviews: [{ review: data.reviews[0] }],
+      review: data.review || "", // review is optional, so we set it to an empty string if not provided
     };
 
     try { 
@@ -104,8 +99,7 @@ export function BookForm() {
       return console.error("server error in newBook");
     } 
 
-    const json = await response.json();
-    console.log("book created", json);
+    await response.json();
     reset();
     toast.success("Your book has been added successfully!")
 
@@ -164,9 +158,9 @@ export function BookForm() {
               <Textarea
                 id="review"
                 placeholder="Share your thoughts here"
-                {...register("reviews")}
+                {...register("review")}
               />
-              {errors.reviews && <p>{errors.reviews.message}</p>}
+              {errors.review && <p>{errors.review.message}</p>}
             </div>
             <p>Fields with a star (*) are mandatory</p>
           </CardContent>

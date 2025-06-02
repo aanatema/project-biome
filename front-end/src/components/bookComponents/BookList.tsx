@@ -12,7 +12,7 @@ export default function BookList() {
 
   useEffect(() => {
     const fetchBooks = async () => {
-      const res = await fetch("http://localhost:3000/books/books_list");
+      const res = await fetch("http://localhost:3000/books/books");
       if (!res.ok) {
         console.error("Erreur API");
         return;
