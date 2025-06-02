@@ -10,9 +10,10 @@ export async function verifyToken(
 ) {
   // extract authorization header from HTTP request
   const authHeader = req.headers.authorization;
-  if (!authHeader) return res.status(401).json({ error: "No token provided" });
+  const cookieToken = req.cookies?.accessToken;
+
   // extract only the token from the header
-  const token = authHeader.split(" ")[1];
+  const token = authHeader?.split(" ")[1] || cookieToken;
 
   // check that the token exists
   const accessToken = process.env.ACCESS_TOKEN_SECRET;
@@ -33,6 +34,7 @@ export async function verifyToken(
     // useful for modify a user account
     req.user = user ?? undefined;
     next();
+    console.log("User verified:", req.user?.id);
   } catch (err) {
     req.user = undefined;
     res.status(401).json({ error: "Invalid Token" });
