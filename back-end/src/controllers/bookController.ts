@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 
 // POST REQUESTS
 export async function newBookMedia(req: ExpressRequest, res: Response) {
-  const { isbn, title, author, reviews } = req.body;
+  const { isbn, title, author, review } = req.body; // <-- `review` au singulier
   const userId = req.user?.id;
   if (!userId) return res.status(401).json({ error: "Not authenticated" });
 
@@ -20,20 +20,15 @@ export async function newBookMedia(req: ExpressRequest, res: Response) {
             author,
           },
         },
-        // ✅ Version corrigée des reviews
-        ...(reviews &&
-          reviews.length > 0 && {
-            reviews: {
-              create: reviews.map((review: any) => ({
-                content: review.content, // ou review.review selon votre structure
-                rating: review.rating || 5, // Utilisez la vraie note
-                // ✅ Correct : userId au lieu de review_author
-                userId: review.userId, // ID de l'utilisateur qui écrit la review
-              })),
+        ...(review && {
+          reviews: {
+            create: {
+              content: review,
+              userId,
             },
-          }),
+          },
+        }),
       },
-      // ✅ Inclure les données créées dans la réponse
       include: {
         book: true,
         reviews: {

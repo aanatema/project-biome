@@ -78,7 +78,7 @@ export async function loginUser(req: ExpressRequest, res: Response) {
       ...userWithoutPassword,
     });
   } catch (error) {
-    console.error("Login error:", error); // <--- utile pour avoir l'erreur précise
+    console.error("Login error:", error);
     res
       .status(500)
       .json({ error: "Something happened during the user connection" });
