@@ -32,9 +32,16 @@ export default function LoginForm() {
 
 const onLoginSubmit: SubmitHandler<UserProps> = async (data) => {
      try {
-      await login(data.email, data.password); // call auth context login method
+      const success = await login(data.email, data.password); // call auth context login method
+      if(!success) {
+        toast.error("Login failed, please check your credentials", {duration: 3000});
+        return;
+      }else {
+      reset();
+      console.log("Login data:", data);
       toast.success("Logged in!");
       reset();
+      }
     } catch (error) {
       toast.error("Login failed");
     }
@@ -61,7 +68,7 @@ const onLoginSubmit: SubmitHandler<UserProps> = async (data) => {
             <Input
               id="password"
               type="password"
-              {...register("password", { required: "Incorrect password" })}
+              {...register("password", { required: "Incorrect password", minLength: { value: 8, message: "Password must be at least 6 characters" } })}              
             />
             {errors.password && <p>{errors.password.message}</p>}
           </div>

@@ -17,7 +17,7 @@ type AuthContextType = {
   user: User | null;
   loading: boolean;
   setUser: (user: User | null) => void;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
 };
 
@@ -68,7 +68,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const user = await response.json();
     console.log({user})
     setUser(user); // on stocke l'utilisateur dans le contexte
+    return true
   } catch (err) {
+    return false
     console.error(err);
   } finally {
     setLoading(false);

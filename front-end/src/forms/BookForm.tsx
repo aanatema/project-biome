@@ -94,7 +94,7 @@ export function BookForm() {
     });
 
     if (!response.ok){
-      toast.error("Something happened, please try again")
+      toast.error("Error !respones.ok");
       reset();
       return console.error("server error in newBook");
     } 
@@ -105,7 +105,7 @@ export function BookForm() {
 
   } catch (err) {
     console.log(err);
-    toast.error("Something happened, please try again")
+    toast.error("Book form error message");
   }
   };
 
@@ -166,7 +166,7 @@ export function BookForm() {
           </CardContent>
           <CardFooter>
             <div className="grid w-full grid-cols-2 gap-6">
-              <Button type="submit" disabled={isLoading}>
+              <Button type="submit" variant="default" disabled={isLoading}>
                 {isLoading ? "Loading..." : "Add"}
               </Button>
               <Button variant="outline" type="reset">
