@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.createUser = createUser;
 exports.loginUser = loginUser;
 exports.modifyUser = modifyUser;
+exports.getCurrentUser = getCurrentUser;
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const auth_tokens_1 = require("../auth/auth.tokens");
 const auth_utils_1 = require("../auth/auth.utils");
@@ -71,6 +72,7 @@ function loginUser(req, res) {
             res.status(200).json(Object.assign(Object.assign({}, userWithoutPassword), { token: accessToken }));
         }
         catch (error) {
+            console.error("Login error:", error); // <--- utile pour avoir l'erreur précise
             console.error("Something happened during the user connection", error);
             res
                 .status(500)
@@ -91,6 +93,22 @@ function modifyUser(req, res) {
             res
                 .status(500)
                 .json({ error: "Something happened during user modification" });
+        }
+    });
+}
+function getCurrentUser(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            // if user is undefined, it means the token is invalid
+            if (!req.user) {
+                return res.status(401).json({ error: "Invalid token" });
+            }
+            const userWithoutPassword = (0, auth_utils_1.sanitizeUser)(req.user);
+            res.status(200).json(userWithoutPassword);
+        }
+        catch (error) {
+            console.error("Error fetching current user:", error);
+            res.status(500).json({ error: "Internal server error" });
         }
     });
 }

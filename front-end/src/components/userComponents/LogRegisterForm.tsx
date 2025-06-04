@@ -1,6 +1,6 @@
 import LoginForm from "@/forms/LoginForm";
 import { RegisterForm } from "@/forms/RegisterForm";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/shadcnComponents/tabs";
 
 export default function LogRegisterForm() {
   return (

@@ -1,4 +1,4 @@
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/shadcnComponents/button";
 import {
   Dialog,
   DialogContent,
@@ -7,7 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
+} from "@/components/shadcnComponents/dialog";
 import { DialogClose } from "@radix-ui/react-dialog";
 
 export function ConfirmDeletionDialog() {

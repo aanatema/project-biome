@@ -1,11 +1,13 @@
 import type { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
-
+import type { ExpressRequest } from "../controllers/userControllers";
 const prisma = new PrismaClient();
 
 // POST REQUESTS
-export async function newBookMedia(req: Request, res: Response) {
-  const { isbn, title, author, reviews } = req.body;
+export async function newBookMedia(req: ExpressRequest, res: Response) {
+  const { isbn, title, author, review } = req.body; // <-- `review` au singulier
+  const userId = req.user?.id;
+  if (!userId) return res.status(401).json({ error: "Not authenticated" });
 
   try {
     const newBook = await prisma.media.create({
@@ -18,18 +20,29 @@ export async function newBookMedia(req: Request, res: Response) {
             author,
           },
         },
-        // PROBLEM with review because of the review author id
-        // reviews: {
-        //   create: reviews.map((review: any) => ({
-        //     content: review.review,
-        //     rating: 5,
-        //     review_author: {id: "8afd13a0-f7f8-40ba-a354-58dcb9f0b275"},
-        //   })),
-        // },
+        ...(review && {
+          reviews: {
+            create: {
+              content: review,
+              userId,
+            },
+          },
+        }),
+      },
+      include: {
+        book: true,
+        reviews: {
+          include: {
+            author: {
+              select: { id: true, username: true },
+            },
+          },
+        },
       },
     });
+
     res.status(201).json({ newBook });
-    console.log("newBook index file", newBook);
+    console.log("newBook created:", newBook);
   } catch (error) {
     console.error("Error during the creation of a new book", error);
     res
@@ -39,25 +52,78 @@ export async function newBookMedia(req: Request, res: Response) {
 }
 
 // GET REQUESTS
-export async function allBooks(req: Request, res: Response) {
-  // retrieve the potentials parameters
+export async function allBooks(req: ExpressRequest, res: Response) {
   const { isbn, title, author, reviews } = req.query;
+  const userId = req.user?.id;
+  if (!userId) return res.status(401).json({ error: "Not authenticated" });
 
   try {
-    // searchBy x logic
-    const books = await prisma.book.findMany({
+    const mediaBooks = await prisma.media.findMany({
       where: {
-        isbn: isbn ? String(isbn) : undefined,
-        title: title ? String(title) : undefined,
-        author: author ? String(author) : undefined,
+        type: "BOOK", // ✅ Correct : 'type' existe sur Media
+        book: {
+          // ✅ Filtres sur les propriétés du Book
+          ...(isbn && { isbn: String(isbn) }),
+          ...(title && {
+            title: { contains: String(title), mode: "insensitive" },
+          }),
+          ...(author && {
+            author: { contains: String(author), mode: "insensitive" },
+          }),
+        },
+      },
+      include: {
+        book: true,
+        ...(reviews && {
+          reviews: {
+            include: {
+              author: {
+                select: { id: true, username: true },
+              },
+            },
+          },
+        }),
       },
     });
+
+    // Transformer pour garder la même interface
+    const books = mediaBooks.map((media) => ({
+      isbn: media.book!.isbn,
+      title: media.book!.title,
+      author: media.book!.author,
+      mediaId: media.id,
+      ...(reviews && { reviews: media.reviews }),
+    }));
+
     res.status(200).json(books);
   } catch (error) {
     console.error("Error while retrieving the books", error);
     res
       .status(500)
       .json({ error: "Something happened when retrieving the books" });
+  }
+}
+
+export async function searchGoogleBooks(req: Request, res: Response) {
+  const query = req.query.q as string;
+  if (!query) {
+    return res.status(400).json({ error: "Query parameter is required" });
+  }
+  try {
+    const apiKey = process.env.GOOGLE_BOOKS_API_KEY;
+    const response = await fetch(
+      `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(
+        query
+      )}&key=${apiKey}`
+    );
+    const data = await response.json();
+    res.json(data);
+    console.log("Google Books API response:", data);
+  } catch {
+    console.error("Error fetching data from Google Books API");
+    res.status(500).json({
+      error: "Something happened when retrieving data from Google Books API",
+    });
   }
 }
 
@@ -130,6 +196,7 @@ export async function bookByTitle(req: Request, res: Response) {
   }
 }
 
+// export async function bookReview
 // DELETE REQUESTS
 // export async function deleteReview(req: Request, res: Response){
 //   const review = req.params.reviewId

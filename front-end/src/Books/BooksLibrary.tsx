@@ -7,7 +7,7 @@
 
 //   const fetchBooks = async () => {
 //     try {
-//       const response = await fetch("http://localhost:3000/books/books_list");
+//       const response = await fetch("http://localhost:3000/books/books");
 //       const json = await response.json();
 //       const data: Books[] = json.books;
 //       // why are we doing that

@@ -12,14 +12,15 @@ export async function refreshAccessToken(req: Request, res: Response) {
   if (!token) throw new Error("token in refreshAccessToken func undefined");
 
   try {
-    const payload = verify(token, refreshToken) as { email: string };
+    const payload = verify(token, refreshToken) as { id: string };
     const user = await prisma.user.findUnique({
       where: {
-        email: payload.email,
+        id: payload.id,
       },
     });
     if (!user) throw new Error("user undefined in refreshAccessToken func");
 
+    // remove password from user object
     const { password: _password, ...userWithoutPassword } = user;
     const newAccessToken = generateAccessToken(userWithoutPassword);
     return res.status(200).json({ token: newAccessToken });

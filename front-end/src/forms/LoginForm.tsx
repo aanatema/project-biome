@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/shadcnComponents/button";
 import {
   Card,
   CardHeader,
@@ -6,46 +6,45 @@ import {
   CardDescription,
   CardContent,
   CardFooter,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+} from "@/components/shadcnComponents/card";
+import { Input } from "@/components/shadcnComponents/input";
+import { useAuth } from "@/context/AuthContext";
 import { Label } from "@radix-ui/react-label";
 import { type SubmitHandler, useForm } from "react-hook-form";
+import { toast } from "sonner";
+
 
 export type UserProps = {
   username: string;
   email: string;
-  password?: string;
+  password: string;
 };
 
 export default function LoginForm() {
+  const { login } = useAuth(); // call Auth context 
+
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset
   } = useForm<UserProps>();
 
-  const onLoginSubmit: SubmitHandler<UserProps> = async (data) => {
-    const existingUser = {
-      username: data.username,
-      email: data.email,
-      password: data.password,
-    };
-
-    const response = await fetch("http://localhost:3000/users/login_user", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(existingUser),
-    });
-
-    if (!response.ok)
-      return console.error(
-        "Server error for newUser, check documentation to resolve"
-      );
-
-    const json = await response.json();
-    console.log(json);
+const onLoginSubmit: SubmitHandler<UserProps> = async (data) => {
+     try {
+      const success = await login(data.email, data.password); // call auth context login method
+      if(!success) {
+        toast.error("Login failed, please check your credentials", {duration: 3000});
+        return;
+      }else {
+      reset();
+      console.log("Login data:", data);
+      toast.success("Logged in!");
+      reset();
+      }
+    } catch (error) {
+      toast.error("Login failed");
+    }
   };
 
   return (
@@ -69,7 +68,7 @@ export default function LoginForm() {
             <Input
               id="password"
               type="password"
-              {...register("password", { required: "Incorrect password" })}
+              {...register("password", { required: "Incorrect password", minLength: { value: 8, message: "Password must be at least 6 characters" } })}              
             />
             {errors.password && <p>{errors.password.message}</p>}
           </div>

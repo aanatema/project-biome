@@ -1,5 +1,4 @@
-import NavigationMenuDemo from "@/components/Navbar";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/shadcnComponents/button";
 import {
   Card,
   CardHeader,
@@ -7,25 +6,21 @@ import {
   CardDescription,
   CardContent,
   CardFooter,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+} from "@/components/shadcnComponents/card";
+import { Input } from "@/components/shadcnComponents/input";
+import { Textarea } from "@/components/shadcnComponents/textarea";
 import { Label } from "@radix-ui/react-label";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { openLibFetchByISBN } from "@/api/openLibrary";
 import { toast } from "sonner"
-
-export type Review = {
-  reviewId: string;
-  review: string;
-};
+import { fetchGoogleBooks } from "@/api/googleBooks";
 
 export type BookFormProps = {
   isbn: string;
   title: string;
   author: string;
-  reviews: Review[];
+  review?: string;
 };
 
 export function BookForm() {
@@ -39,6 +34,7 @@ export function BookForm() {
     reset,
   } = useForm<BookFormProps>();
 
+  // setValue is used to set the value of the inputs
   const [isLoading, setIsLoading] = useState(false);
   const watchedISBN = watch("isbn");
 
@@ -48,17 +44,30 @@ export function BookForm() {
 
       try {
         setIsLoading(true);
-        const book = await openLibFetchByISBN(watchedISBN);
-        if (book) {
-          setValue("title", book.title);
-          setValue("author", book.author);
+        // try open library first
+        const openLibData = await openLibFetchByISBN(watchedISBN);
+        if (openLibData?.title && openLibData?.author) {
+          setValue("title", openLibData.title);
+          setValue("author", openLibData.author);
+
+        } else { // try google books
+        console.log("Open Library didn't return data, trying Google Books");
+        const googleData = await fetchGoogleBooks(watchedISBN);
+        if (googleData) {
+          setValue("title", googleData.title);
+          setValue("author", googleData.author);
+        } else {
+        console.error("No book found for the given ISBN in both APIs");
+        toast.warning("No book found with this ISBN in our external resources", {duration: 5000});
+        reset();
         }
+      };
+
       } catch (err) {
         console.error("Error fetching book data", err);
       } finally {
         setIsLoading(false);
       }
-      if (watchedISBN === "") reset();
     };
 
     loadBookData();
@@ -71,7 +80,7 @@ export function BookForm() {
       isbn: data.isbn,
       title: data.title,
       author: data.author,
-      reviews: [{ review: data.reviews[0] }],
+      review: data.review || "", // review is optional, so we set it to an empty string if not provided
     };
 
     try { 
@@ -85,18 +94,18 @@ export function BookForm() {
     });
 
     if (!response.ok){
-      toast.error("Something happened, please try again")
+      toast.error("Error !respones.ok");
+      reset();
       return console.error("server error in newBook");
     } 
 
-    const json = await response.json();
-    console.log("book created", json);
+    await response.json();
     reset();
     toast.success("Your book has been added successfully!")
 
   } catch (err) {
     console.log(err);
-    toast.error("Something happened, please try again")
+    toast.error("Book form error message");
   }
   };
 
@@ -107,13 +116,11 @@ export function BookForm() {
 
   return (
     <>
-      <NavigationMenuDemo />
-      <div className="flex flex-col items-center justify-center min-h-screen py-2"> 
       <form onSubmit={handleSubmit(onSubmit)}>
         <Card className="mt-10 w-140 justify-center">
           <CardHeader>
             <CardTitle>New book</CardTitle>
-            <CardDescription>Add your latest reading!</CardDescription>
+            <CardDescription className="m-3">Add the ISBN of your book and we'll fetch the infos for you!</CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
             <div className="space-y-1">
@@ -151,16 +158,16 @@ export function BookForm() {
               <Textarea
                 id="review"
                 placeholder="Share your thoughts here"
-                {...register("reviews")}
+                {...register("review")}
               />
-              {errors.reviews && <p>{errors.reviews.message}</p>}
+              {errors.review && <p>{errors.review.message}</p>}
             </div>
             <p>Fields with a star (*) are mandatory</p>
           </CardContent>
           <CardFooter>
             <div className="grid w-full grid-cols-2 gap-6">
-              <Button type="submit" disabled={isLoading}>
-                {isLoading ? "Loading..." : "Add"} Add
+              <Button type="submit" variant="default" disabled={isLoading}>
+                {isLoading ? "Loading..." : "Add"}
               </Button>
               <Button variant="outline" type="reset">
                 Clear form
@@ -169,7 +176,6 @@ export function BookForm() {
           </CardFooter>
         </Card>
       </form>
-      </div>
     </>
   );
 }

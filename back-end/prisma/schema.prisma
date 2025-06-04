@@ -17,35 +17,32 @@ model User {
 }
 
 model Media {
-  id        String    @id @default(cuid())
-  type      MediaType
-  createdAt DateTime  @default(now())
-  book      Book?
-  reviews   Review[]
+  id      String    @id @default(cuid())
+  type    MediaType
+  reviews Review[]
 
-  @@index([type])
+  // polymorphic relation
+  // only books for now but can be extended later
+  book Book?
 }
 
 model Book {
-  id      String   @id @default(uuid())
-  isbn    String   @unique
+  id      String @id @default(uuid())
+  isbn    String @unique
   title   String
   author  String
-  media   Media    @relation(fields: [id], references: [id])
-  reviews Review[]
+  mediaId String @unique // FK to Media
+  media   Media  @relation(fields: [mediaId], references: [id])
 }
 
 model Review {
-  id            String   @id @default(uuid())
-  content       String
-  mediaId       String
-  bookId        String?
-  createdAt     DateTime @default(now())
-  userId        String
-  rating        Float
-  Book          Book?    @relation(fields: [bookId], references: [id])
-  media         Media    @relation(fields: [mediaId], references: [id])
-  review_author User     @relation(fields: [userId], references: [id])
+  id      String @id @default(uuid())
+  content String
+  mediaId String // one reference to Media 
+  userId  String
+
+  media  Media @relation(fields: [mediaId], references: [id])
+  author User  @relation(fields: [userId], references: [id])
 }
 
 enum MediaType {

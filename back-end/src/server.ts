@@ -9,12 +9,17 @@ import bookRoutes from "./routes/bookRoutes";
 const app = express();
 const PORT = 3000;
 
+// uses express to parse incoming requests
+// and allows cross-origin requests from the front-end
+// also parses cookies from incoming requests
+// credentials are set to true to allow cookies to be sent
 app.use(
   express.json(),
   cors({
     origin: "http://localhost:5173",
-  }), 
-  cookieParser(),
+    credentials: true,
+  }),
+  cookieParser()
 );
 
 // REQUESTS

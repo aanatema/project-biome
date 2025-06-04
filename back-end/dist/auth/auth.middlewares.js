@@ -35,7 +35,7 @@ function verifyToken(req, res, next) {
             const decoded = (0, jsonwebtoken_1.verify)(token, accessToken);
             const user = yield prisma_1.default.user.findUnique({
                 where: {
-                    email: decoded.email,
+                    id: decoded.id,
                 },
             });
             // if user found, attached to user else undefined

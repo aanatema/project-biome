@@ -1,15 +1,16 @@
 import { ConfirmDeletionDialog } from "@/components/userComponents/ConfirmDeletion";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/shadcnComponents/button";
 import {
   Card,
   CardHeader,
   CardTitle,
   CardContent,
   CardFooter,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+} from "@/components/shadcnComponents/card";
+import { Input } from "@/components/shadcnComponents/input";
 import { Label } from "@radix-ui/react-label";
 import { type SubmitHandler, useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 export type UserProps = {
   username: string;
@@ -22,6 +23,7 @@ export function ModifyUserForm() {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<UserProps>();
 
   const onModifySubmit: SubmitHandler<UserProps> = async (data) => {
@@ -39,12 +41,14 @@ export function ModifyUserForm() {
       body: JSON.stringify(newUserData),
     });
 
-    if (!response.ok)
-      return console.error(
-        "Server error for newUser, check documentation to resolve"
-      );
+    if (!response.ok){
+      toast.error("Error while modifying your account, try again"); 
+      reset();
+      return console.error()
+    }
 
     const json = await response.json();
+    reset();
     console.log(json);
   };
 

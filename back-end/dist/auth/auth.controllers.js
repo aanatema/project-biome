@@ -39,11 +39,12 @@ function refreshAccessToken(req, res) {
             const payload = (0, jsonwebtoken_1.verify)(token, refreshToken);
             const user = yield prisma_1.default.user.findUnique({
                 where: {
-                    email: payload.email,
+                    id: payload.id,
                 },
             });
             if (!user)
                 throw new Error("user undefined in refreshAccessToken func");
+            // remove password from user object
             const { password: _password } = user, userWithoutPassword = __rest(user, ["password"]);
             const newAccessToken = (0, auth_tokens_1.generateAccessToken)(userWithoutPassword);
             return res.status(200).json({ token: newAccessToken });

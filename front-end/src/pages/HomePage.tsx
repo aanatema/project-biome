@@ -1,5 +1,5 @@
 import LogRegisterForm from "@/components/userComponents/LogRegisterForm";
-import NavigationMenuDemo from "@/components/Navbar";
+import NavigationMenuDemo from "@/components/websiteComponents/Navbar";
 
 export default function HomePage() {
   return (
