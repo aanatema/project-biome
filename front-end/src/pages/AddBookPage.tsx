@@ -1,4 +1,4 @@
-import NavigationMenuDemo from "@/components/websiteComponents/Navbar";
+import NavigationMenuDemo from "@/components/Navbar";
 import { BookForm } from "@/forms/BookForm";
 
 export function AddBook() {
