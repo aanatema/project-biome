@@ -169,7 +169,7 @@ export function BookForm() {
               <Button type="submit" variant="default" disabled={isLoading}>
                 {isLoading ? "Loading..." : "Add"}
               </Button>
-              <Button variant="outline" type="reset">
+              <Button variant="destructive" type="reset">
                 Clear form
               </Button>
             </div>
