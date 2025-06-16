@@ -1,7 +1,7 @@
 // username 
 // add book
 
-import NavigationMenuDemo from "@/components/Navbar";
+import NavigationMenuDemo from "@/components/websiteComponents/Navbar";
 import { ModifyUserForm } from "@/forms/ModifyUserForm";
 
 
