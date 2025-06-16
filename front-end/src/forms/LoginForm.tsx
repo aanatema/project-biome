@@ -68,7 +68,7 @@ const onLoginSubmit: SubmitHandler<UserProps> = async (data) => {
             <Input
               id="password"
               type="password"
-              {...register("password", { required: "Incorrect password", minLength: { value: 8, message: "Password must be at least 6 characters" } })}              
+              {...register("password", { required: "Incorrect password", minLength: { value: 8, message: "Password must be at least 8 characters" } })}              
             />
             {errors.password && <p>{errors.password.message}</p>}
           </div>
