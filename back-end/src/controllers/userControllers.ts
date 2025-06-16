@@ -53,7 +53,7 @@ export async function loginUser(req: ExpressRequest, res: Response) {
       },
     });
     // make sure there is an email and a password matching in the db
-    if (!userLogin || !userLogin.password) {
+    if (!userLogin?.email || !userLogin.password) {
       return res.status(401).json({ error: "User not found" });
     }
 
