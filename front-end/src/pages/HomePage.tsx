@@ -5,7 +5,7 @@ export default function HomePage() {
   return (
     <>
     <NavigationMenuDemo/>
-    <div className="flex flex-col items-center justify-center min-h-screen py-2"> 
+    <div className="flex flex-col items-center justify-center"> 
     <LogRegisterForm/>
     </div>
     </>
