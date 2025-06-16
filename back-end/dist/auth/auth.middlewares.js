@@ -17,12 +17,12 @@ const jsonwebtoken_1 = require("jsonwebtoken");
 const prisma_1 = __importDefault(require("../lib/prisma"));
 function verifyToken(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
+        var _a, _b;
         // extract authorization header from HTTP request
         const authHeader = req.headers.authorization;
-        if (!authHeader)
-            return res.status(401).json({ error: "No token provided" });
+        const cookieToken = (_a = req.cookies) === null || _a === void 0 ? void 0 : _a.accessToken;
         // extract only the token from the header
-        const token = authHeader.split(" ")[1];
+        const token = (authHeader === null || authHeader === void 0 ? void 0 : authHeader.split(" ")[1]) || cookieToken;
         // check that the token exists
         const accessToken = process.env.ACCESS_TOKEN_SECRET;
         const refreshToken = process.env.REFRESH_TOKEN_SECRET;
@@ -42,6 +42,7 @@ function verifyToken(req, res, next) {
             // useful for modify a user account
             req.user = user !== null && user !== void 0 ? user : undefined;
             next();
+            console.log("User verified:", (_b = req.user) === null || _b === void 0 ? void 0 : _b.id);
         }
         catch (err) {
             req.user = undefined;
