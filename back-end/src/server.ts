@@ -32,14 +32,6 @@ app.get("/", (req: Request, res: Response) => {
   res.json({ content: "this is some content", url: req.url });
 });
 
-// delete the book, WIP
-app.delete(
-  "/delete/isbn/:isbn/reviews/:reviewId",
-  (req: Request, res: Response) => {
-    res.end();
-  }
-);
-
 // to verify that the server started
 app.listen(PORT, () => {
   console.log("Server started and listening on port", PORT);
