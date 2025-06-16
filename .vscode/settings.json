@@ -1,6 +1,4 @@
 {
-  "cSpell.words": [
-    "issn",
-    "pswd"
-  ]
+	"cSpell.words": ["issn", "pswd"],
+	"editor.defaultFormatter": "esbenp.prettier-vscode"
 }
