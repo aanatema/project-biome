@@ -54,7 +54,7 @@ export function ModifyUserForm() {
 
   return (
     <form onSubmit={handleSubmit(onModifySubmit)}>
-      <Card className="mt-10 w-140">
+      <Card className="mt-10 sm:w-90 md:w-140">
         <CardHeader>
           <CardTitle>Modify your account</CardTitle>
         </CardHeader>
@@ -102,8 +102,8 @@ export function ModifyUserForm() {
           </div>
         </CardContent>
         <CardFooter>
-          <div className="grid w-full grid-cols-2 gap-6">
-            <Button className="" type="submit">
+          <div className="grid w-full grid-cols-2 gap-4">
+            <Button type="submit">
               Update
             </Button>
             <ConfirmDeletionDialog />
