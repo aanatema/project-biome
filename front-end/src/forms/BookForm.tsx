@@ -76,16 +76,16 @@ export function BookForm() {
   // data is an object with the properties of BookFormProps and the values that will be added through the form
   // async to take into account data being sent to the server
   const onSubmit: SubmitHandler<BookFormProps> = async (data) => {
-    const bookData = {
+
+    try { 
+      const bookData = {
       isbn: data.isbn,
       title: data.title,
       author: data.author,
-      review: data.review || "", // review is optional, so we set it to an empty string if not provided
-    };
+    }; 
 
-    try { 
       // send the new book
-    const response = await fetch("http://localhost:3000/books/new_book", {
+    const bookResponse = await fetch("http://localhost:3000/books/new_book", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -93,15 +93,41 @@ export function BookForm() {
       body: JSON.stringify(bookData),
     });
 
-    if (!response.ok){
+    if (!bookResponse.ok){
       toast.error("Error !respones.ok");
       reset();
       return console.error("server error in newBook");
     } 
 
-    await response.json();
+    const createdBook = await bookResponse.json();
+    const bookId = createdBook.id; 
     reset();
     toast.success("Your book has been added successfully!")
+  
+    const reviewData = {
+      content: data.review,
+      bookId: bookId,
+      authorId: 1234 //TO BE REPLACED
+    }
+
+    const reviewResponse = await fetch("http://localhost:3000/books/new_review", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(reviewData),
+    });
+
+    if (!reviewResponse.ok){
+      toast.error("Error !response.ok review");
+      reset();
+      return console.error("server error when adding a review");
+    } 
+
+    const reviewCreated = await reviewResponse.json();
+    console.log("Review added successfully", {reviewCreated});
+    reset();
+    toast.success("Your review has been added successfully!")
 
   } catch (err) {
     console.log(err);
@@ -169,7 +195,7 @@ export function BookForm() {
               <Button type="submit" variant="default" disabled={isLoading}>
                 {isLoading ? "Loading..." : "Add"}
               </Button>
-              <Button variant="outline" type="reset">
+              <Button variant="destructive" type="reset">
                 Clear form
               </Button>
             </div>

@@ -14,7 +14,7 @@ export function ConfirmDeletionDialog() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline">Delete account</Button>
+        <Button variant="destructive">Delete account</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
@@ -27,7 +27,7 @@ export function ConfirmDeletionDialog() {
         <DialogFooter>
           <div className="grid w-full grid-cols-2 gap-6 mt-5">
             <DialogClose className={buttonVariants({ variant: "default" })}>Cancel</DialogClose>
-            <Button variant="outline" type="submit">
+            <Button variant="destructive" type="submit">
               Confirm
             </Button>
           </div>

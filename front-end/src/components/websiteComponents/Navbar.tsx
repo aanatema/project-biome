@@ -38,6 +38,13 @@ export default function NavigationMenuDemo() {
             </NavigationMenuLink>
           </Link>
         </NavigationMenuItem>
+         <NavigationMenuItem>
+          <Link to="/terms-and-conditions">
+            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+              Terms and Conditions
+            </NavigationMenuLink>
+          </Link>
+        </NavigationMenuItem>
         <NavigationMenuItem>
           <Link to="/account">
             <NavigationMenuLink className={navigationMenuTriggerStyle()}>

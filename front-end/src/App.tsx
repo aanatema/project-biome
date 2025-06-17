@@ -9,6 +9,7 @@ import AccountPage from "./pages/AccountPage.tsx";
 import LibraryPage from "./pages/LibraryPage.tsx";
 import BookDetailsPage from "./pages/BookDetailsPage.tsx";
 import { AddBook } from "./pages/AddBookPage.tsx";
+import TermsAndConditionsPage from "./pages/TermsAndConditionsPage.tsx";
 
 const router = createBrowserRouter([
   { path: "/", element: <HomePage />, errorElement: <PageNotFound /> },
@@ -30,6 +31,11 @@ const router = createBrowserRouter([
   {
     path: "/library",
     element: <LibraryPage />,
+    errorElement: <PageNotFound />,
+  },
+   {
+    path: "/terms-and-conditions",
+    element: <TermsAndConditionsPage />,
     errorElement: <PageNotFound />,
   },
   {

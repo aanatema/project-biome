@@ -13,18 +13,16 @@ export default function ReviewCard({ isbn }: ReviewCardProps) {
   return (
     // TODO - create this route
     <Link to={`/books/${isbn}/reviews/:reviewId`}> 
-      <Card className="book-card mt-10 m-5 w-300 h-50">
-        <CardContent className="space-y-2 text-center">
-          <div className="space-y-1">
+      <Card className="book-card mt-10 m-5 w-145 min-h-50 max-h-60 overflow-scroll">
+        <CardContent className="space-y-2">
             <Label className="font-bold" htmlFor="title">
-              Test
+              The priory of The Orange Tree
             </Label>
+          <div>
+            <Label htmlFor="author">Samantha Shannon</Label>
           </div>
-          <div className="space-y-1">
-            <Label htmlFor="author">TEST</Label>
-          </div>
-          <div className="space-y-1">
-            <Label htmlFor="isbn">TEST</Label>
+          <div>
+            <Label className="pb-4" htmlFor="isbn">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam fringilla, odio quis tincidunt lobortis, risus nisi dapibus lacus, sed finibus sem purus nec mi. Fusce blandit purus dignissim justo pulvinar mollis. Nam lobortis ante quis tellus consequat, sed suscipit nulla dictum. Nunc suscipit vitae nulla sit amet elementum. Suspendisse ultrices dui vel ipsum scelerisque, iaculis posuere ex tempus.Nulla facilisi. Nulla facilisi. Etiam leo quam, venenatis eget elit eu, maximus ullamcorper ex. Nunc facilisis justo vitae enim fringilla, et scelerisque justo varius.</Label>
           </div>
         </CardContent>
       </Card>

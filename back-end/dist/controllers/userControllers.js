@@ -59,7 +59,7 @@ function loginUser(req, res) {
                 },
             });
             // make sure there is an email and a password matching in the db
-            if (!userLogin || !userLogin.password) {
+            if (!(userLogin === null || userLogin === void 0 ? void 0 : userLogin.email) || !userLogin.password) {
                 return res.status(401).json({ error: "User not found" });
             }
             const validPassword = yield bcrypt_1.default.compare(password, userLogin.password);
@@ -69,11 +69,16 @@ function loginUser(req, res) {
             const userWithoutPassword = (0, auth_utils_1.sanitizeUser)(userLogin);
             const { accessToken, refreshToken } = (0, auth_tokens_1.generateTokens)(userWithoutPassword);
             res.cookie("refreshToken", refreshToken, auth_cookies_1.refreshTokenCookie);
-            res.status(200).json(Object.assign(Object.assign({}, userWithoutPassword), { token: accessToken }));
+            res.cookie("token", accessToken, {
+                httpOnly: true,
+                secure: false, // secure should be true in production, false for local dev
+                sameSite: "lax", // sameSite is set to lax to allow cross-site requests
+                maxAge: 1000 * 60 * 15, // 15 min
+            });
+            res.status(200).json(Object.assign({}, userWithoutPassword));
         }
         catch (error) {
-            console.error("Login error:", error); // <--- utile pour avoir l'erreur précise
-            console.error("Something happened during the user connection", error);
+            console.error("Login error:", error);
             res
                 .status(500)
                 .json({ error: "Something happened during the user connection" });
