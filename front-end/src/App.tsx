@@ -44,11 +44,6 @@ const router = createBrowserRouter([
     element: <LibraryPage />,
     errorElement: <PageNotFound />,
   },
-   {
-    path: "/terms-and-conditions",
-    element: <TermsAndConditionsPage />,
-    errorElement: <PageNotFound />,
-  },
   {
     path: "/books/:isbn",
     element: <BookDetailsPage />,
