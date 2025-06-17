@@ -5,14 +5,14 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[2px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-lg font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[2px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
   {
     variants: {
       variant: {
         default:
-          "bg-secondary border border-secondary text-background shadow-sm hover:shadow-md hover:bg-foreground hover:text-background hover:border-secondary",
+          "bg-secondary text-background shadow-sm hover:shadow-md hover:bg-foreground hover:text-background hover:border-secondary",
         destructive:
-          "bg-background border border-destructive hover:bg-sidebar-border shadow-sm hover:shadow-md hover:font-semibold text-foreground shadow-xs hover:border-destructive focus-visible:ring-destructive dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
+          "bg-sidebar-border hover:bg-destructive shadow-sm hover:shadow-md hover:font-semibold text-foreground hover:text-background shadow-xs hover:border-destructive focus-visible:ring-destructive dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
         outline:
           "border bg-muted shadow-xs hover:bg-muted hover:text-accent-foreground hover:shadow-md dark:bg-input/30 dark:border-input dark:hover:bg-input/50",
         secondary:
