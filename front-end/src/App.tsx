@@ -10,6 +10,7 @@ import LibraryPage from "./pages/LibraryPage.tsx";
 import BookDetailsPage from "./pages/BookDetailsPage.tsx";
 import { AddBook } from "./pages/AddBookPage.tsx";
 import TermsAndConditionsPage from "./pages/TermsAndConditionsPage.tsx";
+import LogOrRegisterPage from "./pages/LogOrRegisterPage.tsx";
 
 const router = createBrowserRouter([
   { path: "/", element: <HomePage />, errorElement: <PageNotFound /> },
@@ -24,8 +25,18 @@ const router = createBrowserRouter([
     errorElement: <PageNotFound />,
   },
   {
+    path: "/login-or-register",
+    element: <LogOrRegisterPage />,
+    errorElement: <PageNotFound />,
+  },
+  {
     path: "/new-book",
     element: <AddBook />,
+    errorElement: <PageNotFound />,
+  },
+  {
+    path: "/homepage",
+    element: <HomePage />,
     errorElement: <PageNotFound />,
   },
   {
