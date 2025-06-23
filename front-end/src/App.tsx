@@ -1,5 +1,3 @@
-import "./App.css";
-
 import PageNotFound from "./pages/PageNotFound.tsx";
 import { RegisterForm } from "./forms/RegisterForm.tsx";
 import LoginForm from "./forms/LoginForm.tsx";
@@ -12,52 +10,51 @@ import { AddBook } from "./pages/AddBookPage.tsx";
 import LogOrRegisterPage from "./pages/LogOrRegisterPage.tsx";
 
 const router = createBrowserRouter([
-  { path: "/", element: <HomePage />, errorElement: <PageNotFound /> },
-  {
-    path: "/register",
-    element: <LoginForm />,
-    errorElement: <PageNotFound />,
-  },
-  {
-    path: "/login",
-    element: <RegisterForm />,
-    errorElement: <PageNotFound />,
-  },
-  {
-    path: "/login-or-register",
-    element: <LogOrRegisterPage />,
-    errorElement: <PageNotFound />,
-  },
-  {
-    path: "/new-book",
-    element: <AddBook />,
-    errorElement: <PageNotFound />,
-  },
-  {
-    path: "/homepage",
-    element: <HomePage />,
-    errorElement: <PageNotFound />,
-  },
-  {
-    path: "/library",
-    element: <LibraryPage />,
-    errorElement: <PageNotFound />,
-  },
-  {
-    path: "/books/:isbn",
-    element: <BookDetailsPage />,
-    errorElement: <PageNotFound />,
-  },
-  {
-    path: "/account",
-    element: <AccountPage />,
-    errorElement: <PageNotFound />,
-  },
+	{ path: "/", element: <HomePage />, errorElement: <PageNotFound /> },
+	{
+		path: "/register",
+		element: <LoginForm />,
+		errorElement: <PageNotFound />,
+	},
+	{
+		path: "/login",
+		element: <RegisterForm />,
+		errorElement: <PageNotFound />,
+	},
+	{
+		path: "/login-or-register",
+		element: <LogOrRegisterPage />,
+		errorElement: <PageNotFound />,
+	},
+	{
+		path: "/new-book",
+		element: <AddBook />,
+		errorElement: <PageNotFound />,
+	},
+	{
+		path: "/homepage",
+		element: <HomePage />,
+		errorElement: <PageNotFound />,
+	},
+	{
+		path: "/library",
+		element: <LibraryPage />,
+		errorElement: <PageNotFound />,
+	},
+	{
+		path: "/books/:isbn",
+		element: <BookDetailsPage />,
+		errorElement: <PageNotFound />,
+	},
+	{
+		path: "/account",
+		element: <AccountPage />,
+		errorElement: <PageNotFound />,
+	},
 ]);
 
 function App() {
-  return <RouterProvider router={router} />;
-  
+	return <RouterProvider router={router} />;
 }
 
 export default App;
