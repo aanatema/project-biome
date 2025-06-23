@@ -16,7 +16,7 @@ import {
 	AccordionContent,
 	AccordionItem,
 	AccordionTrigger,
-} from "@/components/ui/accordion";
+} from "@/components/shadcnComponents/accordion";
 
 // list of all books linked to this account
 export default function AccountPage() {
