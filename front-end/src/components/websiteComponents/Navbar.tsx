@@ -14,7 +14,7 @@ import { Link } from "react-router";
 
 export default function Navbar() {
 	return (
-		<NavigationMenu className='sticky top-0  shadow-sm bg-background'>
+		<NavigationMenu className='sticky top-0 pt-2 pb-2 shadow-sm bg-background'>
 			<NavigationMenuList>
 				<NavigationMenuItem>
 					<Link to='/'>
