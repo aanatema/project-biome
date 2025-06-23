@@ -1,11 +1,11 @@
 import BookList from "@/components/bookComponents/BookList";
 import ReviewCard from "@/components/bookComponents/ReviewCard";
-import NavigationMenuDemo from "@/components/websiteComponents/Navbar";
+import Navbar from "@/components/websiteComponents/Navbar";
 
 export default function LibraryPage() {
 	return (
 		<>
-			<NavigationMenuDemo />
+			<Navbar />
 			<BookList />
 			<ReviewCard />
 		</>

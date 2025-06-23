@@ -1,7 +1,7 @@
 // username
 // add book
 
-import NavigationMenuDemo from "@/components/websiteComponents/Navbar";
+import Navbar from "@/components/websiteComponents/Navbar";
 import { ModifyUserForm } from "@/forms/ModifyUserForm";
 import { TermsConditions } from "@/components/websiteComponents/TermsConditions";
 import {
@@ -22,7 +22,7 @@ import {
 export default function AccountPage() {
 	return (
 		<>
-			<NavigationMenuDemo />
+			<Navbar />
 			<div className='flex flex-col items-center justify-center'>
 				<ModifyUserForm />
 				<Card className='mt-10 mb-10 w-140'>

@@ -12,7 +12,7 @@ import {
 } from "@/components/shadcnComponents/navigation-menu";
 import { Link } from "react-router";
 
-export default function NavigationMenuDemo() {
+export default function Navbar() {
 	return (
 		<NavigationMenu className='sticky top-0  shadow-sm bg-background'>
 			<NavigationMenuList>
