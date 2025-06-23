@@ -9,7 +9,6 @@ import AccountPage from "./pages/AccountPage.tsx";
 import LibraryPage from "./pages/LibraryPage.tsx";
 import BookDetailsPage from "./pages/BookDetailsPage.tsx";
 import { AddBook } from "./pages/AddBookPage.tsx";
-import TermsAndConditionsPage from "./pages/TermsAndConditionsPage.tsx";
 import LogOrRegisterPage from "./pages/LogOrRegisterPage.tsx";
 
 const router = createBrowserRouter([
