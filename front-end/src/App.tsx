@@ -8,6 +8,7 @@ import LibraryPage from "./pages/LibraryPage.tsx";
 import BookDetailsPage from "./pages/BookDetailsPage.tsx";
 import { AddBook } from "./pages/AddBookPage.tsx";
 import LogOrRegisterPage from "./pages/LogOrRegisterPage.tsx";
+import ModifyAccountPage from "./pages/ModifyAccountPage.tsx";
 
 const router = createBrowserRouter([
 	{ path: "/", element: <HomePage />, errorElement: <PageNotFound /> },
@@ -49,6 +50,11 @@ const router = createBrowserRouter([
 	{
 		path: "/account",
 		element: <AccountPage />,
+		errorElement: <PageNotFound />,
+	},
+	{
+		path: "/modify-account",
+		element: <ModifyAccountPage />,
 		errorElement: <PageNotFound />,
 	},
 ]);
