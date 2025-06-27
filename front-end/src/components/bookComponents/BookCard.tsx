@@ -3,15 +3,13 @@ import { Card, CardContent } from "../shadcnComponents/card";
 import { Link } from "react-router";
 
 type BookCardProps = {
-  title: string;
-  author: string;
-  isbn: string;
+	title: string;
+	author: string;
+	isbn: string;
 };
 
 export default function BookCard({ title, author, isbn }: BookCardProps) {
-  // map of books in database
-  // put the cards inside a grid ?
-  return (
+	return (
 		<Link to={`/books/${isbn}`}>
 			<Card className='book-card m-5 w-40 h-65'>
 				<CardContent className='space-y-2 text-center'>
@@ -29,10 +27,7 @@ export default function BookCard({ title, author, isbn }: BookCardProps) {
 						<Label htmlFor='isbn'>{isbn}</Label>
 					</div>
 				</CardContent>
-				{/* <CardFooter>
-        <Label>Rating</Label>
-      </CardFooter> */}
 			</Card>
 		</Link>
-  );
+	);
 }
