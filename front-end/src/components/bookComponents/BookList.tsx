@@ -25,15 +25,15 @@ export default function BookList() {
   }, []);
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 mt-10">
-      {books.map((book) => (
-        <BookCard
-          key={book.isbn}
-          title={book.title}
-          author={book.author}
-          isbn={book.isbn}
-        />
-      ))}
-    </div>
+		<div className='grid grid-cols-1 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-6 ml-5 mr-5 mt-10'>
+			{books.map((book) => (
+				<BookCard
+					key={book.isbn}
+					title={book.title}
+					author={book.author}
+					isbn={book.isbn}
+				/>
+			))}
+		</div>
   );
 }
