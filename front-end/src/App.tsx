@@ -1,6 +1,4 @@
 import PageNotFound from "./pages/PageNotFound.tsx";
-import { RegisterForm } from "./forms/RegisterForm.tsx";
-import LoginForm from "./forms/LoginForm.tsx";
 import HomePage from "./pages/HomePage.tsx";
 import { createBrowserRouter, RouterProvider } from "react-router";
 import AccountPage from "./pages/AccountPage.tsx";
