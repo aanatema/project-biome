@@ -3,15 +3,14 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
 import { Toaster } from 'sonner'
-import { AuthProvider } from './context/AuthContext.tsx'
+import { AuthProvider } from "./context/AuthProvider.tsx";
 
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    
-    <AuthProvider>
-      <App />
-      <Toaster />
-    </AuthProvider>
-  </StrictMode>,
-)
+createRoot(document.getElementById("root")!).render(
+	<StrictMode>
+		<AuthProvider>
+			<App />
+			<Toaster />
+		</AuthProvider>
+	</StrictMode>
+);

@@ -1,8 +1,12 @@
-import type { CookieOptions } from "express";
+import type { Response } from "express";
 
-export const  refreshTokenCookie : CookieOptions = {
-  httpOnly: true,
-  secure: true, //HTTPS mandatory in prod
-  sameSite: "strict", // anti CSRF
-  maxAge: 15 * 24 * 60 * 60 * 1000, //15d in ms
+const refreshTokenOptions = {
+	httpOnly: true,
+	secure: true,
+	sameSite: "strict" as const,
+	maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
 };
+
+export function setRefreshTokenCookie(res: Response, token: string) {
+	res.cookie("refreshToken", token, refreshTokenOptions);
+}

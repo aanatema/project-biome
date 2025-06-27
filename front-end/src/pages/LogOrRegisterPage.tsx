@@ -1,13 +1,13 @@
+import LogRegisterForm from "@/components/userComponents/LogRegisterForm";
 import Navbar from "@/components/websiteComponents/Navbar";
-import { BookForm } from "@/forms/BookForm";
 
-export function AddBook() {
-	return (
+export default function LogOrRegisterPage() {
+  return (
 		<>
 			<Navbar />
 			<div className='flex flex-col items-center justify-center'>
-				<BookForm />
+				<LogRegisterForm />
 			</div>
 		</>
-	);
+  );
 }
