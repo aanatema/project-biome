@@ -18,7 +18,7 @@ export default function InfoSection() {
 		<Card className='mt-10 mb-10 w-140'>
 			<CardTitle>INFOS</CardTitle>
 			<CardHeader>
-				Here you can find information concerning txhe terms and
+				Here you can find information concerning the terms and
 				conditions of use as well as the legal mentions of the Biome
 				application.
 			</CardHeader>
