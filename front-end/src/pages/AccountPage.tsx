@@ -1,13 +1,7 @@
-// username
-// add book
-
 import Navbar from "@/components/websiteComponents/Navbar";
-import { ModifyUserForm } from "@/forms/ModifyUserForm";
-import InfoSection from "@/components/websiteComponents/InfoSection";
 import { useAuth } from "@/Hooks/useAuth";
 import NotConnectedPage from "./NotConnectedPage";
 import { Button } from "@/components/shadcnComponents/button";
-import { Book, Library } from "lucide-react";
 import BookList from "@/components/bookComponents/BookList";
 
 // list of all books linked to this account
