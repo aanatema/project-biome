@@ -13,16 +13,6 @@ import ModifyAccountPage from "./pages/ModifyAccountPage.tsx";
 const router = createBrowserRouter([
 	{ path: "/", element: <HomePage />, errorElement: <PageNotFound /> },
 	{
-		path: "/register",
-		element: <LoginForm />,
-		errorElement: <PageNotFound />,
-	},
-	{
-		path: "/login",
-		element: <RegisterForm />,
-		errorElement: <PageNotFound />,
-	},
-	{
 		path: "/login-or-register",
 		element: <LogOrRegisterPage />,
 		errorElement: <PageNotFound />,
