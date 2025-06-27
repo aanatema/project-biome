@@ -15,6 +15,8 @@ import { useEffect, useState } from "react";
 import { openLibFetchByISBN } from "@/api/openLibrary";
 import { toast } from "sonner";
 import { fetchGoogleBooks } from "@/api/googleBooks";
+import { useAuth } from "@/Hooks/useAuth";
+import NotConnectedPage from "@/pages/NotConnectedPage";
 
 export type BookFormProps = {
 	isbn: string;
@@ -24,6 +26,8 @@ export type BookFormProps = {
 };
 
 export function BookForm() {
+	const { user } = useAuth();
+
 	// handleSubmit will make sure the values inside the inputs are valid before submitting
 	const {
 		register,
@@ -78,6 +82,10 @@ export function BookForm() {
 
 		loadBookData();
 	}, [watchedISBN, setValue, reset]);
+
+	if (!user) {
+		return <NotConnectedPage />;
+	}
 
 	// data is an object with the properties of BookFormProps and the values that will be added through the form
 	// async to take into account data being sent to the server
