@@ -3,6 +3,7 @@ dotenv.config();
 import cookieParser from "cookie-parser";
 import express, { type Request, type Response } from "express";
 import cors from "cors";
+import authRoutes from "./routes/authRoutes";
 import userRoutes from "./routes/userRoutes";
 import bookRoutes from "./routes/bookRoutes";
 
@@ -14,23 +15,24 @@ const PORT = 3000;
 // also parses cookies from incoming requests
 // credentials are set to true to allow cookies to be sent
 app.use(
-  express.json(),
-  cors({
-    origin: "http://localhost:5173",
-    credentials: true,
-  }),
-  cookieParser()
+	express.json(),
+	cors({
+		origin: "http://localhost:5173",
+		credentials: true,
+	}),
+	cookieParser()
 );
 
 // REQUESTS
 app.use("/users", userRoutes);
 app.use("/books", bookRoutes);
+app.use("/api/auth", authRoutes);
 
 // localhost:3000 home page
 app.get("/", (req: Request, res: Response) => {
-  res.send("HOME PAGE");
-  res.json({ content: "this is some content", url: req.url });
+	res.json({ message: "HOME PAGE", url: req.url });
 });
+
 
 // to verify that the server started
 app.listen(PORT, () => {
