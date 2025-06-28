@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { AuthContext } from "./AuthContext";
 import type { ReactNode } from "react";
+import { authApi, userApi } from "@/libraries/axios";
 
 type Props = {
 	children: ReactNode;
@@ -17,45 +18,47 @@ export const AuthProvider = ({ children }: Props) => {
 	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
-		const fetchCurrentUser = async () => {
+		const fetchUserWithRefresh = async () => {
 			try {
-				const res = await fetch(
+				const refreshResponse = await authApi.post("/refresh");
+				const { token: accessToken } = refreshResponse.data;
+
+				const response = await fetch(
 					"http://localhost:3000/users/current_user",
 					{
-						credentials: "include",
+						headers: {
+							Authorization: `Bearer ${accessToken}`,
+						},
 					}
 				);
-				if (!res.ok) throw new Error("Not authenticated");
+				if (!response.ok) throw new Error("Not authenticated");
 
-				const data = await res.json();
+				const data = await response.json();
+				console.log("Current user data:", data);
 				setUser(data);
-            } catch (err) {
-                console.error("Failed to fetch current user:", err);
+			} catch (err) {
+				console.error("Failed to refresh token or fetch user:", err);
 				setUser(null);
 			} finally {
 				setLoading(false);
 			}
 		};
 
-		fetchCurrentUser();
+		fetchUserWithRefresh();
 	}, []);
 
 	const login = async (email: string, password: string) => {
 		setLoading(true);
 		try {
-			const res = await fetch("http://localhost:3000/users/login_user", {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				credentials: "include",
-				body: JSON.stringify({ email, password }),
+			const response = await userApi.post("/login_user", {
+				email,
+				password,
 			});
 
-			if (!res.ok) throw new Error("Login failed");
-			const data = await res.json();
-			setUser(data);
+			setUser(response.data);
 			return true;
-        } catch (err) {
-            console.error("Login error:", err);
+		} catch (err) {
+			console.error("Login error:", err);
 			return false;
 		} finally {
 			setLoading(false);
