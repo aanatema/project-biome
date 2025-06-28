@@ -4,7 +4,10 @@ import bcrypt from "bcrypt";
 import { generateAccessToken, generateRefreshToken } from "../auth/auth.tokens";
 import prisma from "../lib/prisma";
 import type { User } from "@prisma/client";
-import { setRefreshTokenCookie } from "../auth/auth.cookies";
+import {
+	setAccessTokenCookie,
+	setRefreshTokenCookie,
+} from "../auth/auth.cookies";
 
 // here instead of in types bc error in loginUser email and pswd
 // fix that later
@@ -61,6 +64,7 @@ export async function loginUser(req: ExpressRequest, res: Response) {
 		const refreshToken = generateRefreshToken(userWithoutPassword);
 
 		setRefreshTokenCookie(res, refreshToken);
+		setAccessTokenCookie(res, accessToken);
 
 		res.status(200).json({ userWithoutPassword });
 	} catch (error) {
