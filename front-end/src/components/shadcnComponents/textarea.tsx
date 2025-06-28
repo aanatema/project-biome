@@ -1,6 +1,6 @@
 import type * as React from "react"
 
-import { cn } from "@/lib/tailwind";
+import { cn } from "@/libraries/tailwind";
 
 function Textarea({ className, ...props }: React.ComponentProps<"textarea">) {
   return (

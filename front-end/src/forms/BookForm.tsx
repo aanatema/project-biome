@@ -16,7 +16,7 @@ import {
 import { Button } from "@/components/shadcnComponents/button";
 import { Input } from "@/components/shadcnComponents/input";
 import { Label } from "@radix-ui/react-label";
-import bookApi from "@/lib/axios";
+import bookApi from "@/libraries/axios";
 import { Textarea } from "@/components/shadcnComponents/textarea";
 
 type FormValues = {
