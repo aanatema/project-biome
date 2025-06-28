@@ -2,7 +2,6 @@
 import type { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import { generateAccessToken, generateRefreshToken } from "../auth/auth.tokens";
-import { sanitizeUser } from "../auth/auth.utils";
 import prisma from "../lib/prisma";
 import type { User } from "@prisma/client";
 import { setRefreshTokenCookie } from "../auth/auth.cookies";
@@ -63,7 +62,7 @@ export async function loginUser(req: ExpressRequest, res: Response) {
 
 		setRefreshTokenCookie(res, refreshToken);
 
-		res.status(200).json({ user });
+		res.status(200).json({ userWithoutPassword });
 	} catch (error) {
 		console.error("Login error:", error);
 		res.status(500).json({
@@ -93,7 +92,7 @@ export async function getCurrentUser(req: ExpressRequest, res: Response) {
 		if (!req.user) {
 			return res.status(401).json({ error: "Invalid token" });
 		}
-		const userWithoutPassword = sanitizeUser(req.user);
+		const { password: _password, ...userWithoutPassword } = req.user;
 		res.status(200).json(userWithoutPassword);
 	} catch (error) {
 		console.error("Error fetching current user:", error);
