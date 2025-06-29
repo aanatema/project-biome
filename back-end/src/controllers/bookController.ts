@@ -41,44 +41,7 @@ export async function createBookAndReview(req: ExpressRequest, res: Response) {
 	}
 }
 
-export async function createBook(req: ExpressRequest, res: Response) {
-	const { isbn, title, author } = req.body;
 
-	try {
-		const newBook = await prisma.book.create({
-			data: {
-				isbn,
-				title,
-				author,
-			},
-		});
-
-		res.status(201).json({ newBook });
-	} catch (error) {
-		console.error("Error during the creation of a new book", error);
-		res.status(500).json({
-			error: "Something happened when creating a new book",
-		});
-	}
-}
-
-export async function createReview(req: ExpressRequest, res: Response) {
-	const { bookId, authorId, content, createdAt } = req.body;
-	try {
-		const newReview = await prisma.review.create({
-			data: {
-				content,
-				authorId,
-				bookId,
-				createdAt,
-			},
-		});
-		res.status(201).json({ newReview });
-		console.log("newReview created:", newReview);
-	} catch (error) {
-		console.error("Error during the creation of a new review", error);
-	}
-}
 
 export async function getUserReviews(req: ExpressRequest, res: Response) {
 	try {
