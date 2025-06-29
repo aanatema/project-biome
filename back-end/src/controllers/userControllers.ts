@@ -2,10 +2,12 @@
 import type { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import { generateAccessToken, generateRefreshToken } from "../auth/auth.tokens";
-import { sanitizeUser } from "../auth/auth.utils";
 import prisma from "../lib/prisma";
 import type { User } from "@prisma/client";
-import { setRefreshTokenCookie } from "../auth/auth.cookies";
+import {
+	setAccessTokenCookie,
+	setRefreshTokenCookie,
+} from "../auth/auth.cookies";
 
 // here instead of in types bc error in loginUser email and pswd
 // fix that later
@@ -62,8 +64,9 @@ export async function loginUser(req: ExpressRequest, res: Response) {
 		const refreshToken = generateRefreshToken(userWithoutPassword);
 
 		setRefreshTokenCookie(res, refreshToken);
+		setAccessTokenCookie(res, accessToken);
 
-		res.status(200).json({ user });
+		res.status(200).json({ userWithoutPassword });
 	} catch (error) {
 		console.error("Login error:", error);
 		res.status(500).json({
@@ -71,6 +74,15 @@ export async function loginUser(req: ExpressRequest, res: Response) {
 		});
 	}
 }
+
+export async function logoutUser(req: ExpressRequest, res: Response) { 
+	res.clearCookie("accessToken", {
+		httpOnly: true,
+		sameSite: "lax",
+		secure: process.env.NODE_ENV === "production",	
+	});
+	res.status(200).json({ message: "Successful logout" });
+};
 
 // TODO
 export async function modifyUser(req: Request, res: Response) {
@@ -93,7 +105,7 @@ export async function getCurrentUser(req: ExpressRequest, res: Response) {
 		if (!req.user) {
 			return res.status(401).json({ error: "Invalid token" });
 		}
-		const userWithoutPassword = sanitizeUser(req.user);
+		const { password: _password, ...userWithoutPassword } = req.user;
 		res.status(200).json(userWithoutPassword);
 	} catch (error) {
 		console.error("Error fetching current user:", error);

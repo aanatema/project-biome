@@ -86,7 +86,7 @@ export function ModifyUserForm() {
 					<div className='space-y-1'>
 						<Label htmlFor='password'>Current password</Label>
 						<Input
-							id='password'
+							id='currentPassword'
 							type='password'
 							{...register("password", {
 								required: "Incorrect password",
@@ -97,7 +97,7 @@ export function ModifyUserForm() {
 					<div className='space-y-1'>
 						<Label htmlFor='password'>New password</Label>
 						<Input
-							id='password'
+							id='newPassword'
 							type='password'
 							{...register("password", {
 								required: "Incorrect password",

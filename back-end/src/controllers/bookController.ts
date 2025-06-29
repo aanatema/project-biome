@@ -1,17 +1,47 @@
-import type { Request, Response } from "express";
+import type { Response } from "express";
 import { PrismaClient } from "@prisma/client";
 import type { ExpressRequest } from "../controllers/userControllers";
 const prisma = new PrismaClient();
 
 // POST REQUESTS
-export async function createBook(req: ExpressRequest, res: Response) {
-	const userId = req.user?.id;
-	if (!userId)
-		return (
-			res.status(401).json({
-				error: "User needs to be authenticated to add a book",
-			}) && console.error("User needs to be authenticated to add a book")
+export async function createBookAndReview(req: ExpressRequest, res: Response) {
+	if (!req.user) {
+		return res.status(401).json({ error: "user is not authenticated" });
+	}
+	const { isbn, title, author, content } = req.body;
+
+	try {
+		let book = await prisma.book.findUnique({
+			where: { isbn },
+		});
+		if (!book) {
+			book = await prisma.book.create({
+				data: {
+					isbn,
+					title,
+					author,
+				},
+			});
+		}
+		const review = await prisma.review.create({
+			data: {
+				content,
+				authorId: req.user.id,
+				bookId: book.id,
+			},
+		});
+		res.status(201).json({ book, review });
+		console.log("New book and review created:", { book, review });
+	} catch (error) {
+		console.error(
+			"Error during the creation of a new book and review",
+			error
 		);
+		return;
+	}
+}
+
+export async function createBook(req: ExpressRequest, res: Response) {
 	const { isbn, title, author } = req.body;
 
 	try {
@@ -33,9 +63,6 @@ export async function createBook(req: ExpressRequest, res: Response) {
 }
 
 export async function createReview(req: ExpressRequest, res: Response) {
-	// const userId = req.user?.id;
-	// if (!userId) return res.status(401).json({ error: "Not authenticated" });
-
 	const { bookId, authorId, content, createdAt } = req.body;
 	try {
 		const newReview = await prisma.review.create({
@@ -54,9 +81,6 @@ export async function createReview(req: ExpressRequest, res: Response) {
 }
 
 export async function getUserReviews(req: ExpressRequest, res: Response) {
-	// const userId = req.user?.id;
-	// if (!userId) return res.status(401).json({ error: "Not authenticated" });
-
 	try {
 		const userReviews = await prisma.review.findMany({
 			where: {
@@ -109,7 +133,6 @@ export async function allBooks(req: ExpressRequest, res: Response) {
 	}
 }
 
-
 // export async function searchGoogleBooks(req: Request, res: Response) {
 //   const query = req.query.q as string;
 //   if (!query) {
@@ -133,30 +156,26 @@ export async function allBooks(req: ExpressRequest, res: Response) {
 //   }
 // }
 
-// export async function bookByIsbn(req: Request, res: Response) {
-//   const isbn = req.params.isbn;
+export async function bookByIsbn(req: Request, res: Response) {
+	const { isbn } = req.body;
+	try {
+		const book = await prisma.book.findUnique({
+			where: { isbn },
+		});
 
-//   try {
-//     const book = await prisma.book.findUnique({
-//       where: { isbn },
-//       include: {
-//         reviews: true,
-//       },
-//     });
-
-//     if (book) {
-//       res.status(200).json({ book });
-//     } else {
-//       res.status(404).json({ message: "Nothing was found" });
-//       res.end();
-//     }
-//   } catch (error) {
-//     console.error("Error while fetching book by ISBN:", error);
-//     res
-//       .status(500)
-//       .json({ error: "Something happened when retrieving a book by its ISBN" });
-//   }
-// }
+		if (book) {
+			res.status(200).json({ book });
+		} else {
+			res.status(404).json({ message: "Nothing was found" });
+			res.end();
+		}
+	} catch (error) {
+		console.error("Error while fetching book by ISBN:", error);
+		res.status(500).json({
+			error: "Something happened when retrieving a book by its ISBN",
+		});
+	}
+}
 
 // export async function bookByAuthor(req: Request, res: Response) {
 //   const author = req.params.author;

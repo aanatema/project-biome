@@ -44,6 +44,7 @@ export default function LoginForm() {
 				reset();
 			}
 		} catch (error) {
+			console.error("Login error:", error);
 			toast.error("Login failed");
 		}
 	};

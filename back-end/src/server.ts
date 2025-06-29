@@ -16,11 +16,11 @@ const PORT = 3000;
 // credentials are set to true to allow cookies to be sent
 app.use(
 	express.json(),
+	cookieParser(),
 	cors({
 		origin: "http://localhost:5173",
 		credentials: true,
-	}),
-	cookieParser()
+	})
 );
 
 // REQUESTS
@@ -33,8 +33,7 @@ app.get("/", (req: Request, res: Response) => {
 	res.json({ message: "HOME PAGE", url: req.url });
 });
 
-
 // to verify that the server started
 app.listen(PORT, () => {
-  console.log("Server started and listening on port", PORT);
+	console.log("Server started and listening on port", PORT);
 });

@@ -1,24 +1,25 @@
-import { Button } from "@/components/shadcnComponents/button";
-import {
-	Card,
-	CardHeader,
-	CardTitle,
-	CardDescription,
-	CardContent,
-	CardFooter,
-} from "@/components/shadcnComponents/card";
-import { Input } from "@/components/shadcnComponents/input";
-import { Textarea } from "@/components/shadcnComponents/textarea";
-import { Label } from "@radix-ui/react-label";
-import { type SubmitHandler, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { openLibFetchByISBN } from "@/api/openLibrary";
 import { toast } from "sonner";
 import { fetchGoogleBooks } from "@/api/googleBooks";
 import { useAuth } from "@/Hooks/useAuth";
 import NotConnectedPage from "@/pages/NotConnectedPage";
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardFooter,
+	CardHeader,
+	CardTitle,
+} from "@/components/shadcnComponents/card";
+import { Button } from "@/components/shadcnComponents/button";
+import { Input } from "@/components/shadcnComponents/input";
+import { Label } from "@radix-ui/react-label";
+import { Textarea } from "@/components/shadcnComponents/textarea";
+import { bookApi } from "@/libraries/axios";
 
-export type BookFormProps = {
+type FormValues = {
 	isbn: string;
 	title: string;
 	author: string;
@@ -36,19 +37,19 @@ export function BookForm() {
 		setValue,
 		watch,
 		reset,
-	} = useForm<BookFormProps>();
+	} = useForm<FormValues>();
 
 	// setValue is used to set the value of the inputs
 	const [isLoading, setIsLoading] = useState(false);
 	const watchedISBN = watch("isbn");
 
 	useEffect(() => {
-		const loadBookData = async () => {
+		const checkAndLoadBook = async () => {
 			if (!watchedISBN || watchedISBN.length < 10) return;
+			setIsLoading(true);
 
 			try {
-				setIsLoading(true);
-				// try open library first
+				// try open library
 				const openLibData = await openLibFetchByISBN(watchedISBN);
 				if (openLibData?.title && openLibData?.author) {
 					setValue("title", openLibData.title);
@@ -80,83 +81,41 @@ export function BookForm() {
 			}
 		};
 
-		loadBookData();
+		checkAndLoadBook();
 	}, [watchedISBN, setValue, reset]);
 
 	if (!user) {
 		return <NotConnectedPage />;
 	}
 
-	// data is an object with the properties of BookFormProps and the values that will be added through the form
-	// async to take into account data being sent to the server
-	const onSubmit: SubmitHandler<BookFormProps> = async (data) => {
+	const onSubmit = async (data: FormValues) => {
+		setIsLoading(true);
+
 		try {
-			const bookData = {
+			const payload = {
 				isbn: data.isbn,
 				title: data.title,
 				author: data.author,
-			};
-
-			// send the new book
-			const bookResponse = await fetch(
-				"http://localhost:3000/books/new_book",
-				{
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					body: JSON.stringify(bookData),
-				}
-			);
-
-			if (!bookResponse.ok) {
-				toast.error("Error !respones.ok");
-				reset();
-				return console.error("server error in newBook");
-			}
-
-			const createdBook = await bookResponse.json();
-			const bookId = createdBook.id;
-			reset();
-			toast.success("Your book has been added successfully!");
-
-			const reviewData = {
 				content: data.review,
-				bookId: bookId,
-				authorId: 1234, //TO BE REPLACED
 			};
 
-			const reviewResponse = await fetch(
-				"http://localhost:3000/books/new_review",
-				{
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					body: JSON.stringify(reviewData),
-				}
+			const response = await bookApi.post(
+				"/add_book_and_review",
+				payload
 			);
 
-			if (!reviewResponse.ok) {
-				toast.error("Error !response.ok review");
-				reset();
-				return console.error("server error when adding a review");
-			}
-
-			const reviewCreated = await reviewResponse.json();
-			console.log("Review added successfully", { reviewCreated });
+			toast.success("Your addition has been successful!", {
+				duration: 4000,
+			});
 			reset();
-			toast.success("Your review has been added successfully!");
-		} catch (err) {
-			console.log(err);
-			toast.error("Book form error message");
+			console.log("Data sent:", response.data);
+		} catch (error) {
+			console.error("Failed to send:", error);
+			toast.error("Something happened, please try again later");
+		} finally {
+			setIsLoading(false);
 		}
 	};
-
-	// NOT WORKING FOR NOW GO BACK LATER
-	// const isbnRegex = /^(97(8|9))?\d{9}(\d|X)$/;
-	// const issnRegex = /^ISSN\s?\d{4}-\d{3}[\dX]$/;
-	// const isbnOrIssnRegex = /^(97(8|9))?\d{9}(\d|X)$|^ISSN\s?\d{4}-\d{3}[\dX]$/;
 
 	return (
 		<>
