@@ -2,6 +2,7 @@ import express from "express";
 import {
 	allBooks,
 	createBookAndReview,
+	getBookByIsbn,
 	getReviewsByBookId,
 	getUserReviews,
 } from "../controllers/bookController";
@@ -14,8 +15,10 @@ const router = express.Router();
 // router.post("/new_book", createBook);
 // router.post("/new_review", createReview);
 router.post("/add_book_and_review", verifyToken, createBookAndReview);
-router.get("/books/:id/reviews", getReviewsByBookId);
 router.post("/user_reviews", verifyToken, getUserReviews);
+
+router.get("/isbn/:isbn", getBookByIsbn);
+router.get("/:bookId/reviews", getReviewsByBookId);
 router.get("/books", allBooks);
 
 export default router;
