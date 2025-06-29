@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { AuthContext } from "./AuthContext";
 import type { ReactNode } from "react";
 import { authApi, userApi } from "@/libraries/axios";
+import { toast } from "sonner";
 
 type Props = {
 	children: ReactNode;
@@ -65,8 +66,15 @@ export const AuthProvider = ({ children }: Props) => {
 		}
 	};
 
-	const logout = () => {
-		setUser(null);
+	const logout = async () => {
+		try {
+			await userApi.post("/logout_user"); // send a disconnect request
+			setUser(null); // delete the user from the context
+			toast.info("You have been disconnected", { duration: 3000 });
+		} catch (error) {
+			console.error("Error during logout", error);
+			toast.error("Disconnection failed", { duration: 3000 });
+		}
 	};
 
 	return (
