@@ -10,6 +10,7 @@ const auth_middlewares_1 = require("../auth/auth.middlewares");
 const router = express_1.default.Router();
 router.post("/new_user", userControllers_1.createUser);
 router.post("/login_user", userControllers_1.loginUser);
+router.post("/logout_user", userControllers_1.logoutUser);
 // authenticate the user with the token
 router.get("/current_user", auth_middlewares_1.verifyToken, userControllers_1.getCurrentUser);
 router.post("/modify_user", auth_middlewares_1.verifyToken, userControllers_1.modifyUser);
