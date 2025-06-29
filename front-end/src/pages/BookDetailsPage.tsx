@@ -1,48 +1,65 @@
-import BookCard from "@/components/bookComponents/BookCard";
+// pages/BookReviewsPage.tsx
 import ReviewCard from "@/components/bookComponents/ReviewCard";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-type Book = {
-	isbn: string;
-	title: string;
-	author: string;
-	reviews?: { review: string }[];
+type Review = {
+	id: string;
+	content: string;
+	author: {
+		id: string;
+		username: string;
+	};
 };
 
-export default function BookDetailsPage() {
-	const { isbn } = useParams<{ isbn: string }>();
-	const [book, setBook] = useState<Book | null>(null);
-	const [error, setError] = useState("");
+export default function BookReviewsPage() {
+	const { bookId } = useParams();
+	const [reviews, setReviews] = useState<Review[]>([]);
+	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
-		const fetchBook = async () => {
+		const fetchReviews = async () => {
 			try {
 				const res = await fetch(
-					`http://localhost:3000/books/isbn/${isbn}`
+					`http://localhost:3000/books/${bookId}/reviews`
 				);
-				if (!res.ok) throw new Error("Book not found");
+				if (!res.ok)
+					throw new Error("Erreur lors du fetch des reviews");
+
 				const json = await res.json();
-				setBook(json.book);
+				setReviews(json);
 			} catch (err) {
-				setError("Failed to load book details");
+				console.error(err);
+			} finally {
+				setLoading(false);
 			}
 		};
 
-		fetchBook();
-	}, [isbn]);
+		fetchReviews();
+	}, [bookId]);
 
-	if (error) return <p className='text-center mt-10 text-red-600'>{error}</p>;
-	if (!book) return <p className='text-center mt-10'>Loading...</p>;
+	if (loading) return <p>Chargement des reviews...</p>;
 
 	return (
-		<>
-			<BookCard
-				title={""}
-				author={""}
-				isbn={""}
-			/>
-			<ReviewCard />
-		</>
+		<div className='mt-10 px-5'>
+			<h1 className='text-2xl font-bold mb-6 text-center'>
+				Avis sur ce livre
+			</h1>
+			{reviews.length === 0 ? (
+				<p className='text-center'>
+					Aucune review pour ce livre pour le moment.
+				</p>
+			) : (
+				<div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4'>
+					{reviews.map((review) => (
+						<ReviewCard
+							key={review.id}
+							content={review.content}
+							author={review.author}
+						/>
+					))}
+				</div>
+			)}
+		</div>
 	);
 }
