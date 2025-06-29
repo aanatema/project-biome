@@ -75,6 +75,15 @@ export async function loginUser(req: ExpressRequest, res: Response) {
 	}
 }
 
+export async function logoutUser(req: ExpressRequest, res: Response) { 
+	res.clearCookie("accessToken", {
+		httpOnly: true,
+		sameSite: "lax",
+		secure: process.env.NODE_ENV === "production",	
+	});
+	res.status(200).json({ message: "Successful logout" });
+};
+
 // TODO
 export async function modifyUser(req: Request, res: Response) {
 	const { username, email } = req.body;
