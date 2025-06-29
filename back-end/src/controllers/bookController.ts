@@ -41,11 +41,11 @@ export async function createBookAndReview(req: ExpressRequest, res: Response) {
 }
 
 export async function getReviewsByBookId(req: ExpressRequest, res: Response) {
-	const { id } = req.params;
+	const { bookId } = req.params;
 
 	try {
 		const reviews = await prisma.review.findMany({
-			where: { bookId: id },
+			where: { bookId: bookId },
 			include: {
 				author: {
 					select: { id: true, username: true },
@@ -116,3 +116,24 @@ export async function allBooks(req: ExpressRequest, res: Response) {
 	}
 }
 
+export async function getBookByIsbn(req: ExpressRequest, res: Response){
+	try {
+		const { isbn } = req.params;
+		const book = await prisma.book.findUnique({
+			where: { isbn },
+		});
+
+		if (!book) return res.status(404).json({ error: "Book not found" });
+		res.json(book);
+	} catch (error) {
+		res.status(500).json({ error: "Internal server error" });
+	}
+};
+
+export async function getBookById(req: ExpressRequest, res: Response) {
+	const { id } = req.params;
+	const book = await prisma.book.findUnique({ where: { id } });
+	if (!book) return res.status(404).json({ error: "Book not found" });
+	res.json(book);
+  };
+  
