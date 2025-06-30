@@ -58,17 +58,6 @@ export async function allBooks(req: ExpressRequest, res: Response) {
 					},
 				}),
 			},
-			...(reviews && {
-				include: {
-					reviews: {
-						include: {
-							author: {
-								select: { id: true, username: true },
-							},
-						},
-					},
-				},
-			}),
 		});
 
 		res.status(200).json(books);
@@ -104,7 +93,7 @@ export async function getBookById(req: ExpressRequest, res: Response) {
 //REVIEWS
 export async function getReviewsByBookId(req: ExpressRequest, res: Response) {
 	const { bookId } = req.params;
-
+	console.log("bookId param:", bookId);
 	try {
 		const reviews = await prisma.review.findMany({
 			where: { bookId: bookId },
@@ -117,7 +106,7 @@ export async function getReviewsByBookId(req: ExpressRequest, res: Response) {
 				createdAt: "desc",
 			},
 		});
-
+		console.log("reviews found:", reviews);
 		res.status(200).json(reviews);
 	} catch (error) {
 		console.error("Error while retrieving books", error);
