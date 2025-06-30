@@ -3,7 +3,6 @@ import { PrismaClient } from "@prisma/client";
 import type { ExpressRequest } from "../controllers/userControllers";
 const prisma = new PrismaClient();
 
-// POST REQUESTS
 export async function createBookAndReview(req: ExpressRequest, res: Response) {
 	if (!req.user) {
 		return res.status(401).json({ error: "user is not authenticated" });
@@ -38,58 +37,6 @@ export async function createBookAndReview(req: ExpressRequest, res: Response) {
 			error
 		);
 		return;
-	}
-}
-
-export async function createBook(req: ExpressRequest, res: Response) {
-	const { isbn, title, author } = req.body;
-
-	try {
-		const newBook = await prisma.book.create({
-			data: {
-				isbn,
-				title,
-				author,
-			},
-		});
-
-		res.status(201).json({ newBook });
-	} catch (error) {
-		console.error("Error during the creation of a new book", error);
-		res.status(500).json({
-			error: "Something happened when creating a new book",
-		});
-	}
-}
-
-export async function createReview(req: ExpressRequest, res: Response) {
-	const { bookId, authorId, content, createdAt } = req.body;
-	try {
-		const newReview = await prisma.review.create({
-			data: {
-				content,
-				authorId,
-				bookId,
-				createdAt,
-			},
-		});
-		res.status(201).json({ newReview });
-		console.log("newReview created:", newReview);
-	} catch (error) {
-		console.error("Error during the creation of a new review", error);
-	}
-}
-
-export async function getUserReviews(req: ExpressRequest, res: Response) {
-	try {
-		const userReviews = await prisma.review.findMany({
-			where: {
-				// authorId: userId,
-			},
-		});
-		res.status(201).json({ userReviews });
-	} catch (error) {
-		console.error("Error while retrieving user reviews", error);
 	}
 }
 
@@ -133,104 +80,93 @@ export async function allBooks(req: ExpressRequest, res: Response) {
 	}
 }
 
-// export async function searchGoogleBooks(req: Request, res: Response) {
-//   const query = req.query.q as string;
-//   if (!query) {
-//     return res.status(400).json({ error: "Query parameter is required" });
-//   }
-//   try {
-//     const apiKey = process.env.GOOGLE_BOOKS_API_KEY;
-//     const response = await fetch(
-//       `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(
-//         query
-//       )}&key=${apiKey}`
-//     );
-//     const data = await response.json();
-//     res.json(data);
-//     console.log("Google Books API response:", data);
-//   } catch {
-//     console.error("Error fetching data from Google Books API");
-//     res.status(500).json({
-//       error: "Something happened when retrieving data from Google Books API",
-//     });
-//   }
-// }
-
-export async function bookByIsbn(req: Request, res: Response) {
-	const { isbn } = req.body;
+export async function getBookByIsbn(req: ExpressRequest, res: Response) {
 	try {
+		const { isbn } = req.params;
 		const book = await prisma.book.findUnique({
 			where: { isbn },
 		});
 
-		if (book) {
-			res.status(200).json({ book });
-		} else {
-			res.status(404).json({ message: "Nothing was found" });
-			res.end();
-		}
+		if (!book) return res.status(404).json({ error: "Book not found" });
+		res.json(book);
 	} catch (error) {
-		console.error("Error while fetching book by ISBN:", error);
-		res.status(500).json({
-			error: "Something happened when retrieving a book by its ISBN",
-		});
+		res.status(500).json({ error: "Internal server error" });
 	}
 }
 
-// export async function bookByAuthor(req: Request, res: Response) {
-//   const author = req.params.author;
+export async function getBookById(req: ExpressRequest, res: Response) {
+	const { id } = req.params;
+	const book = await prisma.book.findUnique({ where: { id } });
+	if (!book) return res.status(404).json({ error: "Book not found" });
+	res.json(book);
+}
 
-//   try {
-//     const book = await prisma.book.findMany({
-//       where: { author },
-//       include: { reviews: true },
-//     });
-//     if (book) {
-//       res.status(200).json({ book });
-//     } else {
-//       res.status(404).json({ message: "No author was found" });
-//       res.end();
-//     }
-//   } catch (error) {
-//     console.error("Error while fetching author:", error);
-//     res.status(500).json({
-//       error: "Something happened when retrieving a book by its author",
-//     });
-//   }
-// }
+//REVIEWS
+export async function getReviewsByBookId(req: ExpressRequest, res: Response) {
+	const { bookId } = req.params;
 
-// export async function bookByTitle(req: Request, res: Response) {
-//   const title = req.params.title;
+	try {
+		const reviews = await prisma.review.findMany({
+			where: { bookId: bookId },
+			include: {
+				author: {
+					select: { id: true, username: true },
+				},
+			},
+			orderBy: {
+				createdAt: "desc",
+			},
+		});
 
-//   try {
-//     const book = await prisma.book.findMany({
-//       where: { title },
-//       include: { reviews: true },
-//     });
-//     if (book) {
-//       res.status(200).json({ book });
-//     } else {
-//       res.status(404).json({ message: "No book with this title was found" });
-//       res.end();
-//     }
-//   } catch (error) {
-//     console.error("Error while fetching a book by its title:", error);
-//     res.status(500).json({
-//       error: "Something happened when retrieving a book by its title",
-//     });
-//   }
-// }
+		res.status(200).json(reviews);
+	} catch (error) {
+		console.error("Error while retrieving books", error);
+		res.status(500).json({ error: "Server error " });
+	}
+}
 
-// // export async function bookReview
-// // DELETE REQUESTS
-// // export async function deleteReview(req: Request, res: Response){
-// //   const review = req.params.reviewId
+export async function getUserReviews(req: ExpressRequest, res: Response) {
+	try {
+		const userReviews = await prisma.review.findMany({
+			where: {
+				// authorId: userId,
+			},
+		});
+		res.status(201).json({ userReviews });
+	} catch (error) {
+		console.error("Error while retrieving user reviews", error);
+	}
+}
 
-// //   try {
-// //     const review = await prisma.review.delete({
-// //       where: {review}
-// //     })
-// //   } catch(error){
+export const getAllReviews = async (req: ExpressRequest, res: Response) => {
+	try {
+		const reviews = await prisma.review.findMany({
+			include: {
+				author: {
+					select: {
+						id: true,
+						username: true,
+					},
+				},
+				book: {
+					select: {
+						id: true,
+						title: true,
+						author: true,
+						isbn: true,
+					},
+				},
+			},
+			orderBy: {
+				createdAt: "desc",
+			},
+		});
 
-// //   }
-// // }
+		res.json(reviews);
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({
+			error: "Erreur lors de la récupération des reviews.",
+		});
+	}
+};

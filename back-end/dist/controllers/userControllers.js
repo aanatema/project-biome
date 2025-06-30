@@ -8,43 +8,54 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createUser = createUser;
 exports.loginUser = loginUser;
+exports.logoutUser = logoutUser;
 exports.modifyUser = modifyUser;
 exports.getCurrentUser = getCurrentUser;
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const auth_tokens_1 = require("../auth/auth.tokens");
-const auth_utils_1 = require("../auth/auth.utils");
-const auth_cookies_1 = require("../auth/auth.cookies");
 const prisma_1 = __importDefault(require("../lib/prisma"));
+const auth_cookies_1 = require("../auth/auth.cookies");
 function createUser(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const { username, email, password } = req.body;
         try {
-            // hash and add 10 salt rounds to the password
+            //10 hash round
             const hashedPassword = yield bcrypt_1.default.hash(password, 10);
-            const newUser = yield prisma_1.default.user.create({
+            const user = yield prisma_1.default.user.create({
                 data: {
                     username,
                     email,
                     password: hashedPassword,
                 },
             });
-            const userWithoutPassword = (0, auth_utils_1.sanitizeUser)(newUser);
-            const { accessToken, refreshToken } = (0, auth_tokens_1.generateTokens)(userWithoutPassword);
-            res.cookie("refreshToken", refreshToken, auth_cookies_1.refreshTokenCookie);
-            // second spread to flatten the object, no direct visual imbrication
-            res.status(201).json(Object.assign(Object.assign({}, userWithoutPassword), { token: accessToken }));
+            const { password: _password } = user, userWithoutPassword = __rest(user, ["password"]);
+            const accessToken = (0, auth_tokens_1.generateAccessToken)(userWithoutPassword);
+            const refreshToken = (0, auth_tokens_1.generateRefreshToken)(userWithoutPassword);
+            (0, auth_cookies_1.setRefreshTokenCookie)(res, refreshToken);
+            res.status(201).json({ token: accessToken });
         }
         catch (error) {
-            console.error("Something happened during the user's creation", error);
-            res
-                .status(500)
-                .json({ error: "Something happened during the user's creation" });
+            console.error("Error during user creation", error);
+            res.status(500).json({
+                error: "Error during user creation",
+            });
         }
     });
 }
@@ -52,39 +63,42 @@ function loginUser(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const { email, password } = req.body;
         try {
-            // 1 email = 1 account
-            const userLogin = yield prisma_1.default.user.findUnique({
-                where: {
-                    email: email,
-                },
+            const user = yield prisma_1.default.user.findUnique({
+                where: { email: email },
             });
-            // make sure there is an email and a password matching in the db
-            if (!(userLogin === null || userLogin === void 0 ? void 0 : userLogin.email) || !userLogin.password) {
-                return res.status(401).json({ error: "User not found" });
-            }
-            const validPassword = yield bcrypt_1.default.compare(password, userLogin.password);
-            if (!validPassword) {
+            if (!user)
+                return res.status(401).json({ error: "Unknown user" });
+            const validPassword = yield bcrypt_1.default.compare(password, user.password);
+            if (!validPassword)
                 return res.status(401).json({ error: "Invalid credentials" });
-            }
-            const userWithoutPassword = (0, auth_utils_1.sanitizeUser)(userLogin);
-            const { accessToken, refreshToken } = (0, auth_tokens_1.generateTokens)(userWithoutPassword);
-            res.cookie("refreshToken", refreshToken, auth_cookies_1.refreshTokenCookie);
-            res.cookie("token", accessToken, {
-                httpOnly: true,
-                secure: false, // secure should be true in production, false for local dev
-                sameSite: "lax", // sameSite is set to lax to allow cross-site requests
-                maxAge: 1000 * 60 * 15, // 15 min
-            });
-            res.status(200).json(Object.assign({}, userWithoutPassword));
+            // remove password from user object, security measure
+            const { password: _password } = user, userWithoutPassword = __rest(user, ["password"]);
+            // accessToken will be used in the front-end to authenticate requests
+            const accessToken = (0, auth_tokens_1.generateAccessToken)(userWithoutPassword);
+            const refreshToken = (0, auth_tokens_1.generateRefreshToken)(userWithoutPassword);
+            (0, auth_cookies_1.setRefreshTokenCookie)(res, refreshToken);
+            (0, auth_cookies_1.setAccessTokenCookie)(res, accessToken);
+            res.status(200).json({ userWithoutPassword });
         }
         catch (error) {
             console.error("Login error:", error);
-            res
-                .status(500)
-                .json({ error: "Something happened during the user connection" });
+            res.status(500).json({
+                error: "Something happened during the user connection",
+            });
         }
     });
 }
+function logoutUser(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        res.clearCookie("accessToken", {
+            httpOnly: true,
+            sameSite: "lax",
+            secure: process.env.NODE_ENV === "production",
+        });
+        res.status(200).json({ message: "Successful logout" });
+    });
+}
+;
 // TODO
 function modifyUser(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -95,9 +109,9 @@ function modifyUser(req, res) {
         }
         catch (error) {
             console.error("Error in modifyUser", error);
-            res
-                .status(500)
-                .json({ error: "Something happened during user modification" });
+            res.status(500).json({
+                error: "Something happened during user modification",
+            });
         }
     });
 }
@@ -108,7 +122,7 @@ function getCurrentUser(req, res) {
             if (!req.user) {
                 return res.status(401).json({ error: "Invalid token" });
             }
-            const userWithoutPassword = (0, auth_utils_1.sanitizeUser)(req.user);
+            const _a = req.user, { password: _password } = _a, userWithoutPassword = __rest(_a, ["password"]);
             res.status(200).json(userWithoutPassword);
         }
         catch (error) {

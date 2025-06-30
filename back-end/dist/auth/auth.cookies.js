@@ -1,9 +1,22 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.refreshTokenCookie = void 0;
-exports.refreshTokenCookie = {
+exports.setRefreshTokenCookie = setRefreshTokenCookie;
+exports.setAccessTokenCookie = setAccessTokenCookie;
+const refreshTokenOptions = {
     httpOnly: true,
-    secure: true, //HTTPS mandatory in prod
-    sameSite: "strict", // anti CSRF
-    maxAge: 15 * 24 * 60 * 60 * 1000, //15d in ms
+    secure: false, //false for dev, true for prod
+    sameSite: "lax",
+    maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
 };
+function setRefreshTokenCookie(res, token) {
+    res.cookie("refreshToken", token, refreshTokenOptions);
+}
+const accessTokenOptions = {
+    httpOnly: true,
+    secure: false, //false for dev, true for prod
+    sameSite: "lax",
+    maxAge: 1000 * 60 * 15, // 15 min
+};
+function setAccessTokenCookie(res, token) {
+    res.cookie("accessToken", token, accessTokenOptions);
+}

@@ -33,8 +33,9 @@ function refreshAccessToken(req, res) {
         if (!refreshToken)
             throw new Error("refresh token undefined in refreshAccessToken func");
         const token = req.cookies.refreshToken;
-        if (!token)
-            throw new Error("token in refreshAccessToken func undefined");
+        if (!token) {
+            return res.status(401).json({ error: "No refresh token provided" });
+        }
         try {
             const payload = (0, jsonwebtoken_1.verify)(token, refreshToken);
             const user = yield prisma_1.default.user.findUnique({
@@ -51,7 +52,9 @@ function refreshAccessToken(req, res) {
         }
         catch (err) {
             console.error("Invalid refresh token", err);
-            return res.status(401).json({ error: "Invalid or expired refresh token" });
+            return res
+                .status(401)
+                .json({ error: "Invalid or expired refresh token" });
         }
     });
 }

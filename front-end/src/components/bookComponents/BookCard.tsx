@@ -2,29 +2,38 @@ import { Label } from "@radix-ui/react-label";
 import { Card, CardContent } from "../shadcnComponents/card";
 import { Link } from "react-router";
 
-type BookCardProps = {
+export type BookCardProps = {
+	id: string;
 	title: string;
 	author: string;
 	isbn: string;
 };
 
-export default function BookCard({ title, author, isbn }: BookCardProps) {
+export default function BookCard({ id, title, author, isbn }: BookCardProps) {
 	return (
-		<Link to={`/books/${isbn}`}>
-			<Card className='book-card m-5 w-40 h-65'>
+		<Link to={`/books/${id}/reviews`}>
+			<Card className='book-card w-full max-w-xs h-65 mx-auto'>
 				<CardContent className='space-y-2 text-center'>
 					<div className='space-y-1'>
 						<Label
-							className='font-bold'
+							className='font-bold hover:cursor-pointer'
 							htmlFor='title'>
 							{title}
 						</Label>
 					</div>
-					<div className='space-y-1'>
-						<Label htmlFor='author'>{author}</Label>
+					<div className='space-y-1 '>
+						<Label
+							className='hover:cursor-pointer'
+							htmlFor='author'>
+							{author}
+						</Label>
 					</div>
 					<div className='space-y-1'>
-						<Label htmlFor='isbn'>{isbn}</Label>
+						<Label
+							className='hover:cursor-pointer'
+							htmlFor='isbn'>
+							{isbn}
+						</Label>
 					</div>
 				</CardContent>
 			</Card>

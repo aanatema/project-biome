@@ -1,15 +1,11 @@
 import express from "express";
 import {
 	allBooks,
-	bookByIsbn,
-	createBook,
 	createBookAndReview,
-	createReview,
+	getAllReviews,
+	getBookByIsbn,
+	getReviewsByBookId,
 	getUserReviews,
-	// bookByAuthor,
-	// bookByIsbn,
-	// bookByTitle,
-	// searchGoogleBooks,
 } from "../controllers/bookController";
 import { verifyToken } from "../auth/auth.middlewares";
 
@@ -20,15 +16,11 @@ const router = express.Router();
 // router.post("/new_book", createBook);
 // router.post("/new_review", createReview);
 router.post("/add_book_and_review", verifyToken, createBookAndReview);
-router.post("/user_reviews",verifyToken, getUserReviews);
+router.post("/user_reviews", verifyToken, getUserReviews);
+
 router.get("/books", allBooks);
-
-router.get("/books/isbn/:isbn", bookByIsbn);
-// router.get("/search-google", searchGoogleBooks);
-// router.get("/books/author/:author", bookByAuthor);
-// router.get("/books/title/:title", bookByTitle);
-// router.get("/books/isbn/:title", bookByTitle);
-
-// router.delete("/", deleteReview)
+router.get("/reviews", getAllReviews);
+router.get("/isbn/:isbn", getBookByIsbn);
+router.get("/:bookId/reviews", getReviewsByBookId);
 
 export default router;

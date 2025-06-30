@@ -4,15 +4,15 @@ import { cn } from "@/libraries/tailwind";
 
 function Card({ className, ...props }: React.ComponentProps<"div">) {
   return (
-    <div
-      data-slot="card"
-      className={cn(
-        "bg-card text-card-foreground flex flex-col gap-6 rounded-lg border border-secondary py-6 shadow-sm",
-        className
-      )}
-      {...props}
-    />
-  )
+		<div
+			data-slot='card'
+			className={cn(
+				"bg-card text-card-foreground flex flex-col gap-6 rounded-lg border border-secondary py-6 shadow-sm hover:cursor-pointer",
+				className
+			)}
+			{...props}
+		/>
+  );
 }
 
 function CardHeader({ className, ...props }: React.ComponentProps<"div">) {

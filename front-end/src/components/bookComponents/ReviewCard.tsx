@@ -1,76 +1,57 @@
 import { Label } from "@radix-ui/react-label";
 import { Card, CardContent } from "../shadcnComponents/card";
-import { Link } from "react-router";
+
+// This card is used in the book details page
 
 type ReviewCardProps = {
-  title?: string; //no need to have title for review, but may implement in the future
-  author?: string; // author of the review, not the book
-  isbn?: string; // not needed for review but for url routing?
+	content: string;
+	author: {
+		id: string;
+		username: string;
+	};
+	book: string;
+	bookAuthor: string;
 };
 
-export default function ReviewCard({ isbn }: ReviewCardProps) {
-  // map of the reviews for a specific book
-  return (
-    <>
-  {/* TODO - create this route */}
-    <Link to={`/books/${isbn}/reviews/:reviewId`}> 
-      <Card className="book-card mb-5 min-w-70 max-w-150 min-h-30 max-h-60 overflow-scroll">
-        <CardContent className="space-y-2">
-            <Label className="font-bold" htmlFor="title">
-              The priory of The Orange Tree
-            </Label>
-          <div>
-            <Label htmlFor="author">Samantha Shannon</Label>
-          </div>
-            <Label className="pb-4" htmlFor="isbn">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam fringilla, odio quis tincidunt lobortis, risus nisi dapibus lacus, sed finibus sem purus nec mi. Fusce blandit purus dignissim justo pulvinar mollis. Nam lobortis ante quis tellus consequat, sed suscipit nulla dictum. Nunc suscipit vitae nulla sit amet elementum. Suspendisse ultrices dui vel ipsum scelerisque, iaculis posuere ex tempus.Nulla facilisi. Nulla facilisi. Etiam leo quam, venenatis eget elit eu, maximus ullamcorper ex. Nunc facilisis justo vitae enim fringilla, et scelerisque justo varius.</Label>
-        </CardContent>
-      </Card>
-    </Link>
-    <Link to={`/books/${isbn}/reviews/:reviewId`}> 
-    <Card className="book-card mb-5 w-150 min-h-30 max-h-60 overflow-scroll">
-      <CardContent className="space-y-2">
-          <Label className="font-bold" htmlFor="title">
-            The priory of The Orange Tree
-          </Label>
-        <div>
-          <Label htmlFor="author">Samantha Shannon</Label>
-        </div>
-        <div>
-          <Label className="pb-4" htmlFor="isbn">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam fringilla, odio quis tincidunt lobortis, risus nisi dapibus lacus, sed finibus sem purus nec mi. Fusce blandit purus dignissim justo pulvinar mollis. </Label>
-        </div>
-      </CardContent>
-    </Card>
-      </Link>
-      <Link to={`/books/${isbn}/reviews/:reviewId`}> 
-    <Card className="book-card mb-5 w-150 min-h-50 max-h-60 overflow-scroll">
-      <CardContent className="space-y-2">
-          <Label className="font-bold" htmlFor="title">
-            The priory of The Orange Tree
-          </Label>
-        <div>
-          <Label htmlFor="author">Samantha Shannon</Label>
-        </div>
-        <div>
-          <Label className="pb-4" htmlFor="isbn">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam fringilla, odio quis tincidunt lobortis, risus nisi dapibus lacus, sed finibus sem purus nec mi. Fusce blandit purus dignissim justo pulvinar mollis. Nam lobortis ante quis tellus consequat, sed suscipit nulla dictum. Nunc suscipit vitae nulla sit amet elementum. Suspendisse ultrices dui vel ipsum scelerisque, iaculis posuere ex tempus.Nulla facilisi. Nulla facilisi. Etiam leo quam, venenatis eget elit eu, maximus ullamcorper ex. Nunc facilisis justo vitae enim fringilla, et scelerisque justo varius.</Label>
-        </div>
-      </CardContent>
-    </Card>
-  </Link>
-  <Link to={`/books/${isbn}/reviews/:reviewId`}> 
-    <Card className="book-card mb-5 w-150 min-h-50 max-h-60 overflow-scroll">
-      <CardContent className="space-y-2">
-          <Label className="font-bold" htmlFor="title">
-            The priory of The Orange Tree
-          </Label>
-        <div>
-          <Label htmlFor="author">Samantha Shannon</Label>
-        </div>
-        <div>
-          <Label className="pb-4" htmlFor="isbn">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam fringilla, odio quis tincidunt lobortis, risus nisi dapibus lacus, sed finibus sem purus nec mi. Fusce blandit purus dignissim justo pulvinar mollis. Nam lobortis ante quis tellus consequat, sed suscipit nulla dictum. Nunc suscipit vitae nulla sit amet elementum. Suspendisse ultrices dui vel ipsum scelerisque, iaculis posuere ex tempus.Nulla facilisi. Nulla facilisi. Etiam leo quam, venenatis eget elit eu, maximus ullamcorper ex. Nunc facilisis justo vitae enim fringilla, et scelerisque justo varius.</Label>
-        </div>
-      </CardContent>
-    </Card>
-  </Link>
-    </>
-  );
+export default function ReviewCard({
+	content,
+	author,
+	book,
+	bookAuthor,
+}: ReviewCardProps) {
+	return (
+		<>
+			<Card className='book-card mb-5 min-w-70 max-w-150 min-h-30 max-h-60 overflow-y-scroll'>
+				<CardContent className='space-y-2 text-center'>
+					<div className='text-start'>
+						<Label
+							className='font-bold'
+							htmlFor='username'>
+							{author.username}
+						</Label>
+
+						<div>
+							<Label
+								className='font-medium text-sm'
+								htmlFor='book'>
+								{book} |{" "}
+							</Label>
+							<Label
+								className='text-sm italic'
+								htmlFor='book'>
+								{bookAuthor}
+							</Label>
+						</div>
+					</div>
+					<div className='text-start'>
+						<Label
+							className='pb-4 text-start'
+							htmlFor='review'>
+							{content}
+						</Label>
+					</div>
+				</CardContent>
+			</Card>
+		</>
+	);
 }
