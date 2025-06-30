@@ -2,11 +2,10 @@ import PageNotFound from "./pages/PageNotFound.tsx";
 import HomePage from "./pages/HomePage.tsx";
 import { createBrowserRouter, RouterProvider } from "react-router";
 import AccountPage from "./pages/AccountPage.tsx";
-import LibraryPage from "./pages/LibraryPage.tsx";
-import BookDetailsPage from "./pages/BookDetailsPage.tsx";
 import { AddBook } from "./pages/AddBookPage.tsx";
 import LogOrRegisterPage from "./pages/LogOrRegisterPage.tsx";
 import ModifyAccountPage from "./pages/ModifyAccountPage.tsx";
+import BookReviewsPage from "./pages/BookReviewsPage.tsx";
 
 const router = createBrowserRouter([
 	{ path: "/", element: <HomePage />, errorElement: <PageNotFound /> },
@@ -26,13 +25,8 @@ const router = createBrowserRouter([
 		errorElement: <PageNotFound />,
 	},
 	{
-		path: "/library",
-		element: <LibraryPage />,
-		errorElement: <PageNotFound />,
-	},
-	{
 		path: "/books/:bookId/reviews",
-		element: <BookDetailsPage />,
+		element: <BookReviewsPage />,
 		errorElement: <PageNotFound />,
 	},
 	{

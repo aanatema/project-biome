@@ -8,7 +8,9 @@ import {
 	CardFooter,
 } from "@/components/shadcnComponents/card";
 import { Input } from "@/components/shadcnComponents/input";
+import { userApi } from "@/libraries/axios";
 import { Label } from "@radix-ui/react-label";
+import axios from "axios";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -33,25 +35,31 @@ export function RegisterForm() {
 			password: data.password,
 		};
 
-		const response = await fetch("http://localhost:3000/users/new_user", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify(newUserData),
-		});
+		try {
+			await userApi.post("/new_user", newUserData);
+		} catch (error) {
+			if (axios.isAxiosError(error)) {
+				// access to the error code status
+				const status = error.response?.status;
 
-		if (!response.ok) {
-			toast.error("Error while registering, verify your credentials");
+				if (status === 400) {
+					toast.error("Invalid user data");
+				} else if (status === 409) {
+					toast.error("User already exists");
+				} else {
+					toast.error(
+						"Error while registering, verify your credentials"
+					);
+				}
+
+				console.error(
+					"Server error for newUser, check documentation to resolve"
+				);
+			} else {
+				toast.error("Network error occurred");
+			}
 			reset();
-			return console.error(
-				"Server error for newUser, check documentation to resolve"
-			);
 		}
-
-		const json = await response.json();
-		reset();
-		console.log(json);
 	};
 
 	return (

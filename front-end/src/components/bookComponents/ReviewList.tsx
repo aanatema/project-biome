@@ -1,6 +1,7 @@
 // pages/AllReviewsPage.tsx
 import { useEffect, useState } from "react";
 import ReviewCard from "./ReviewCard";
+import { bookApi } from "@/libraries/axios";
 
 type Review = {
 	id: string;
@@ -22,13 +23,8 @@ export default function AllReviewsPage() {
 
 	useEffect(() => {
 		const fetchReviews = async () => {
-			const res = await fetch("http://localhost:3000/books/reviews");
-			if (!res.ok) {
-				console.error("Erreur lors du chargement des reviews");
-				return;
-			}
-			const json = await res.json();
-			setReviews(json);
+			const res = await bookApi.get("/reviews");
+			setReviews(res.data);
 		};
 
 		fetchReviews();

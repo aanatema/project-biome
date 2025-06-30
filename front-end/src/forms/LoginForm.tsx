@@ -31,7 +31,8 @@ export default function LoginForm() {
 
 	const onLoginSubmit: SubmitHandler<UserProps> = async (data) => {
 		try {
-			const success = await login(data.email, data.password); // call auth context login method
+			// call auth context login method
+			const success = await login(data.email, data.password);
 			if (!success) {
 				toast.error("Login failed, please check your credentials", {
 					duration: 3000,
@@ -39,13 +40,16 @@ export default function LoginForm() {
 				return;
 			} else {
 				reset();
-				console.log("Login data:", data);
 				toast.success("Logged in!");
-				reset();
 			}
 		} catch (error) {
 			console.error("Login error:", error);
-			toast.error("Login failed");
+			toast.error(
+				"An unexpected error occurred during login, try again later",
+				{
+					duration: 5000,
+				}
+			);
 		}
 	};
 
