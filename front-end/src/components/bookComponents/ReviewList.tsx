@@ -1,39 +1,53 @@
-// import { useEffect, useState } from "react";
-// import ReviewCard from "./ReviewCard";
+// pages/AllReviewsPage.tsx
+import { useEffect, useState } from "react";
+import ReviewCard from "./ReviewCard";
 
-// type Review = {
-//   isbn: string;
-//   title: string;
-//   author: string;
-// };
+type Review = {
+	id: string;
+	content: string;
+	author: {
+		id: string;
+		username: string;
+	};
+	book: {
+		id: string;
+		title: string;
+		author: string;
+		isbn: string;
+	};
+};
 
-// export default function ReviewList() {
-//   const [reviews, setReviews] = useState<Review[]>([]);
+export default function AllReviewsPage() {
+	const [reviews, setReviews] = useState<Review[]>([]);
 
-//   useEffect(() => {
-//     const fetchReviews = async () => {
-//       const res = await fetch("http://localhost:3000/books/books");
-//       if (!res.ok) {
-//         console.error("Erreur API");
-//         return;
-//       }
-//       const json = await res.json();
-//       setReviews(json);
-//     };
+	useEffect(() => {
+		const fetchReviews = async () => {
+			const res = await fetch("http://localhost:3000/books/reviews");
+			if (!res.ok) {
+				console.error("Erreur lors du chargement des reviews");
+				return;
+			}
+			const json = await res.json();
+			setReviews(json);
+		};
 
-//     fetchReviews();
-//   }, []);
+		fetchReviews();
+	}, []);
 
-//   return (
-//     <div className="grid grid-rows-1 sm:grid-rows-2 md:grid-rows-3 lg:grid-rows-4 xl:grid-rows-5 mt-10">
-//       {reviews.map((review) => (
-//         <ReviewCard
-//           key={review.isbn}
-//           title={review.title}
-//           author={review.author}
-//           isbn={review.isbn}
-//         />
-//       ))}
-//     </div>
-//   );
-// }
+	return (
+		<div className=''>
+			<div className='grid grid-cols-1 gap-4'>
+				{reviews.map((review) => (
+					<div key={review.id}>
+						<ReviewCard
+							content={review.content}
+							author={review.author}
+							book={review.book.title}
+							bookAuthor={review.book.author}
+						/>
+					</div>
+				))}
+			</div>
+		</div>
+	);
+}
