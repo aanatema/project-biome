@@ -1,5 +1,5 @@
 import BookList from "../bookComponents/BookList";
-import PreviewCard from "../bookComponents/PreviewCard";
+import AllReviewsPage from "../bookComponents/ReviewList";
 import {
 	Tabs,
 	TabsContent,
@@ -27,7 +27,7 @@ export default function BookReviewTabs() {
 			<TabsContent
 				className='mt-10'
 				value='reviews'>
-				<PreviewCard />
+				<AllReviewsPage />
 			</TabsContent>
 			<TabsContent value='books'>
 				<BookList />
