@@ -85,14 +85,86 @@ export async function logoutUser(req: ExpressRequest, res: Response) {
 };
 
 // TODO
-export async function modifyUser(req: Request, res: Response) {
-	const { username, email } = req.body;
-
+export async function modifyUser(req: ExpressRequest, res: Response) {
+	const { username, email, currentPassword, newPassword } = req.body;
+	const userId = req.user?.id; // Assure-toi que l'utilisateur est authentifié
 	try {
-		// Temporary stub
-		res.status(200).json({ message: "modifyUser not implemented yet" });
+		// Vérifications de base
+		if (!userId) {
+			return res.status(401).json({ error: "User not authenticated" });
+		}
+
+		if (!username || !currentPassword) {
+			return res.status(400).json({
+				error: "Username and current password are required",
+			});
+		}
+
+		// Récupérer l'utilisateur actuel
+		const user = await prisma.user.findUnique({
+			where: { id: userId },
+		});
+
+		if (!user) {
+			return res.status(404).json({ error: "User not found" });
+		}
+
+		// Vérifier le mot de passe actuel
+		const isCurrentPasswordValid = await bcrypt.compare(
+			currentPassword,
+			user.password
+		);
+		if (!isCurrentPasswordValid) {
+			return res
+				.status(401)
+				.json({ error: "Incorrect current password" });
+		}
+
+		// Vérifier si l'email n'est pas déjà utilisé par un autre utilisateur
+		if (email !== user.email) {
+			const existingUser = await prisma.user.findFirst({
+				where: {
+					email: email,
+					NOT: { id: userId }, // Exclure l'utilisateur actuel
+				},
+			});
+
+			if (existingUser) {
+				return res.status(409).json({ error: "Email already in use" });
+			}
+		}
+
+		// Préparer les données de mise à jour
+		const updateData: any = {
+			username: username.trim(),
+			email: email.toLowerCase().trim(),
+		};
+
+		// Si un nouveau mot de passe est fourni, le hasher
+		if (newPassword && newPassword.trim() !== "") {
+			const saltRounds = 10;
+			updateData.password = await bcrypt.hash(newPassword, saltRounds);
+		}
+
+		// Mettre à jour l'utilisateur avec Prisma
+		const updatedUser = await prisma.user.update({
+			where: { id: userId },
+			data: updateData,
+			select: {
+				id: true,
+				username: true,
+				email: true,
+				createdAt: true,
+				// password exclu automatiquement
+			},
+		});
+
+		res.status(200).json({
+			message: "User updated successfully",
+			user: updatedUser,
+		});
 	} catch (error) {
-		console.error("Error in modifyUser", error);
+		console.error("Error in modifyUser:", error);
 		res.status(500).json({
 			error: "Something happened during user modification",
 		});
