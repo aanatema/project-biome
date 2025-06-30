@@ -26,11 +26,6 @@ const router = createBrowserRouter([
 		errorElement: <PageNotFound />,
 	},
 	{
-		path: "/library",
-		element: <LibraryPage />,
-		errorElement: <PageNotFound />,
-	},
-	{
 		path: "/books/:bookId/reviews",
 		element: <BookDetailsPage />,
 		errorElement: <PageNotFound />,
