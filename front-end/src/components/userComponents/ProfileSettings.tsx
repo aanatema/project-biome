@@ -7,8 +7,8 @@ import {
 } from "../shadcnComponents/dropdown-menu";
 import { useAuth } from "@/Hooks/useAuth";
 
-export function ProfileSettings() {
-    const {logout} = useAuth();
+export function ProfileSettingsButton() {
+	const { logout } = useAuth();
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
