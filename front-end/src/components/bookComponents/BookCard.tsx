@@ -12,7 +12,7 @@ export type BookCardProps = {
 export default function BookCard({ id, title, author, isbn }: BookCardProps) {
 	return (
 		<Link to={`/books/${id}/reviews`}>
-			<Card className='book-card m-5 w-40 h-65'>
+			<Card className='book-card w-full max-w-xs h-65 mx-auto'>
 				<CardContent className='space-y-2 text-center'>
 					<div className='space-y-1'>
 						<Label
