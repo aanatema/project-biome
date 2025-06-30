@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import BookCard from "./BookCard";
+import { bookApi } from "@/libraries/axios";
 
 type Book = {
 	id: string;
@@ -13,13 +14,8 @@ export default function BookList() {
 
 	useEffect(() => {
 		const fetchBooks = async () => {
-			const res = await fetch("http://localhost:3000/books/books");
-			if (!res.ok) {
-				console.error("Erreur API");
-				return;
-			}
-			const json = await res.json();
-			setBooks(json);
+			const res = await bookApi.get("/books");
+			setBooks(res.data);
 		};
 
 		fetchBooks();

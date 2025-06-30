@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import BookDetailsReviewCard from "./BookDetailsReviewCard";
 import { useParams } from "react-router";
+import { bookApi } from "@/libraries/axios";
 
 type Review = {
 	id: string;
@@ -11,32 +12,17 @@ type Review = {
 	};
 };
 
-
 export default function BookReviews() {
 	const [reviews, setReviews] = useState<Review[]>([]);
 	const [loading, setLoading] = useState(true);
 	const params = useParams();
 	const { bookId } = params;
 
-	
 	useEffect(() => {
 		const fetchReviews = async () => {
 			try {
-
-				const res = await fetch(
-					`http://localhost:3000/books/${bookId}/reviews`
-				);
-				console.log("Statut de la réponse:", res.status);
-				console.log("Headers de la réponse:", res.headers);
-				if (!res.ok)
-					throw new Error("Erreur lors du fetch des reviews");
-
-				const data = await res.json();
-				console.log("Données reçues:", data);
-				console.log("Type des données:", typeof data);
-				console.log("Est-ce un tableau?", Array.isArray(data));
-				console.log("Reviews fetched:", data);
-				setReviews(data);
+				const response = await bookApi.get(`/${bookId}/reviews`);
+				setReviews(response.data);
 			} catch (err) {
 				console.error(err);
 			} finally {
