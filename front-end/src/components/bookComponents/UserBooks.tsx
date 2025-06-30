@@ -4,6 +4,7 @@ import { bookApi } from "@/libraries/axios";
 import { Button } from "../shadcnComponents/button";
 import { Card, CardContent, CardHeader } from "../shadcnComponents/card";
 import { Label } from "@radix-ui/react-label";
+import { toast } from "sonner";
 
 type Book = {
 	id: string;
@@ -15,24 +16,21 @@ type Book = {
 export default function UserBooks() {
 	const [books, setBooks] = useState<Book[]>([]);
 	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState<string | null>(null);
 
 	useEffect(() => {
 		const fetchBooks = async () => {
 			try {
 				setLoading(true);
-				setError(null);
 
 				const res = await bookApi.get("/user_books");
 
 				// Retrieve books or empty array if no books added for this user
 				setBooks(res.data.books || []);
 			} catch (err) {
-				console.error(
-					"Erreur lors de la récupération des livres:",
-					err
+				console.error("Error while retrieving the books", err);
+				toast.error(
+					"Impossible to retrieve books, please try again later"
 				);
-				setError("Impossible de charger vos livres");
 			} finally {
 				setLoading(false);
 			}
@@ -43,12 +41,14 @@ export default function UserBooks() {
 
 	if (loading) {
 		return (
-			<div className='text-center mt-10'>Chargement de vos livres...</div>
+			<div className='text-center mt-10'>
+				<Card>
+					<CardContent>
+						Your books are loading... Please wait...
+					</CardContent>
+				</Card>
+			</div>
 		);
-	}
-
-	if (error) {
-		return <div className='text-center mt-10 text-red-500'>{error}</div>;
 	}
 
 	if (books.length === 0) {
@@ -72,7 +72,7 @@ export default function UserBooks() {
 	}
 
 	return (
-		<div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5 mt-10'>
+		<div className='grid grid-cols-1 sm:grid-cols-4 md:grid-cols-3 lg:grid-cols-6 gap-5 mt-10'>
 			{books.map((book) => (
 				<BookCard
 					key={book.id}
