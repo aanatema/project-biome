@@ -32,6 +32,11 @@ export default function BookReviews() {
 
 		fetchReviews();
 	}, [bookId]);
+	const handleReviewDeleted = (reviewId: string) => {
+		setReviews((prevReviews) =>
+			prevReviews.filter((review) => review.id !== reviewId)
+		);
+	};
 
 	if (loading) return <p>Chargement des reviews...</p>;
 	if (reviews.length === 0) return <p>Aucune review pour ce livre.</p>;
@@ -50,8 +55,10 @@ export default function BookReviews() {
 					{reviews.map((review) => (
 						<BookDetailsReviewCard
 							key={review.id}
+							reviewId={review.id}
 							content={review.content}
 							author={review.author}
+							onReviewDeleted={handleReviewDeleted}
 						/>
 					))}
 				</div>
