@@ -75,14 +75,14 @@ export async function loginUser(req: ExpressRequest, res: Response) {
 	}
 }
 
-export async function logoutUser(req: ExpressRequest, res: Response) { 
+export async function logoutUser(req: ExpressRequest, res: Response) {
 	res.clearCookie("accessToken", {
 		httpOnly: true,
 		sameSite: "lax",
-		secure: process.env.NODE_ENV === "production",	
+		secure: process.env.NODE_ENV === "production",
 	});
 	res.status(200).json({ message: "Successful logout" });
-};
+}
 
 // TODO
 export async function modifyUser(req: ExpressRequest, res: Response) {
@@ -184,4 +184,41 @@ export async function getCurrentUser(req: ExpressRequest, res: Response) {
 		res.status(500).json({ error: "Internal server error" });
 	}
 }
-// delete user
+export async function deleteUser(req: ExpressRequest, res: Response) {
+	if (!req.user) {
+		return res.status(401).json({ error: "User is not authenticated" });
+	}
+
+	try {
+		const user = await prisma.user.findUnique({
+			where: { id: req.user.id },
+			select: { id: true, username: true },
+		});
+
+		if (!user) {
+			return res.status(404).json({ error: "User not found" });
+		}
+		// delete reviews the user
+		await prisma.review.deleteMany({
+			where: { authorId: req.user.id },
+		});
+		await prisma.user.delete({
+			where: { id: req.user.id },
+		});
+
+		// clean cookie then logout
+		res.clearCookie("refreshToken", {
+			httpOnly: true,
+			secure: process.env.NODE_ENV === "production",
+			sameSite: "strict",
+		});
+
+		res.status(200).json({
+			message: "Account deleted successfully",
+			deletedUserId: req.user.id,
+		});
+	} catch (error) {
+		console.error("Error while deleting user:", error);
+		res.status(500).json({ error: "Internal server error" });
+	}
+}
