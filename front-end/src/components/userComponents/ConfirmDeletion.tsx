@@ -1,4 +1,4 @@
-import { useAuth } from "@/Hooks/useAuth";
+import { useAuth } from "@/hooks/useAuth";
 import { userApi } from "@/libraries/axios";
 import axios from "axios";
 import { useState } from "react";
@@ -34,8 +34,7 @@ export function ConfirmDeletionDialog() {
 
 			// clean auth context
 			logout();
-      navigate("/not-connected", { replace: true });
-      
+			navigate("/not-connected", { replace: true });
 		} catch (error) {
 			console.error("Error during account deletion:", error);
 
@@ -77,8 +76,10 @@ export function ConfirmDeletionDialog() {
 				</DialogTrigger>
 				<DialogContent className='sm:max-w-[425px]'>
 					<DialogHeader>
-						<DialogTitle className="text-center">Are you sure?</DialogTitle>
-						<DialogDescription className="mt-5 mb-5">
+						<DialogTitle className='text-center'>
+							Are you sure?
+						</DialogTitle>
+						<DialogDescription className='mt-5 mb-5'>
 							<p>
 								This action is permanent and cannot be undone.
 							</p>

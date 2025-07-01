@@ -1,7 +1,7 @@
 import { Label } from "@radix-ui/react-label";
 import { Card, CardContent } from "../shadcnComponents/card";
 import DeleteReview from "./DeleteReview";
-import { useAuth } from "@/Hooks/useAuth";
+import { useAuth } from "@/hooks/useAuth";
 
 // This card is used in the book details page to display username and their review
 

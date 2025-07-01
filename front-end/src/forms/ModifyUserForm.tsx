@@ -12,7 +12,7 @@ import { type SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import axios from "axios";
 import { userApi } from "@/libraries/axios";
-import { useAuth } from "@/Hooks/useAuth";
+import { useAuth } from "@/hooks/useAuth";
 
 export type ModifyUserProps = {
 	username?: string;
