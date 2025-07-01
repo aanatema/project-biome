@@ -1,7 +1,7 @@
 import { Label } from "@radix-ui/react-label";
 import { Card, CardContent } from "../shadcnComponents/card";
 
-// This card is used in the book details page
+// This card is display all basic info of a review, used in the home page
 
 type ReviewCardProps = {
 	content: string;

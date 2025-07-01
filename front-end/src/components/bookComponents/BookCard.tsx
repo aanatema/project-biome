@@ -6,10 +6,9 @@ export type BookCardProps = {
 	id: string;
 	title: string;
 	author: string;
-	isbn: string;
 };
 
-export default function BookCard({ id, title, author, isbn }: BookCardProps) {
+export default function BookCard({ id, title, author }: BookCardProps) {
 	return (
 		<Link to={`/books/${id}/reviews`}>
 			<Card className='book-card w-full max-w-xs h-65 mx-auto'>
@@ -26,13 +25,6 @@ export default function BookCard({ id, title, author, isbn }: BookCardProps) {
 							className='hover:cursor-pointer'
 							htmlFor='author'>
 							{author}
-						</Label>
-					</div>
-					<div className='space-y-1'>
-						<Label
-							className='hover:cursor-pointer'
-							htmlFor='isbn'>
-							{isbn}
 						</Label>
 					</div>
 				</CardContent>

@@ -1,7 +1,7 @@
 import { Label } from "@radix-ui/react-label";
 import { Card, CardContent } from "../shadcnComponents/card";
 
-// This card is used in the homepage to display a global preview
+// This card is used in the book details page to display username and their review
 
 type ReviewCardProps = {
 	content: string;
@@ -14,7 +14,7 @@ type ReviewCardProps = {
 export default function BookDetailsReviewCard({ content, author }: ReviewCardProps) {
 	return (
 		<>
-			<Card className='book-card mb-5 min-w-70 max-w-150 min-h-30 max-h-60 overflow-y-scroll'>
+			<Card className='book-card mb-5 min-w-90 max-w-170 min-h-30 max-h-60 overflow-y-scroll'>
 				<CardContent className='space-y-2 text-center'>
 					<div className='text-start'>
 						<Label

@@ -42,7 +42,7 @@ export async function createBookAndReview(req: ExpressRequest, res: Response) {
 
 // GET REQUESTS
 export async function allBooks(req: ExpressRequest, res: Response) {
-	const { isbn, title, author, reviews } = req.query;
+	const { isbn, title, author } = req.query;
 
 	try {
 		const books = await prisma.book.findMany({
@@ -114,16 +114,34 @@ export async function getReviewsByBookId(req: ExpressRequest, res: Response) {
 	}
 }
 
-export async function getUserReviews(req: ExpressRequest, res: Response) {
+export async function getUserBooks(req: ExpressRequest, res: Response) {
+	if (!req.user) {
+		return res.status(401).json({ error: "user is not authenticated" });
+	}
+
 	try {
 		const userReviews = await prisma.review.findMany({
 			where: {
-				// authorId: userId,
+				authorId: req.user.id,
+			},
+			include: {
+				book: true,
 			},
 		});
-		res.status(201).json({ userReviews });
+
+		// avoid duplication if +1 review on 1 book
+		const books = userReviews.map((review) => review.book);
+
+		//remove book duplication in case of +1 reviews
+		const uniqueBooks = books.filter(
+			(book, index, self) =>
+				index === self.findIndex((b) => b.id === book.id)
+		);
+
+		res.status(200).json({ books: uniqueBooks });
 	} catch (error) {
-		console.error("Error while retrieving user reviews", error);
+		console.error("Error while retrieving user books", error);
+		res.status(500).json({ error: "Internal server error" });
 	}
 }
 
