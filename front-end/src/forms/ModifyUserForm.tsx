@@ -186,10 +186,11 @@ export function ModifyUserForm() {
 					</div>
 				</CardContent>
 				<CardFooter>
-					<div className='grid w-full grid-cols-2 gap-4'>
-						<Button type='submit'>Update Account</Button>
-						<ConfirmDeletionDialog />
-					</div>
+					<Button
+						className='w-full'
+						type='submit'>
+						Update Account
+					</Button>
 				</CardFooter>
 			</Card>
 		</form>
