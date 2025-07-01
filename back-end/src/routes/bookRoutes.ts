@@ -2,6 +2,7 @@ import express from "express";
 import {
 	allBooks,
 	createBookAndReview,
+	deleteReview,
 	getAllReviews,
 	getBookByIsbn,
 	getReviewsByBookId,
@@ -22,4 +23,5 @@ router.get("/isbn/:isbn", getBookByIsbn);
 router.get("/:bookId/reviews", getReviewsByBookId);
 router.get("/user_books", verifyToken, getUserBooks);
 
+router.delete("/reviews/:id", verifyToken, deleteReview);
 export default router;
