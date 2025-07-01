@@ -75,14 +75,14 @@ export async function loginUser(req: ExpressRequest, res: Response) {
 	}
 }
 
-export async function logoutUser(req: ExpressRequest, res: Response) { 
+export async function logoutUser(req: ExpressRequest, res: Response) {
 	res.clearCookie("accessToken", {
 		httpOnly: true,
 		sameSite: "lax",
-		secure: process.env.NODE_ENV === "production",	
+		secure: process.env.NODE_ENV === "production",
 	});
 	res.status(200).json({ message: "Successful logout" });
-};
+}
 
 // TODO
 export async function modifyUser(req: Request, res: Response) {
@@ -113,3 +113,33 @@ export async function getCurrentUser(req: ExpressRequest, res: Response) {
 	}
 }
 // delete user
+
+export async function deleteUser(req: ExpressRequest, res: Response) {
+	try {
+		if (!req.user) {
+			return res.status(401).json({
+				error: "Invalid token, the user appears to not be connected",
+			});
+		}
+
+		// delete reviews then user
+		await prisma.review.deleteMany({
+			where: { authorId: req.user.id },
+		});
+		await prisma.user.delete({
+			where: { id: req.user.id },
+		});
+
+		// clean cookies
+		res.clearCookie("refreshToken", {
+			httpOnly: true,
+			sameSite: "strict",
+			secure: false, //until https
+		});
+
+		res.status(200).json({ message: "User account deleted" });
+	} catch (err) {
+		console.error("Error while deleting user:", err);
+		res.status(500).json({ error: "Internal server error" });
+	}
+}
