@@ -129,7 +129,6 @@ export async function getUserBooks(req: ExpressRequest, res: Response) {
 			},
 		});
 
-		// avoid duplication if +1 review on 1 book
 		const books = userReviews.map((review) => review.book);
 
 		//remove book duplication in case of +1 reviews
