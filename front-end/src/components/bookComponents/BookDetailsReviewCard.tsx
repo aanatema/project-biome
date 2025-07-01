@@ -1,27 +1,50 @@
 import { Label } from "@radix-ui/react-label";
 import { Card, CardContent } from "../shadcnComponents/card";
+import DeleteReview from "./DeleteReview";
+import { useAuth } from "@/Hooks/useAuth";
 
 // This card is used in the book details page to display username and their review
 
 type ReviewCardProps = {
+	reviewId: string;
 	content: string;
 	author: {
 		id: string;
 		username: string;
 	};
+	onReviewDeleted: (reviewId: string) => void; //onClick review will be deleted
 };
 
-export default function BookDetailsReviewCard({ content, author }: ReviewCardProps) {
+export default function BookDetailsReviewCard({
+	reviewId,
+	content,
+	author,
+	onReviewDeleted,
+}: ReviewCardProps) {
+	const { user } = useAuth();
+	// so that only the user can delete its own review
+	const canDelete = user && user.id === author.id;
+
 	return (
 		<>
 			<Card className='book-card mb-5 min-w-90 max-w-170 min-h-30 max-h-60 overflow-y-scroll'>
 				<CardContent className='space-y-2 text-center'>
-					<div className='text-start'>
-						<Label
-							className='font-bold'
-							htmlFor='username'>
-							{author.username}
-						</Label>
+					<div className='grid grid-cols-2'>
+						<div className='text-start'>
+							<Label
+								className='font-bold'
+								htmlFor='username'>
+								{author.username}
+							</Label>
+						</div>
+						<div className='text-end'>
+							{canDelete && (
+								<DeleteReview
+									reviewId={reviewId}
+									onReviewDeleted={onReviewDeleted}
+								/>
+							)}
+						</div>
 					</div>
 					<div className='text-start'>
 						<Label
