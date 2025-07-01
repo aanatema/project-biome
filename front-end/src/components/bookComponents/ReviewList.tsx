@@ -1,4 +1,3 @@
-// pages/AllReviewsPage.tsx
 import { useEffect, useState } from "react";
 import ReviewCard from "./ReviewCard";
 import { bookApi } from "@/libraries/axios";
