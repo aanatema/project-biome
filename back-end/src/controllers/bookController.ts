@@ -173,7 +173,43 @@ export const getAllReviews = async (req: ExpressRequest, res: Response) => {
 	} catch (error) {
 		console.error(error);
 		res.status(500).json({
-			error: "Erreur lors de la récupération des reviews.",
+			error: "Error during review retrieving",
 		});
 	}
 };
+
+export async function deleteReview(req: ExpressRequest, res: Response) {
+	if (!req.user) {
+		return res.status(401).json({ error: "user is not authenticated" });
+	}
+
+	try {
+		const reviewId = req.params.id;
+		const review = await prisma.review.findFirst({
+			where: {
+				id: reviewId,
+				authorId: req.user.id, //delete only user own reviews
+			},
+		});
+
+		if (!review) {
+			return res.status(404).json({
+				error: "Review not found or you don't have permission to delete it",
+			});
+		}
+
+		await prisma.review.delete({
+			where: {
+				id: reviewId,
+			},
+		});
+
+		res.status(200).json({
+			message: "Review deleted successfully",
+			deletedReviewId: reviewId,
+		});
+	} catch (error) {
+		console.error("Error while deleting review", error);
+		res.status(500).json({ error: "Internal server error" });
+	}
+}
