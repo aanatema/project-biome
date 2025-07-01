@@ -4,7 +4,6 @@ import type { JwtPayload } from "./auth.types";
 
 const accessToken = process.env.ACCESS_TOKEN_SECRET;
 if (!accessToken) throw new Error("access token undefined");
-
 // generate a jwt based on the user id, can be extended later, see if needed
 export const generateAccessToken = (user: JwtPayload): string => {
   return sign({ id: user.id }, accessToken, { expiresIn: "30m" });
