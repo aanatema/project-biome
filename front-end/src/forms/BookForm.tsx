@@ -69,7 +69,7 @@ export function BookForm() {
 						);
 						toast.warning(
 							"No book found with this ISBN in our external resources",
-							{ duration: 5000 }
+							{ duration: 4000 }
 						);
 						reset();
 					}

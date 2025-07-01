@@ -70,10 +70,10 @@ export const AuthProvider = ({ children }: Props) => {
 		try {
 			await userApi.post("/logout_user"); // send a disconnect request
 			setUser(null); // delete the user from the context
-			toast.info("You have been disconnected", { duration: 3000 });
+			toast.info("You have been disconnected", { duration: 4000 });
 		} catch (error) {
 			console.error("Error during logout", error);
-			toast.error("Disconnection failed", { duration: 3000 });
+			toast.error("Disconnection failed", { duration: 4000 });
 		}
 	};
 

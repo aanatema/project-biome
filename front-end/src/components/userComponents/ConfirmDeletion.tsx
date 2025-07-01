@@ -30,7 +30,7 @@ export function ConfirmDeletionDialog() {
 
 			// close dialog
 			setIsOpen(false);
-			toast.success("Account deleted successfully", { duration: 3000 });
+			toast.success("Account deleted successfully", { duration: 4000 });
 
 			// clean auth context
 			logout();
