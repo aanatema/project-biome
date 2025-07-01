@@ -25,7 +25,7 @@ export default function AccountPage() {
 					<h1 className='ml-10 font-semibold text-lg '>Your books</h1>
 				</div>
 
-				<div className='w-full flex justify-start pl-10 '>
+				<div className='w-full flex justify-center pl-10 '>
 					<UserBooks />
 				</div>
 			</div>
