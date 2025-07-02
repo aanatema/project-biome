@@ -3,6 +3,9 @@ import BookDetailsReviewCard from "./BookDetailsReviewCard";
 import { useParams } from "react-router";
 import { bookApi } from "@/libraries/axios";
 import { PaginationButtons } from "../PaginationButton";
+import { Label } from "@radix-ui/react-label";
+import { Button } from "../shadcnComponents/button";
+import { Card, CardHeader, CardContent } from "../shadcnComponents/card";
 
 type Review = {
 	id: string;
@@ -45,8 +48,7 @@ export default function BookReviews() {
 		);
 	};
 
-	if (loading) return <p>Chargement des reviews...</p>;
-	if (reviews.length === 0) return <p>Aucune review pour ce livre.</p>;
+	if (loading) return <p>Reviews loading...</p>;
 
 	return (
 		<div className='mt-10 px-5'>
@@ -54,9 +56,21 @@ export default function BookReviews() {
 				Avis sur ce livre
 			</h1>
 			{reviews.length === 0 ? (
-				<p className='text-center'>
-					Aucune review pour ce livre pour le moment.
-				</p>
+				<div className='mt-10 text-center '>
+					<Card className='w-90 '>
+						<CardHeader className='font-bold'>
+							This book has been read, but no reviews have been
+							posted about it yet.
+						</CardHeader>
+						<CardContent>
+							<Button
+								variant='secondary'
+								className='m-5 w-40'>
+								<a href='/homepage'>Return to homepage</a>
+							</Button>
+						</CardContent>
+					</Card>
+				</div>
 			) : (
 				<div className='grid grid-cols-2 gap-4'>
 					{reviews.map((review) => (
