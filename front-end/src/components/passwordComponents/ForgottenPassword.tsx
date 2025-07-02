@@ -1,6 +1,5 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import { Button, buttonVariants } from "../shadcnComponents/button";
-import { AuthContext } from "@/context/AuthContext";
 import { userApi } from "@/libraries/axios";
 import {
 	Dialog,
@@ -15,10 +14,8 @@ import { DialogHeader, DialogFooter } from "../shadcnComponents/dialog";
 import { Input } from "../shadcnComponents/input";
 
 export default function ForgottenPasswordDialog() {
-	const auth = useContext(AuthContext);
 	const [email, setEmail] = useState("");
 	const [loading, setLoading] = useState(false);
-	const [isOpen, setIsOpen] = useState(true);
 
 	const sendEmail = async () => {
 		if (!email) {
@@ -35,14 +32,11 @@ export default function ForgottenPasswordDialog() {
 			toast.error("Something went wrong");
 		} finally {
 			setLoading(false);
-			setIsOpen(false);
 		}
 	};
 
 	return (
-		<Dialog
-			open={isOpen}
-			onOpenChange={setIsOpen}>
+		<Dialog>
 			<DialogTrigger asChild>
 				<p className='underline text-secondary cursor-pointer'>
 					Forgot your password?
