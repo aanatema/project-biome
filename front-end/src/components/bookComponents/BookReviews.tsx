@@ -32,7 +32,7 @@ export default function BookReviews() {
 		const fetchReviews = async () => {
 			try {
 				const response = await bookApi.get(
-					`/${bookId}/reviews?page=${page}&limit=15`
+					`/${bookId}/reviews?page=${page}&limit=6`
 				);
 				if (page > totalPages && totalPages > 0) {
 					setPage(totalPages);
