@@ -22,7 +22,9 @@ export function ProfileButton() {
 				<Link to={`/modify-account`}>
 					<DropdownMenuItem>Update profile</DropdownMenuItem>
 				</Link>
-				<DropdownMenuItem onClick={logout}>Logout</DropdownMenuItem>
+				<Link to={`/disconnected`}>
+					<DropdownMenuItem onClick={logout}>Logout</DropdownMenuItem>
+				</Link>
 			</DropdownMenuContent>
 		</DropdownMenu>
 	);
