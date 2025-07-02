@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import BookDetailsReviewCard from "./BookDetailsReviewCard";
 import { useParams } from "react-router";
 import { bookApi } from "@/libraries/axios";
+import { PaginationButtons } from "../PaginationButton";
 
 type Review = {
 	id: string;
@@ -15,14 +16,19 @@ type Review = {
 export default function BookReviews() {
 	const [reviews, setReviews] = useState<Review[]>([]);
 	const [loading, setLoading] = useState(true);
+	const [page, setPage] = useState(1);
+	const [totalPages, setTotalPages] = useState(1);
 	const params = useParams();
 	const { bookId } = params;
 
 	useEffect(() => {
 		const fetchReviews = async () => {
 			try {
-				const response = await bookApi.get(`/${bookId}/reviews`);
-				setReviews(response.data);
+				const response = await bookApi.get(
+					`/${bookId}/reviews?page=${page}&limit=15`
+				);
+				setReviews(response.data.bookReviews);
+				setTotalPages(response.data.totalPages);
 			} catch (err) {
 				console.error(err);
 			} finally {
@@ -31,7 +37,8 @@ export default function BookReviews() {
 		};
 
 		fetchReviews();
-	}, [bookId]);
+	}, [bookId, page]);
+
 	const handleReviewDeleted = (reviewId: string) => {
 		setReviews((prevReviews) =>
 			prevReviews.filter((review) => review.id !== reviewId)
@@ -63,6 +70,11 @@ export default function BookReviews() {
 					))}
 				</div>
 			)}
+			<PaginationButtons
+				currentPage={page}
+				totalPages={totalPages}
+				onPageChange={setPage}
+			/>
 		</div>
 	);
 }

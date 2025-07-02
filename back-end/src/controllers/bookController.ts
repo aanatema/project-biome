@@ -43,24 +43,38 @@ export async function createBookAndReview(req: ExpressRequest, res: Response) {
 // GET REQUESTS
 export async function allBooks(req: ExpressRequest, res: Response) {
 	const { isbn, title, author } = req.query;
+	const page = parseInt(req.query.page as string) || 1;
+	const limit = parseInt(req.query.limit as string) || 15;
+	const skip = (page - 1) * limit;
 
 	try {
-		const books = await prisma.book.findMany({
-			where: {
-				...(isbn && { isbn: String(isbn) }),
-				...(title && {
-					title: { contains: String(title), mode: "insensitive" },
-				}),
-				...(author && {
-					author: {
-						contains: String(author),
-						mode: "insensitive",
-					},
-				}),
-			},
-		});
+		const [books, total] = await Promise.all([
+			await prisma.book.findMany({
+				skip,
+				take: limit,
+				where: {
+					...(isbn && { isbn: String(isbn) }),
+					...(title && {
+						title: { contains: String(title), mode: "insensitive" },
+					}),
+					...(author && {
+						author: {
+							contains: String(author),
+							mode: "insensitive",
+						},
+					}),
+				},
+			}),
+			prisma.review.count(),
+		]);
 
-		res.status(200).json(books);
+		res.json({
+			books,
+			page,
+			limit,
+			total,
+			totalPages: Math.ceil(total / limit),
+		});
 	} catch (error) {
 		console.error("Error while retrieving the books", error);
 		res.status(500).json({
@@ -93,21 +107,35 @@ export async function getBookById(req: ExpressRequest, res: Response) {
 //REVIEWS
 export async function getReviewsByBookId(req: ExpressRequest, res: Response) {
 	const { bookId } = req.params;
-	console.log("bookId param:", bookId);
+	const page = parseInt(req.query.page as string) || 1;
+	const limit = parseInt(req.query.limit as string) || 15;
+	const skip = (page - 1) * limit;
+
 	try {
-		const reviews = await prisma.review.findMany({
-			where: { bookId: bookId },
-			include: {
-				author: {
-					select: { id: true, username: true },
+		const [bookReviews, total] = await Promise.all([
+			prisma.review.findMany({
+				skip,
+				take: limit,
+				where: { bookId: bookId },
+				include: {
+					author: {
+						select: { id: true, username: true },
+					},
 				},
-			},
-			orderBy: {
-				createdAt: "desc",
-			},
+				orderBy: {
+					createdAt: "desc",
+				},
+			}),
+			prisma.review.count(),
+		]);
+		res.json({
+			bookReviews,
+			page,
+			limit,
+			total,
+			totalPages: Math.ceil(total / limit),
 		});
-		console.log("reviews found:", reviews);
-		res.status(200).json(reviews);
+		console.log("reviews found:", bookReviews);
 	} catch (error) {
 		console.error("Error while retrieving books", error);
 		res.status(500).json({ error: "Server error " });
@@ -122,10 +150,10 @@ export async function getUserBooks(req: ExpressRequest, res: Response) {
 	try {
 		const userReviews = await prisma.review.findMany({
 			where: {
-				authorId: req.user.id, 
+				authorId: req.user.id,
 			},
 			include: {
-				book: true, 
+				book: true,
 			},
 		});
 
@@ -136,7 +164,7 @@ export async function getUserBooks(req: ExpressRequest, res: Response) {
 				index === self.findIndex((b) => b.id === book.id)
 		);
 
-		res.status(200).json({ books: uniqueBooks }); 
+		res.status(200).json({ books: uniqueBooks });
 	} catch (error) {
 		console.error("Error while retrieving user books", error);
 		res.status(500).json({ error: "Internal server error" });
