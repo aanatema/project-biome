@@ -1,9 +1,9 @@
 import Navbar from "@/components/websiteComponents/Navbar";
 import { useAuth } from "@/hooks/useAuth";
 import NotConnectedPage from "./NotConnectedPage";
-import { ProfileButton } from "@/components/userComponents/Profile";
 import UserBooks from "@/components/bookComponents/UserBooks";
 import { Button } from "@/components/shadcnComponents/button";
+import { ProfileButton } from "@/components/userComponents/ProfileSettings";
 
 // list of all books linked to this account
 export default function AccountPage() {
