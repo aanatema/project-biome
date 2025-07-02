@@ -144,16 +144,25 @@ export async function getReviewsByBookId(req: ExpressRequest, res: Response) {
 
 export async function getUserBooks(req: ExpressRequest, res: Response) {
 	if (!req.user) {
-		return res.status(401).json({ error: "user is not authenticated" });
+		return res.status(401).json({ error: "User is not authenticated" });
 	}
+
+	const page = parseInt(req.query.page as string) || 1;
+	const limit = parseInt(req.query.limit as string) || 15;
+	const skip = (page - 1) * limit;
 
 	try {
 		const userReviews = await prisma.review.findMany({
+			skip,
+			take: limit,
 			where: {
 				authorId: req.user.id,
 			},
 			include: {
 				book: true,
+			},
+			orderBy: {
+				createdAt: "desc",
 			},
 		});
 
@@ -164,12 +173,27 @@ export async function getUserBooks(req: ExpressRequest, res: Response) {
 				index === self.findIndex((b) => b.id === book.id)
 		);
 
-		res.status(200).json({ books: uniqueBooks });
+		const totalReviews = await prisma.review.count({
+			where: {
+				authorId: req.user.id,
+			},
+		});
+
+		return res.status(200).json({
+			books: uniqueBooks,
+			pagination: {
+				page,
+				limit,
+				totalItems: totalReviews,
+				totalPages: Math.ceil(totalReviews / limit),
+			},
+		});
 	} catch (error) {
-		console.error("Error while retrieving user books", error);
-		res.status(500).json({ error: "Internal server error" });
+		console.error("Error retrieving user books:", error);
+		return res.status(500).json({ error: "Error retrieving user books" });
 	}
 }
+
 
 export async function deleteReview(req: ExpressRequest, res: Response) {
 	if (!req.user) {
