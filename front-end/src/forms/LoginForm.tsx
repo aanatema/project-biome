@@ -8,6 +8,7 @@ import {
 	CardFooter,
 } from "@/components/shadcnComponents/card";
 import { Input } from "@/components/shadcnComponents/input";
+import ForgottenPasswordDialog from "@/components/userComponents/ForgottenPassword";
 import { useAuth } from "@/hooks/useAuth";
 import { Label } from "@radix-ui/react-label";
 import { type SubmitHandler, useForm } from "react-hook-form";
@@ -90,8 +91,7 @@ export default function LoginForm() {
 						{errors.password && <p>{errors.password.message}</p>}
 					</div>
 
-					{/* IMPLEMENT LOGIC ABOUT SENDING AN EMAIL TO RESTER PASSWORD */}
-					<p>Forgot your password?</p>
+					<ForgottenPasswordDialog />
 				</CardContent>
 				<CardFooter>
 					<Button
