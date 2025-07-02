@@ -1,50 +1,43 @@
-import { Button, buttonVariants } from "@/components/shadcnComponents/button";
-import {
-	Dialog,
-	DialogContent,
-	DialogDescription,
-	DialogFooter,
-	DialogHeader,
-	DialogTitle,
-	DialogTrigger,
-} from "@/components/shadcnComponents/dialog";
+import { useState, useContext } from "react";
+import { Button, buttonVariants } from "../shadcnComponents/button";
 import { AuthContext } from "@/context/AuthContext";
 import { authApi } from "@/libraries/axios";
-import { DialogClose } from "@radix-ui/react-dialog";
-import { useContext } from "react";
+import {
+	Dialog,
+	DialogTrigger,
+	DialogContent,
+	DialogTitle,
+	DialogDescription,
+	DialogClose,
+} from "@/components/shadcnComponents/dialog";
 import { toast } from "sonner";
+import { DialogHeader, DialogFooter } from "../shadcnComponents/dialog";
 import { Input } from "../shadcnComponents/input";
+// ...
 
 export default function ForgottenPasswordDialog() {
 	const auth = useContext(AuthContext);
+	const [email, setEmail] = useState("");
 
 	const sendEmail = async () => {
-		if (!auth) return;
+		if (!email) {
+			toast.error("Please enter your email");
+			return;
+		}
 
 		try {
-			const refreshRes = await authApi.post("/refresh");
-			const accessToken = refreshRes.data.token;
-
-			const res = await fetch("http://localhost:3000/users/delete_user", {
-				method: "DELETE",
-				headers: {
-					Authorization: `Bearer ${accessToken}`,
-				},
-			});
-
-			if (!res.ok) throw new Error("Failed to delete account");
+			await authApi.post("/forgot-password", { email });
 			toast.success("Mail sent, check your inbox!");
 		} catch (err) {
-			console.error("Error while looking for account", err);
-			toast.error(
-				"We couldn't find your account, try again later or create one"
-			);
+			console.error("Error while sending reset email", err);
+			toast.error("Something went wrong");
 		}
 	};
+
 	return (
 		<Dialog>
 			<DialogTrigger asChild>
-				<p className=' text-decoration-line: underline text-secondary'>
+				<p className='underline text-secondary cursor-pointer'>
 					Forgot your password?
 				</p>
 			</DialogTrigger>
@@ -52,17 +45,23 @@ export default function ForgottenPasswordDialog() {
 				<DialogHeader>
 					<DialogTitle>Forgot your password?</DialogTitle>
 					<DialogDescription>
-						Enter your email and we'll check if you already have an
-						account, if that's the case, we'll send you an email
-						allowing you to reset your password.
+						Enter your email. If you have an account, you'll receive
+						an email to reset your password.
 					</DialogDescription>
 				</DialogHeader>
-				<Input placeholder='example@email.com' />
+
+				<Input
+					placeholder='example@email.com'
+					type='email'
+					value={email}
+					onChange={(e) => setEmail(e.target.value)}
+				/>
+
 				<DialogFooter>
 					<div className='grid w-full grid-cols-2 gap-4 mt-5'>
 						<Button
 							variant='default'
-							type='submit'
+							type='button'
 							onClick={sendEmail}>
 							Confirm
 						</Button>
