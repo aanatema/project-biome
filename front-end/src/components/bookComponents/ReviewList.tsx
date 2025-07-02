@@ -42,11 +42,13 @@ export default function AllReviewsPage() {
 					/>
 				))}
 			</div>
-			<PaginationButtons
-				currentPage={page}
-				totalPages={totalPages}
-				onPageChange={setPage}
-			/>
+			{totalPages > 1 && (
+				<PaginationButtons
+					currentPage={page}
+					totalPages={totalPages}
+					onPageChange={setPage}
+				/>
+			)}
 		</div>
 	);
 }

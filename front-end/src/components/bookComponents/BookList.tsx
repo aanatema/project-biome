@@ -38,11 +38,13 @@ export default function BookList() {
 					/>
 				))}
 			</div>
-			<PaginationButtons
-				currentPage={page}
-				totalPages={totalPages}
-				onPageChange={setPage}
-			/>
+			{totalPages > 1 && (
+				<PaginationButtons
+					currentPage={page}
+					totalPages={totalPages}
+					onPageChange={setPage}
+				/>
+			)}
 		</>
 	);
 }
