@@ -34,8 +34,12 @@ export default function BookReviews() {
 				const response = await bookApi.get(
 					`/${bookId}/reviews?page=${page}&limit=15`
 				);
-				setReviews(response.data.bookReviews);
-				setTotalPages(response.data.totalPages);
+				if (page > totalPages && totalPages > 0) {
+					setPage(totalPages);
+				} else {
+					setReviews(response.data.bookReviews);
+					setTotalPages(response.data.totalPages);
+				}
 			} catch (err) {
 				console.error(err);
 			} finally {
