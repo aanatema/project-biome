@@ -8,12 +8,18 @@ import ModifyAccountPage from "./pages/ModifyAccountPage.tsx";
 import BookReviewsPage from "./pages/BookReviewsPage.tsx";
 import LoggedOutPage from "./pages/LoggedOutPage.tsx";
 import AccountDeletedPage from "./pages/AccountDeletedPage.tsx";
+import LoginForm from "./forms/LoginForm.tsx";
 
 const router = createBrowserRouter([
 	{ path: "/", element: <HomePage />, errorElement: <PageNotFound /> },
 	{
 		path: "/login-or-register",
 		element: <LogOrRegisterPage />,
+		errorElement: <PageNotFound />,
+	},
+	{
+		path: "/login",
+		element: <LoginForm />,
 		errorElement: <PageNotFound />,
 	},
 	{
