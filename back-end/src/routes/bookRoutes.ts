@@ -24,4 +24,5 @@ router.get("/:bookId/reviews", getReviewsByBookId);
 router.get("/user_books", verifyToken, getUserBooks);
 
 router.delete("/reviews/:id", verifyToken, deleteReview);
+
 export default router;
