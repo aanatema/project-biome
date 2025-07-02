@@ -1,7 +1,7 @@
 # Biome - Online reading journal 📖
 
 **Biome** is a personal library where you can add your latest reading and share your thoughts on it.
-Each user can register, login, add a book and a review. Infos like the title and author are retrieved with [Open Library](https://openlibrary.org/dev/docs/api/books), using the book ISBN.
+Each user can register, login, add a book and a review. Infos like the title and author are retrieved with [Open Library](https://openlibrary.org/dev/docs/api/books) or [Google Books Api](https://developers.google.com/books/docs/v1/using?hl=en), using the book ISBN.
 
 ---
 
@@ -87,16 +87,17 @@ Launch dev server
 
 ### User oriented
 
-- Add Google Books API to cover more recent publishing
+- Allow user to modify their reviews
 - Add in app ratings
-- Allow users to like other reviews 
+- Allow users to like and comment under other users reviews
 - Add a follow system
+- Add a "library card" summarising monthly reads
 
 
 ### Dev oriented 
 
 - Add CI/CD
-- Add more tests to ensure quality 
+- Add tests to ensure quality
 
 
 ## Credits 
