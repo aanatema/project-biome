@@ -11,6 +11,7 @@ import { Input } from "@/components/shadcnComponents/input";
 import { useAuth } from "@/Hooks/useAuth";
 import { Label } from "@radix-ui/react-label";
 import { type SubmitHandler, useForm } from "react-hook-form";
+import { useNavigate } from "react-router";
 import { toast } from "sonner";
 
 export type UserProps = {
@@ -21,7 +22,7 @@ export type UserProps = {
 
 export default function LoginForm() {
 	const { login } = useAuth(); // call Auth context
-
+	const navigate = useNavigate();
 	const {
 		register,
 		handleSubmit,
@@ -35,10 +36,11 @@ export default function LoginForm() {
 			const success = await login(data.email, data.password);
 			if (!success) {
 				toast.error("Login failed, please check your credentials", {
-					duration: 3000,
+					duration: 4000,
 				});
 				return;
 			} else {
+				navigate("/homepage", { replace: true });
 				reset();
 				toast.success("Logged in!");
 			}
@@ -47,7 +49,7 @@ export default function LoginForm() {
 			toast.error(
 				"An unexpected error occurred during login, try again later",
 				{
-					duration: 5000,
+					duration: 4000,
 				}
 			);
 		}
