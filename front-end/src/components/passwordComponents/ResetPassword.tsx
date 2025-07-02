@@ -45,46 +45,48 @@ export default function ResetPassword() {
 				newPassword: password,
 			});
 			toast.success("Your password has successfully been changed!");
-			navigate("/login");
 		} catch (error) {
 			toast.error("Something happened, please try again later");
 			console.error(error);
 		} finally {
 			setLoading(false);
+			navigate("/login-or-register");
 		}
 	};
 
 	return (
-		<form onSubmit={handleSubmit}>
-			<Card className='w-140'>
-				<CardHeader>
-					<CardTitle>Change password</CardTitle>
-					<CardDescription>
-						Enter your new password here, don't forget to make it
-						secure!
-					</CardDescription>
-				</CardHeader>
-				<CardContent className='space-y-2'>
-					<div className='space-y-1'>
-						<Label htmlFor='password'>Password</Label>
-						<Input
-							id='password'
-							type='password'
-							value={password}
-							onChange={(e) => setPassword(e.target.value)}
-							disabled={loading}
-						/>
-					</div>
-				</CardContent>
-				<CardFooter>
-					<Button
-						className='w-full'
-						type='submit'
-						disabled={loading}>
-						{loading ? "Saving..." : "Confirm"}
-					</Button>
-				</CardFooter>
-			</Card>
-		</form>
+		<div className='flex justify-center h-screen items-center gap-4 mt-6 mb-10'>
+			<form onSubmit={handleSubmit}>
+				<Card className='w-140'>
+					<CardHeader>
+						<CardTitle>Change password</CardTitle>
+						<CardDescription>
+							Enter your new password here, don't forget to make
+							it secure!
+						</CardDescription>
+					</CardHeader>
+					<CardContent className='space-y-2'>
+						<div className='space-y-1'>
+							<Label htmlFor='password'>Password</Label>
+							<Input
+								id='password'
+								type='password'
+								value={password}
+								onChange={(e) => setPassword(e.target.value)}
+								disabled={loading}
+							/>
+						</div>
+					</CardContent>
+					<CardFooter>
+						<Button
+							className='w-full'
+							type='submit'
+							disabled={loading}>
+							{loading ? "Saving..." : "Confirm"}
+						</Button>
+					</CardFooter>
+				</Card>
+			</form>
+		</div>
 	);
 }
