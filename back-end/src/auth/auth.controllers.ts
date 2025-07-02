@@ -2,6 +2,7 @@ import type { Request, Response } from "express";
 import { generateAccessToken } from "./auth.tokens";
 import { verify } from "jsonwebtoken";
 import prisma from "../lib/prisma";
+import { setAccessTokenCookie } from "./auth.cookies";
 
 export async function refreshAccessToken(req: Request, res: Response) {
 	const refreshToken = process.env.REFRESH_TOKEN_SECRET;
@@ -25,6 +26,7 @@ export async function refreshAccessToken(req: Request, res: Response) {
 		// remove password from user object
 		const { password: _password, ...userWithoutPassword } = user;
 		const newAccessToken = generateAccessToken(userWithoutPassword);
+		setAccessTokenCookie(res, newAccessToken);
 
 		return res.status(200).json({ token: newAccessToken });
 	} catch (err) {

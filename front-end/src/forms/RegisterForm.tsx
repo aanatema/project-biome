@@ -8,6 +8,7 @@ import {
 	CardFooter,
 } from "@/components/shadcnComponents/card";
 import { Input } from "@/components/shadcnComponents/input";
+import { useAuth } from "@/hooks/useAuth";
 import { userApi } from "@/libraries/axios";
 import { Label } from "@radix-ui/react-label";
 import axios from "axios";
@@ -18,7 +19,7 @@ import { toast } from "sonner";
 export type UserProps = {
 	username: string;
 	email: string;
-	password?: string;
+	password: string;
 };
 
 export function RegisterForm() {
@@ -29,6 +30,7 @@ export function RegisterForm() {
 		reset,
 	} = useForm<UserProps>();
 	const navigate = useNavigate();
+	const { login } = useAuth(); // call Auth context
 
 	const onRegisterSubmit: SubmitHandler<UserProps> = async (data) => {
 		const newUserData = {
@@ -39,6 +41,8 @@ export function RegisterForm() {
 
 		try {
 			await userApi.post("/new_user", newUserData);
+			await login(data.email, data.password);
+
 			navigate("/homepage", { replace: true });
 		} catch (error) {
 			if (axios.isAxiosError(error)) {

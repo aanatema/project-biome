@@ -5,6 +5,7 @@ import { Button } from "../shadcnComponents/button";
 import { Card, CardContent, CardHeader } from "../shadcnComponents/card";
 import { Label } from "@radix-ui/react-label";
 import { toast } from "sonner";
+import { PaginationButtons } from "../PaginationButton";
 
 type Book = {
 	id: string;
@@ -16,16 +17,21 @@ type Book = {
 export default function UserBooks() {
 	const [books, setBooks] = useState<Book[]>([]);
 	const [loading, setLoading] = useState(true);
+	const [page, setPage] = useState(1);
+	const [totalPages, setTotalPages] = useState(1);
 
 	useEffect(() => {
 		const fetchBooks = async () => {
 			try {
 				setLoading(true);
 
-				const res = await bookApi.get("/user_books");
+				const response = await bookApi.get(
+					`/user_books?page=${page}&limit=15`
+				);
 
 				// Retrieve books or empty array if no books added for this user
-				setBooks(res.data.books || []);
+				setBooks(response.data.books || []);
+				setTotalPages(response.data.totalPages);
 			} catch (err) {
 				console.error("Error while retrieving the books", err);
 				toast.error(
@@ -37,7 +43,7 @@ export default function UserBooks() {
 		};
 
 		fetchBooks();
-	}, []);
+	}, [page]);
 
 	if (loading) {
 		return (
@@ -72,16 +78,27 @@ export default function UserBooks() {
 	}
 
 	return (
-		<div className='grid grid-cols-1 sm:grid-cols-4 md:grid-cols-3 lg:grid-cols-6 gap-5 mt-10'>
-			{books.map((book) => (
-				<BookCard
-					key={book.id}
-					id={book.id}
-					title={book.title}
-					author={book.author}
-					isbn={book.isbn}
-				/>
-			))}
-		</div>
+		<>
+			<div className='grid grid-cols-1 sm:grid-cols-4 md:grid-cols-3 lg:grid-cols-6 gap-5 mt-10'>
+				{books.map((book) => (
+					<BookCard
+						key={book.id}
+						id={book.id}
+						title={book.title}
+						author={book.author}
+						// isbn={book.isbn}
+					/>
+				))}
+			</div>
+			{totalPages > 1 && (
+				<div>
+					<PaginationButtons
+						currentPage={page}
+						totalPages={totalPages}
+						onPageChange={setPage}
+					/>
+				</div>
+			)}
+		</>
 	);
 }

@@ -124,7 +124,7 @@ export function BookForm() {
 					<CardHeader>
 						<CardTitle>New book</CardTitle>
 						<CardDescription className='m-3'>
-							Add the ISBN of your book and we'll fetch the infos
+							Add the ISBN of your book and we'll fetch the rest
 							for you!
 						</CardDescription>
 					</CardHeader>
