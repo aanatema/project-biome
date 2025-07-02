@@ -33,14 +33,6 @@ export default function Navbar() {
 					</Link>
 				</NavigationMenuItem>
 				<NavigationMenuItem>
-					<Link to='/library'>
-						<NavigationMenuLink
-							className={navigationMenuTriggerStyle()}>
-							Library
-						</NavigationMenuLink>
-					</Link>
-				</NavigationMenuItem>
-				<NavigationMenuItem>
 					<Link to='/account'>
 						<NavigationMenuLink
 							className={navigationMenuTriggerStyle()}>

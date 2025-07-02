@@ -1,118 +1,201 @@
-import { ConfirmDeletionDialog } from "@/components/userComponents/ConfirmDeletion";
 import { Button } from "@/components/shadcnComponents/button";
 import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-  CardFooter,
+	Card,
+	CardContent,
+	CardFooter,
+	CardHeader,
+	CardTitle,
 } from "@/components/shadcnComponents/card";
 import { Input } from "@/components/shadcnComponents/input";
+import { ConfirmDeletionDialog } from "@/components/userComponents/ConfirmDeletion";
+import { useAuth } from "@/hooks/useAuth";
+import { userApi } from "@/libraries/axios";
 import { Label } from "@radix-ui/react-label";
-import { type SubmitHandler, useForm } from "react-hook-form";
+import axios from "axios";
+import { useForm, SubmitHandler } from "react-hook-form";
 import { toast } from "sonner";
 
-export type UserProps = {
-  username: string;
-  email: string;
-  password?: string;
+export type ModifyUserProps = {
+	username?: string;
+	email?: string; //Optional
+	currentPassword: string;
+	newPassword?: string; // Optional
 };
 
 export function ModifyUserForm() {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm<UserProps>();
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+		reset,
+		watch,
+	} = useForm<ModifyUserProps>();
+	const { user } = useAuth();
 
-  const onModifySubmit: SubmitHandler<UserProps> = async (data) => {
-    const newUserData = {
-      username: data.username,
-      email: data.email,
-      password: data.password,
-    };
+	const watchNewPassword = watch("newPassword");
 
-    const response = await fetch("http://localhost:3000/users/new_user", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newUserData),
-    });
+	const onModifySubmit: SubmitHandler<ModifyUserProps> = async (data) => {
+		try {
+			const updateData = {
+				username: data.username,
+				currentPassword: data.currentPassword,
+				...(data.email && { email: data.email }),
+				...(data.newPassword && { newPassword: data.newPassword }),
+			};
 
-    if (!response.ok){
-      toast.error("Error while modifying your account, try again"); 
-      reset();
-      return console.error()
-    }
+			const response = await userApi.put("/modify_user", updateData);
 
-    const json = await response.json();
-    reset();
-    console.log(json);
-  };
+			toast.success("Account updated successfully!");
+			reset();
+			console.log("User updated:", response.data);
+		} catch (error) {
+			if (axios.isAxiosError(error)) {
+				const status = error.response?.status;
 
-  return (
+				if (status === 401) {
+					toast.error("Incorrect current password");
+				} else if (status === 409) {
+					toast.error("Email already exists");
+				} else if (status === 400) {
+					toast.error("Invalid data provided");
+				} else {
+					toast.error(
+						"Error while modifying your account, try again"
+					);
+				}
+
+				console.error("Server error during user modification:", error);
+			} else {
+				toast.error("Network error occurred");
+				console.error("Unexpected error:", error);
+			}
+		}
+	};
+
+	return (
 		<form onSubmit={handleSubmit(onModifySubmit)}>
 			<Card className='mt-10 sm:w-90 md:w-140'>
 				<CardHeader>
 					<CardTitle>Modify your account</CardTitle>
+					<Label className='m-2 text-center text-sm'>
+						To confirm it's really you making the change, you'll
+						need to enter your current password
+					</Label>
 				</CardHeader>
 				<CardContent className='space-y-2'>
 					<div className='space-y-1'>
-						<Label htmlFor='username'>Username</Label>
+						<div>
+							<Label htmlFor='username'>
+								Current username |{" "}
+							</Label>
+							<Label className='font-bold'>
+								{user?.username}
+							</Label>
+						</div>
+
 						<Input
 							id='username'
 							type='text'
+							placeholder='Type your new username'
 							{...register("username", {
-								required: "You can not have an empty username",
+								required: "Username cannot be empty",
+								minLength: {
+									value: 3,
+									message:
+										"Username must be at least 3 characters",
+								},
 							})}
 						/>
-						{errors.username && <p>{errors.username.message}</p>}
+
+						{errors.username && (
+							<p className='text-red-500 text-sm'>
+								{errors.username.message}
+							</p>
+						)}
 					</div>
 
-					{/* TODO ALLOW IMPORTANT CHANGE ONLY IF THE PASSWORD HAS BEEN VERIFIED  */}
 					<div className='space-y-1'>
-						<Label htmlFor='email'>Email</Label>
+						<div>
+							<Label htmlFor='email'>Current email | </Label>
+							<Label className='font-bold'>{user?.email}</Label>
+						</div>
+
 						<Input
 							id='email'
 							type='email'
+							placeholder='exemple@email.com'
 							{...register("email", {
-								required: "Incorrect email",
+								pattern: {
+									value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+									message: "Invalid email address",
+								},
 							})}
 						/>
-						{errors.email && <p>{errors.email.message}</p>}
+
+						{errors.email && (
+							<p className='text-red-500 text-sm'>
+								{errors.email.message}
+							</p>
+						)}
 					</div>
+
 					<div className='space-y-1'>
-						<Label htmlFor='password'>Current password</Label>
+						<Label htmlFor='currentPassword'>
+							Current password{" "}
+							{watchNewPassword &&
+								"* (required to change password)"}
+						</Label>
 						<Input
 							id='currentPassword'
 							type='password'
-							{...register("password", {
-								required: "Incorrect password",
+							placeholder='********'
+							{...register("currentPassword", {
+								validate: (value) => {
+									if (watchNewPassword && value.length < 8) {
+										return "Current password must be at least 8 characters";
+									}
+									if (watchNewPassword && !value) {
+										return "Current password is required when changing password";
+									}
+									return true;
+								},
 							})}
 						/>
-						{errors.password && <p>{errors.password.message}</p>}
+						{errors.currentPassword && (
+							<p className='text-red-500 text-sm'>
+								{errors.currentPassword.message}
+							</p>
+						)}
 					</div>
+
 					<div className='space-y-1'>
-						<Label htmlFor='password'>New password</Label>
+						<Label htmlFor='newPassword'>New password</Label>
 						<Input
 							id='newPassword'
 							type='password'
-							{...register("password", {
-								required: "Incorrect password",
+							{...register("newPassword", {
+								minLength: {
+									value: 8,
+									message:
+										"New password must be at least 8 characters",
+								},
 							})}
+							placeholder='Leave empty to keep your current password'
 						/>
-						{errors.password && <p>{errors.password.message}</p>}
+						{errors.newPassword && (
+							<p className='text-red-500 text-sm'>
+								{errors.newPassword.message}
+							</p>
+						)}
 					</div>
 				</CardContent>
 				<CardFooter>
 					<div className='grid w-full grid-cols-2 gap-4'>
-						<Button type='submit'>Update</Button>
+						<Button type='submit'>Update Account</Button>
 						<ConfirmDeletionDialog />
 					</div>
 				</CardFooter>
 			</Card>
 		</form>
-  );
+	);
 }

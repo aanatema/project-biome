@@ -1,7 +1,7 @@
 import Navbar from "@/components/websiteComponents/Navbar";
-import { useAuth } from "@/Hooks/useAuth";
+import { useAuth } from "@/hooks/useAuth";
 import NotConnectedPage from "./NotConnectedPage";
-import { ProfileSettingsButton } from "@/components/userComponents/ProfileSettings";
+import { ProfileButton } from "@/components/userComponents/Profile";
 import UserBooks from "@/components/bookComponents/UserBooks";
 import { Button } from "@/components/shadcnComponents/button";
 
@@ -19,13 +19,13 @@ export default function AccountPage() {
 					<Button variant='secondary'>
 						<a href='/new-book'>Add a book</a>
 					</Button>
-					<ProfileSettingsButton />
+					<ProfileButton/>
 				</div>
 				<div className='w-full flex justify-start mt-5'>
 					<h1 className='ml-10 font-semibold text-lg '>Your books</h1>
 				</div>
 
-				<div className='w-full flex justify-center pl-10 '>
+				<div className='w-full flex justify-center pl-10'>
 					<UserBooks />
 				</div>
 			</div>

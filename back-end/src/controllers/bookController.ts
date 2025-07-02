@@ -122,25 +122,59 @@ export async function getUserBooks(req: ExpressRequest, res: Response) {
 	try {
 		const userReviews = await prisma.review.findMany({
 			where: {
-				authorId: req.user.id,
+				authorId: req.user.id, 
 			},
 			include: {
-				book: true,
+				book: true, 
 			},
 		});
 
-		// avoid duplication if +1 review on 1 book
 		const books = userReviews.map((review) => review.book);
-
-		//remove book duplication in case of +1 reviews
+		// avoid having several book card for the same book
 		const uniqueBooks = books.filter(
 			(book, index, self) =>
 				index === self.findIndex((b) => b.id === book.id)
 		);
 
-		res.status(200).json({ books: uniqueBooks });
+		res.status(200).json({ books: uniqueBooks }); 
 	} catch (error) {
 		console.error("Error while retrieving user books", error);
+		res.status(500).json({ error: "Internal server error" });
+	}
+}
+
+export async function deleteReview(req: ExpressRequest, res: Response) {
+	if (!req.user) {
+		return res.status(401).json({ error: "user is not authenticated" });
+	}
+
+	try {
+		const reviewId = req.params.id;
+		const review = await prisma.review.findFirst({
+			where: {
+				id: reviewId,
+				authorId: req.user.id, //delete only user own reviews
+			},
+		});
+
+		if (!review) {
+			return res.status(404).json({
+				error: "Review not found or you don't have permission to delete it",
+			});
+		}
+
+		await prisma.review.delete({
+			where: {
+				id: reviewId,
+			},
+		});
+
+		res.status(200).json({
+			message: "Review deleted successfully",
+			deletedReviewId: reviewId,
+		});
+	} catch (error) {
+		console.error("Error while deleting review", error);
 		res.status(500).json({ error: "Internal server error" });
 	}
 }
@@ -173,7 +207,7 @@ export const getAllReviews = async (req: ExpressRequest, res: Response) => {
 	} catch (error) {
 		console.error(error);
 		res.status(500).json({
-			error: "Erreur lors de la récupération des reviews.",
+			error: "Error during book retrieving",
 		});
 	}
 };

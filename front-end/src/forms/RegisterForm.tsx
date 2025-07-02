@@ -12,6 +12,7 @@ import { userApi } from "@/libraries/axios";
 import { Label } from "@radix-ui/react-label";
 import axios from "axios";
 import { type SubmitHandler, useForm } from "react-hook-form";
+import { useNavigate } from "react-router";
 import { toast } from "sonner";
 
 export type UserProps = {
@@ -27,6 +28,7 @@ export function RegisterForm() {
 		formState: { errors },
 		reset,
 	} = useForm<UserProps>();
+	const navigate = useNavigate();
 
 	const onRegisterSubmit: SubmitHandler<UserProps> = async (data) => {
 		const newUserData = {
@@ -37,6 +39,7 @@ export function RegisterForm() {
 
 		try {
 			await userApi.post("/new_user", newUserData);
+			navigate("/homepage", { replace: true });
 		} catch (error) {
 			if (axios.isAxiosError(error)) {
 				// access to the error code status

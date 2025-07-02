@@ -9,13 +9,15 @@ import {
   DialogTrigger,
 } from "@/components/shadcnComponents/dialog";
 import { AuthContext } from "@/context/AuthContext";
-import { authApi, userApi } from "@/libraries/axios";
+import { authApi } from "@/libraries/axios";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { useContext } from "react";
+import { useNavigate } from "react-router";
 import { toast } from "sonner";
 
 export function ConfirmDeletionDialog() {
 	const auth = useContext(AuthContext);
+	const navigate = useNavigate();
 
 	const handleDelete = async () => {
 		if (!auth) return;
@@ -24,17 +26,21 @@ export function ConfirmDeletionDialog() {
 			const refreshRes = await authApi.post("/refresh");
 			const accessToken = refreshRes.data.token;
 
-			await userApi.delete("/delete_user", {
+			const res = await fetch("http://localhost:3000/users/delete_user", {
+				method: "DELETE",
 				headers: {
 					Authorization: `Bearer ${accessToken}`,
 				},
 			});
 
+			if (!res.ok) throw new Error("Failed to delete account");
+			//clean disconnect
 			auth.logout();
-			toast.success("Your account has been successfully deleted");
+			navigate("/account-deleted", {replace: true})
+			toast.success("Account successfully deleted");
 		} catch (err) {
 			console.error("Error while deleting account", err);
-			toast.error("Fail for account deletion");
+			toast.error("Fail in account deletion");
 		}
 	};
 	return (

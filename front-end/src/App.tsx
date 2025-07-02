@@ -6,6 +6,8 @@ import { AddBook } from "./pages/AddBookPage.tsx";
 import LogOrRegisterPage from "./pages/LogOrRegisterPage.tsx";
 import ModifyAccountPage from "./pages/ModifyAccountPage.tsx";
 import BookReviewsPage from "./pages/BookReviewsPage.tsx";
+import LoggedOutPage from "./pages/LoggedOutPage.tsx";
+import AccountDeletedPage from "./pages/AccountDeletedPage.tsx";
 
 const router = createBrowserRouter([
 	{ path: "/", element: <HomePage />, errorElement: <PageNotFound /> },
@@ -37,6 +39,16 @@ const router = createBrowserRouter([
 	{
 		path: "/modify-account",
 		element: <ModifyAccountPage />,
+		errorElement: <PageNotFound />,
+	},
+	{
+		path: "/disconnected",
+		element: <LoggedOutPage />,
+		errorElement: <PageNotFound />,
+	},
+	{
+		path: "/account-deleted",
+		element: <AccountDeletedPage />,
 		errorElement: <PageNotFound />,
 	},
 ]);

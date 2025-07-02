@@ -21,22 +21,11 @@ export const AuthProvider = ({ children }: Props) => {
 	useEffect(() => {
 		const fetchUserWithRefresh = async () => {
 			try {
-				const refreshResponse = await authApi.post("/refresh");
-				const { token: accessToken } = refreshResponse.data;
+				await authApi.post("/refresh");
 
-				const response = await fetch(
-					"http://localhost:3000/users/current_user",
-					{
-						headers: {
-							Authorization: `Bearer ${accessToken}`,
-						},
-					}
-				);
-				if (!response.ok) throw new Error("Not authenticated");
-
-				const data = await response.json();
-				console.log("Current user data:", data);
-				setUser(data);
+				const response = await userApi("/current_user");
+				console.log("Current user data:", response.data);
+				setUser(response.data);
 			} catch (err) {
 				console.error("Failed to refresh token or fetch user:", err);
 				setUser(null);
@@ -56,7 +45,8 @@ export const AuthProvider = ({ children }: Props) => {
 				password,
 			});
 
-			setUser(response.data);
+			setUser(response.data.user);
+			console.log(response.data.user);
 			return true;
 		} catch (err) {
 			console.error("Login error:", err);
@@ -68,12 +58,14 @@ export const AuthProvider = ({ children }: Props) => {
 
 	const logout = async () => {
 		try {
-			await userApi.post("/logout_user"); // send a disconnect request
-			setUser(null); // delete the user from the context
-			toast.info("You have been disconnected", { duration: 3000 });
+			// send a disconnect request
+			await userApi.post("/logout_user");
+			// delete the user from the context
+			setUser(null);
+			toast.info("You have been disconnected", { duration: 4000 });
 		} catch (error) {
 			console.error("Error during logout", error);
-			toast.error("Disconnection failed", { duration: 3000 });
+			toast.error("Disconnection failed", { duration: 4000 });
 		}
 	};
 

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { openLibFetchByISBN } from "@/api/booksApi/openLibrary";
 import { toast } from "sonner";
 import { fetchGoogleBooks } from "@/api/booksApi/googleBooks";
-import { useAuth } from "@/Hooks/useAuth";
+import { useAuth } from "@/hooks/useAuth";
 import NotConnectedPage from "@/pages/NotConnectedPage";
 import {
 	Card,
@@ -68,8 +68,8 @@ export function BookForm() {
 							"No book found for the given ISBN in both APIs"
 						);
 						toast.warning(
-							"No book found with this ISBN in our external resources",
-							{ duration: 5000 }
+							"No book with this ISBN found in our external resources",
+							{ duration: 4000 }
 						);
 						reset();
 					}

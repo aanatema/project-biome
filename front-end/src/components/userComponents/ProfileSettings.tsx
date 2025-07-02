@@ -5,10 +5,12 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "../shadcnComponents/dropdown-menu";
-import { useAuth } from "@/Hooks/useAuth";
+import { useAuth } from "@/hooks/useAuth";
+import { Link } from "react-router";
 
-export function ProfileSettingsButton() {
+export function ProfileButton() {
 	const { logout } = useAuth();
+
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
@@ -17,10 +19,12 @@ export function ProfileSettingsButton() {
 			<DropdownMenuContent
 				className='w-40'
 				align='end'>
-				<DropdownMenuItem>
-					<a href='/modify-account'>Update profile</a>
-				</DropdownMenuItem>
-				<DropdownMenuItem onClick={logout}>Logout</DropdownMenuItem>
+				<Link to={`/modify-account`}>
+					<DropdownMenuItem>Update profile</DropdownMenuItem>
+				</Link>
+				<Link to={`/disconnected`}>
+					<DropdownMenuItem onClick={logout}>Logout</DropdownMenuItem>
+				</Link>
 			</DropdownMenuContent>
 		</DropdownMenu>
 	);
