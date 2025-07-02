@@ -34,7 +34,7 @@ export default function DeleteReview({
 			setIsOpen(false);
 			onReviewDeleted(reviewId);
 			toast.success("Your review has been successfully deleted", {
-				duration: 3000,
+				duration: 4000,
 			});
 		} catch (error) {
 			console.error("Error during deletion", error);

@@ -68,8 +68,8 @@ export function BookForm() {
 							"No book found for the given ISBN in both APIs"
 						);
 						toast.warning(
-							"No book found with this ISBN in our external resources",
-							{ duration: 5000 }
+							"No book with this ISBN found in our external resources",
+							{ duration: 4000 }
 						);
 						reset();
 					}
