@@ -239,4 +239,38 @@ export async function forgottenPassword(req: ExpressRequest, res: Response) {
 	}
 }
 
-export async function resetPassword(req: ExpressRequest, res: Response) {}
+export async function resetPassword(req: ExpressRequest, res: Response) {
+	const { token, newPassword } = req.body;
+
+	if (!token || !newPassword) {
+		return res.status(400).json({ error: "Missing token or new password" });
+	}
+
+	if (newPassword.length < 8) {
+		return res
+			.status(400)
+			.json({ error: "Password must be at least 8 characters" });
+	}
+
+	try {
+		// verify and decode token
+		const decoded = jwt.verify(
+			token,
+			process.env.JWT_RESET_SECRET as string
+		) as {
+			id: string;
+		};
+		const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+		// Mise à jour en base
+		await prisma.user.update({
+			where: { id: decoded.id },
+			data: { password: hashedPassword },
+		});
+
+		res.status(200).json({ message: "Password updated successfully" });
+	} catch (err) {
+		console.error("Reset password error:", err);
+		res.status(400).json({ error: "Invalid or expired token" });
+	}
+}

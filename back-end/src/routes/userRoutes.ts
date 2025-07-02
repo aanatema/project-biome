@@ -17,7 +17,7 @@ router.post("/new_user", createUser);
 router.post("/login_user", loginUser);
 router.post("/logout_user", logoutUser);
 router.post("/forgotten_password", forgottenPassword);
-router.post("reset_password", resetPassword);
+router.post("/reset_password", resetPassword);
 
 router.put("/modify_user", verifyToken, modifyUser);
 
