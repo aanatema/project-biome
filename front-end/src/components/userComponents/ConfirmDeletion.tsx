@@ -12,10 +12,12 @@ import { AuthContext } from "@/context/AuthContext";
 import { authApi } from "@/libraries/axios";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { useContext } from "react";
+import { useNavigate } from "react-router";
 import { toast } from "sonner";
 
 export function ConfirmDeletionDialog() {
 	const auth = useContext(AuthContext);
+	const navigate = useNavigate();
 
 	const handleDelete = async () => {
 		if (!auth) return;
@@ -34,6 +36,7 @@ export function ConfirmDeletionDialog() {
 			if (!res.ok) throw new Error("Failed to delete account");
 			//clean disconnect
 			auth.logout();
+			navigate("/account-deleted", {replace: true})
 			toast.success("Account successfully deleted");
 		} catch (err) {
 			console.error("Error while deleting account", err);
