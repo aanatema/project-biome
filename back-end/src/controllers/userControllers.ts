@@ -63,8 +63,7 @@ export async function loginUser(req: ExpressRequest, res: Response) {
 
 		setRefreshTokenCookie(res, refreshToken);
 		setAccessTokenCookie(res, accessToken);
-
-		res.status(200).json({ userWithoutPassword });
+		res.status(200).json({ user: userWithoutPassword }); 
 	} catch (error) {
 		console.error("Login error:", error);
 		res.status(500).json({
@@ -73,11 +72,16 @@ export async function loginUser(req: ExpressRequest, res: Response) {
 	}
 }
 
-export async function logoutUser(req: ExpressRequest, res: Response) { 
+export async function logoutUser(req: ExpressRequest, res: Response) {
+	res.clearCookie("refreshToken", {
+		httpOnly: true,
+		sameSite: "lax",
+		secure: process.env.NODE_ENV === "production",
+	});
 	res.clearCookie("accessToken", {
 		httpOnly: true,
 		sameSite: "lax",
-		secure: process.env.NODE_ENV === "production",	
+		secure: process.env.NODE_ENV === "production",
 	});
 	res.status(200).json({ message: "Successful logout" });
 };
