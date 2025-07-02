@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import ReviewCard from "./ReviewCard";
 import { bookApi } from "@/libraries/axios";
-import { Button } from "../shadcnComponents/button";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { PaginationButtons } from "../PaginationButton";
 
 type Review = {
 	id: string;
@@ -43,31 +42,11 @@ export default function AllReviewsPage() {
 					/>
 				))}
 			</div>
-
-			{/* pagination controls */}
-			<div className='flex justify-center items-center gap-4 mt-6 mb-10'>
-				<Button
-					variant='outline'
-					onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-					disabled={page === 1}
-					className='px-3 py-1 bg-gray-200 rounded disabled:opacity-50'>
-					<ArrowLeft />
-				</Button>
-
-				<span className=''>
-					Page {page} / {totalPages}
-				</span>
-
-				<Button
-					variant='outline'
-					onClick={() =>
-						setPage((prev) => Math.min(prev + 1, totalPages))
-					}
-					disabled={page === totalPages}
-					className='px-3 py-1 bg-gray-200 rounded disabled:opacity-50'>
-					<ArrowRight />
-				</Button>
-			</div>
+			<PaginationButtons
+				currentPage={page}
+				totalPages={totalPages}
+				onPageChange={setPage}
+			/>
 		</div>
 	);
 }
