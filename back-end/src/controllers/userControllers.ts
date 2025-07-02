@@ -63,7 +63,7 @@ export async function loginUser(req: ExpressRequest, res: Response) {
 
 		setRefreshTokenCookie(res, refreshToken);
 		setAccessTokenCookie(res, accessToken);
-		res.status(200).json({ user: userWithoutPassword }); 
+		res.status(200).json({ user: userWithoutPassword });
 	} catch (error) {
 		console.error("Login error:", error);
 		res.status(500).json({
@@ -84,17 +84,81 @@ export async function logoutUser(req: ExpressRequest, res: Response) {
 		secure: process.env.NODE_ENV === "production",
 	});
 	res.status(200).json({ message: "Successful logout" });
-};
+}
 
-// TODO
-export async function modifyUser(req: Request, res: Response) {
-	const { username, email } = req.body;
-
+export async function modifyUser(req: ExpressRequest, res: Response) {
+	const { username, email, currentPassword, newPassword } = req.body;
+	const userId = req.user?.id;
 	try {
-		// Temporary stub
-		res.status(200).json({ message: "modifyUser not implemented yet" });
+		if (!userId) {
+			return res.status(401).json({ error: "User not authenticated" });
+		}
+
+		// if (!username || !currentPassword) {
+		// 	return res.status(400).json({
+		// 		error: "Username and current password are required",
+		// 	});
+		// }
+
+		const user = await prisma.user.findUnique({
+			where: { id: userId },
+		});
+		if (!user) {
+			return res.status(404).json({ error: "User not found" });
+		}
+
+		const isCurrentPasswordValid = await bcrypt.compare(
+			currentPassword,
+			user.password
+		);
+		if (!isCurrentPasswordValid) {
+			return res
+				.status(401)
+				.json({ error: "Incorrect current password" });
+		}
+
+		// check if email is not already in use, apart from current user
+		if (email !== user.email) {
+			const existingUser = await prisma.user.findFirst({
+				where: {
+					email: email,
+					NOT: { id: userId },
+				},
+			});
+			if (existingUser) {
+				return res.status(409).json({ error: "Email already in use" });
+			}
+		}
+
+		const updateData: any = {
+			username: username.trim(),
+			email: email.toLowerCase().trim(),
+		};
+
+		if (newPassword && newPassword.trim() !== "") {
+			const saltRounds = 10;
+			updateData.password = await bcrypt.hash(newPassword, saltRounds);
+		}
+
+		// update user in prisma
+		const updatedUser = await prisma.user.update({
+			where: { id: userId },
+			data: updateData,
+			select: {
+				id: true,
+				username: true,
+				email: true,
+				createdAt: true,
+				// password exclu automatiquement
+			},
+		});
+
+		res.status(200).json({
+			message: "User updated successfully",
+			user: updatedUser,
+		});
 	} catch (error) {
-		console.error("Error in modifyUser", error);
+		console.error("Error in modifyUser:", error);
 		res.status(500).json({
 			error: "Something happened during user modification",
 		});

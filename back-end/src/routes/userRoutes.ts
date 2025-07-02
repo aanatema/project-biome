@@ -14,7 +14,8 @@ const router = express.Router();
 router.post("/new_user", createUser);
 router.post("/login_user", loginUser);
 router.post("/logout_user", logoutUser);
-router.post("/modify_user", verifyToken, modifyUser);
+
+router.put("/modify_user", verifyToken, modifyUser);
 
 router.get("/current_user", verifyToken, getCurrentUser);
 
