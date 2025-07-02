@@ -90,7 +90,6 @@ export default function LoginForm() {
 						/>
 						{errors.password && <p>{errors.password.message}</p>}
 					</div>
-
 					<ForgottenPasswordDialog />
 				</CardContent>
 				<CardFooter>
