@@ -12,7 +12,7 @@ export default function ModifyAccountPage() {
 	return (
 		<>
 			<Navbar />
-			<div className='grid grid-cols-2 items-center justify-center'>
+			<div className='flex flex-col items-center justify-center'>
 				<ModifyUserForm />
 				<InfoSection />
 			</div>
