@@ -126,7 +126,9 @@ export async function getReviewsByBookId(req: ExpressRequest, res: Response) {
 					createdAt: "desc",
 				},
 			}),
-			prisma.review.count(),
+			prisma.review.count({
+				where: { bookId: bookId },
+			}),
 		]);
 		res.json({
 			bookReviews,
