@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import ReviewCard from "./ReviewCard";
 import { bookApi } from "@/libraries/axios";
 import { Button } from "../shadcnComponents/button";
-import { ArrowBigLeft, ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
 type Review = {
 	id: string;
