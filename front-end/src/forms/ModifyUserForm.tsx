@@ -8,7 +8,7 @@ import {
 } from "@/components/shadcnComponents/card";
 import { Input } from "@/components/shadcnComponents/input";
 import { ConfirmDeletionDialog } from "@/components/userComponents/ConfirmDeletion";
-import { useAuth } from "@/Hooks/useAuth";
+import { useAuth } from "@/hooks/useAuth";
 import { userApi } from "@/libraries/axios";
 import { Label } from "@radix-ui/react-label";
 import axios from "axios";

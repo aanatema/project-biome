@@ -1,5 +1,5 @@
 import Navbar from "@/components/websiteComponents/Navbar";
-import { useAuth } from "@/Hooks/useAuth";
+import { useAuth } from "@/hooks/useAuth";
 import NotConnectedPage from "./NotConnectedPage";
 import { ProfileButton } from "@/components/userComponents/Profile";
 import UserBooks from "@/components/bookComponents/UserBooks";

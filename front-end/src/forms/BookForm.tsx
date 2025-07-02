@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { openLibFetchByISBN } from "@/api/booksApi/openLibrary";
 import { toast } from "sonner";
 import { fetchGoogleBooks } from "@/api/booksApi/googleBooks";
-import { useAuth } from "@/Hooks/useAuth";
+import { useAuth } from "@/hooks/useAuth";
 import NotConnectedPage from "@/pages/NotConnectedPage";
 import {
 	Card,

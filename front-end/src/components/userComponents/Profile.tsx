@@ -5,7 +5,7 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "../shadcnComponents/dropdown-menu";
-import { useAuth } from "@/Hooks/useAuth";
+import { useAuth } from "@/hooks/useAuth";
 import { Link } from "react-router";
 
 export function ProfileButton() {

@@ -8,7 +8,7 @@ import {
 	CardFooter,
 } from "@/components/shadcnComponents/card";
 import { Input } from "@/components/shadcnComponents/input";
-import { useAuth } from "@/Hooks/useAuth";
+import { useAuth } from "@/hooks/useAuth";
 import { Label } from "@radix-ui/react-label";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router";

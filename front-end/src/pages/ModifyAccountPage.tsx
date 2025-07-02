@@ -1,7 +1,7 @@
 import Navbar from "@/components/websiteComponents/Navbar";
 import { ModifyUserForm } from "@/forms/ModifyUserForm";
 import InfoSection from "@/components/websiteComponents/InfoSection";
-import { useAuth } from "@/Hooks/useAuth";
+import { useAuth } from "@/hooks/useAuth";
 import NotConnectedPage from "./NotConnectedPage";
 
 export default function ModifyAccountPage() {
