@@ -1,5 +1,5 @@
 {
-	"cSpell.words": ["issn", "pswd", "shadcn", "sonner"],
+	"cSpell.words": ["issn", "MAILGUN", "pswd", "shadcn", "sonner"],
 	"editor.defaultFormatter": "esbenp.prettier-vscode",
 	"[typescriptreact]": {
 		"editor.defaultFormatter": "esbenp.prettier-vscode"
