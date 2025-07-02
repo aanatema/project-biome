@@ -9,6 +9,7 @@ import BookReviewsPage from "./pages/BookReviewsPage.tsx";
 import LoggedOutPage from "./pages/LoggedOutPage.tsx";
 import AccountDeletedPage from "./pages/AccountDeletedPage.tsx";
 import LoginForm from "./forms/LoginForm.tsx";
+import ResetPassword from "./components/passwordComponents/ResetPassword.tsx";
 
 const router = createBrowserRouter([
 	{ path: "/", element: <HomePage />, errorElement: <PageNotFound /> },
@@ -55,6 +56,11 @@ const router = createBrowserRouter([
 	{
 		path: "/account-deleted",
 		element: <AccountDeletedPage />,
+		errorElement: <PageNotFound />,
+	},
+	{
+		path: "/reset-password",
+		element: <ResetPassword />,
 		errorElement: <PageNotFound />,
 	},
 ]);
