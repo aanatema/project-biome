@@ -3,7 +3,6 @@ import BookDetailsReviewCard from "./BookDetailsReviewCard";
 import { useParams } from "react-router";
 import { bookApi } from "@/libraries/axios";
 import { PaginationButtons } from "../PaginationButton";
-import { Label } from "@radix-ui/react-label";
 import { Button } from "../shadcnComponents/button";
 import { Card, CardHeader, CardContent } from "../shadcnComponents/card";
 
