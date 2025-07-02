@@ -8,6 +8,9 @@ import {
 	setAccessTokenCookie,
 	setRefreshTokenCookie,
 } from "../auth/auth.cookies";
+import axios from "axios";
+import jwt from "jsonwebtoken";
+import FormData from "form-data";
 
 export interface ExpressRequest extends Request {
 	user?: User;
@@ -178,7 +181,7 @@ export async function getCurrentUser(req: ExpressRequest, res: Response) {
 		res.status(500).json({ error: "Internal server error" });
 	}
 }
-// delete user
+
 export async function deleteUser(req: ExpressRequest, res: Response) {
 	try {
 		if (!req.user) {
@@ -208,3 +211,61 @@ export async function deleteUser(req: ExpressRequest, res: Response) {
 		res.status(500).json({ error: "Internal server error" });
 	}
 }
+
+export async function forgottenPassword(req: ExpressRequest, res: Response) {
+	const { email } = req.body;
+
+	try {
+		const user = await prisma.user.findUnique({
+			where: { email },
+		});
+
+		if (!user) {
+			return res.status(200).json({
+				message: "If this email exists, a reset link was sent.",
+			});
+		}
+
+		// generate temporary token for reset
+		// to be changed to a proper RESET_TOKEN
+		const resetToken = jwt.sign(
+			{ id: user.id, email: user.email }, // payload
+			process.env.JWT_SECRET as string,
+			{ expiresIn: "1h" }
+		);
+
+		const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
+
+		// mail with mailgun
+		const data = new FormData();
+		data.append(
+			"from",
+			`No Reply <no-reply@${process.env.MAILGUN_DOMAIN}>`
+		);
+		data.append("to", email);
+		data.append("subject", "Reset your password");
+		data.append(
+			"text",
+			`Hello!\n\nYou requested to reset your password. Click the link below:\n\n${resetLink}\n\nIf you didn’t request this, ignore this message.`
+		);
+
+		await axios.post(
+			`https://api.mailgun.net/v3/${process.env.MAILGUN_DOMAIN}/messages`,
+			data,
+			{
+				auth: {
+					username: "api",
+					password: process.env.MAILGUN_API_KEY as string,
+				},
+				headers: data.getHeaders(),
+			}
+		);
+
+		return res.status(200).json({ message: "Reset email sent" });
+	} catch (err) {
+		console.error("Forgotten password error:", err);
+		return res.status(500).json({ error: "Internal server error" });
+	}
+}
+
+export async function resetPassword(req: ExpressRequest, res: Response) {}
