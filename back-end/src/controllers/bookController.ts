@@ -180,30 +180,45 @@ export async function deleteReview(req: ExpressRequest, res: Response) {
 }
 
 export const getAllReviews = async (req: ExpressRequest, res: Response) => {
-	try {
-		const reviews = await prisma.review.findMany({
-			include: {
-				author: {
-					select: {
-						id: true,
-						username: true,
-					},
-				},
-				book: {
-					select: {
-						id: true,
-						title: true,
-						author: true,
-						isbn: true,
-					},
-				},
-			},
-			orderBy: {
-				createdAt: "desc",
-			},
-		});
+	const page = parseInt(req.query.page as string) || 1;
+	const limit = parseInt(req.query.limit as string) || 15;
+	const skip = (page - 1) * limit;
 
-		res.json(reviews);
+	try {
+		const [reviews, total] = await Promise.all([
+			await prisma.review.findMany({
+				skip,
+				take: limit,
+				include: {
+					author: {
+						select: {
+							id: true,
+							username: true,
+						},
+					},
+					book: {
+						select: {
+							id: true,
+							title: true,
+							author: true,
+							isbn: true,
+						},
+					},
+				},
+				orderBy: {
+					createdAt: "desc",
+				},
+			}),
+			prisma.review.count(),
+		]);
+
+		res.json({
+			reviews,
+			page,
+			limit,
+			total,
+			totalPages: Math.ceil(total / limit),
+		});
 	} catch (error) {
 		console.error(error);
 		res.status(500).json({
