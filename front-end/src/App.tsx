@@ -1,15 +1,15 @@
 import PageNotFound from "./pages/PageNotFound.tsx";
 import HomePage from "./pages/HomePage.tsx";
 import { createBrowserRouter, RouterProvider } from "react-router";
-import AccountPage from "./pages/AccountPage.tsx";
-import { AddBook } from "./pages/AddBookPage.tsx";
-import LogOrRegisterPage from "./pages/LogOrRegisterPage.tsx";
-import ModifyAccountPage from "./pages/ModifyAccountPage.tsx";
-import BookReviewsPage from "./pages/BookReviewsPage.tsx";
-import LoggedOutPage from "./pages/LoggedOutPage.tsx";
-import AccountDeletedPage from "./pages/AccountDeletedPage.tsx";
+import { AddBook } from "./pages/book/AddBookPage.tsx";
+import LogOrRegisterPage from "./pages/connection/LogOrRegisterPage.tsx";
+import BookReviewsPage from "./pages/book/BookReviewsPage.tsx";
+import LoggedOutPage from "./pages/connection/LoggedOutPage.tsx";
+import AccountDeletedPage from "./pages/account/AccountDeletedPage.tsx";
 import LoginForm from "./forms/LoginForm.tsx";
 import ResetPassword from "./components/passwordComponents/ResetPassword.tsx";
+import ModifyAccountPage from "./pages/account/ModifyAccountPage.tsx";
+import AccountPage from "./pages/account/AccountPage.tsx";
 
 const router = createBrowserRouter([
 	{ path: "/", element: <HomePage />, errorElement: <PageNotFound /> },
