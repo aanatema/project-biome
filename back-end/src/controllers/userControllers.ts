@@ -2,7 +2,7 @@
 import type { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import { generateAccessToken, generateRefreshToken } from "../auth/auth.tokens";
-import prisma from "../lib/prisma";
+import prisma from "../libraries/prisma";
 import type { User } from "@prisma/client";
 import {
 	setAccessTokenCookie,

@@ -1,7 +1,7 @@
 import { verify } from "jsonwebtoken";
 import type { NextFunction, Response } from "express";
 import type { ExpressRequest } from "../controllers/userControllers";
-import prisma from "../lib/prisma";
+import prisma from "../libraries/prisma";
 
 export async function verifyToken(
   req: ExpressRequest,
