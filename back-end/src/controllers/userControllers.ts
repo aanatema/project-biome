@@ -19,6 +19,14 @@ export async function createUser(req: Request, res: Response) {
 	const { username, email, password } = req.body;
 
 	try {
+		let newUser = await prisma.user.findUnique({
+			where: { email },
+		});
+		if (newUser)
+			return res
+				.status(409)
+				.json({ error: "This email is already taken" });
+
 		//10 hash round
 		const hashedPassword = await bcrypt.hash(password, 10);
 		const user = await prisma.user.create({
@@ -34,8 +42,10 @@ export async function createUser(req: Request, res: Response) {
 		const accessToken = generateAccessToken(userWithoutPassword);
 		const refreshToken = generateRefreshToken(userWithoutPassword);
 
+		setAccessTokenCookie(res, accessToken);
 		setRefreshTokenCookie(res, refreshToken);
-		res.status(201).json({ token: accessToken });
+
+		res.status(201).json({ userWithoutPassword });
 	} catch (error) {
 		console.error("Error during user creation", error);
 		res.status(500).json({
@@ -57,9 +67,7 @@ export async function loginUser(req: ExpressRequest, res: Response) {
 		if (!validPassword)
 			return res.status(401).json({ error: "Invalid credentials" });
 
-		// remove password from user object, security measure
 		const { password: _password, ...userWithoutPassword } = user;
-		// accessToken will be used in the front-end to authenticate requests
 		const accessToken = generateAccessToken(userWithoutPassword);
 		const refreshToken = generateRefreshToken(userWithoutPassword);
 
@@ -218,7 +226,7 @@ export async function forgottenPassword(req: ExpressRequest, res: Response) {
 		const user = await prisma.user.findUnique({ where: { email } });
 		if (!user) {
 			return res.status(200).json({
-				message: "If this email exists, a reset link was sent.",
+				message: "A reset link has been sent.",
 			});
 		}
 
@@ -229,9 +237,7 @@ export async function forgottenPassword(req: ExpressRequest, res: Response) {
 		);
 
 		const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
-
 		await sendResetPasswordEmail(email, resetLink);
-
 		return res.status(200).json({ message: "Reset email sent" });
 	} catch (err) {
 		console.error("Forgotten password error:", err);
@@ -260,9 +266,9 @@ export async function resetPassword(req: ExpressRequest, res: Response) {
 		) as {
 			id: string;
 		};
+
 		const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-		// Mise à jour en base
 		await prisma.user.update({
 			where: { id: decoded.id },
 			data: { password: hashedPassword },
