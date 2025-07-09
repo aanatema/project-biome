@@ -29,8 +29,9 @@ export function RegisterForm() {
 		formState: { errors },
 		reset,
 	} = useForm<UserProps>();
+
 	const navigate = useNavigate();
-	const { login } = useAuth(); // call Auth context
+	const { login } = useAuth();
 
 	const onRegisterSubmit: SubmitHandler<UserProps> = async (data) => {
 		const newUserData = {
@@ -42,26 +43,20 @@ export function RegisterForm() {
 		try {
 			await userApi.post("/new_user", newUserData);
 			await login(data.email, data.password);
-
 			navigate("/homepage", { replace: true });
 		} catch (error) {
 			if (axios.isAxiosError(error)) {
-				// access to the error code status
 				const status = error.response?.status;
 
 				if (status === 400) {
 					toast.error("Invalid user data");
 				} else if (status === 409) {
-					toast.error("User already exists");
+					toast.error("This email is taken. You may have an account");
 				} else {
 					toast.error(
 						"Error while registering, verify your credentials"
 					);
 				}
-
-				console.error(
-					"Server error for newUser, check documentation to resolve"
-				);
 			} else {
 				toast.error("Network error occurred");
 			}
