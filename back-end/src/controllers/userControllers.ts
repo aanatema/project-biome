@@ -4,10 +4,7 @@ import bcrypt from "bcrypt";
 import { generateAccessToken, generateRefreshToken } from "../auth/auth.tokens";
 import prisma from "../libraries/prisma";
 import type { User } from "@prisma/client";
-import {
-	setAccessTokenCookie,
-	setRefreshTokenCookie,
-} from "../auth/auth.cookies";
+import { setRefreshTokenCookie } from "../auth/auth.cookies";
 import jwt from "jsonwebtoken";
 import { sendResetPasswordEmail } from "../services/mailgun.service";
 
@@ -42,10 +39,9 @@ export async function createUser(req: Request, res: Response) {
 		const accessToken = generateAccessToken(userWithoutPassword);
 		const refreshToken = generateRefreshToken(userWithoutPassword);
 
-		setAccessTokenCookie(res, accessToken);
 		setRefreshTokenCookie(res, refreshToken);
 
-		res.status(201).json({ userWithoutPassword });
+		res.status(201).json({ userWithoutPassword, accessToken });
 	} catch (error) {
 		console.error("Error during user creation", error);
 		res.status(500).json({
@@ -72,8 +68,7 @@ export async function loginUser(req: ExpressRequest, res: Response) {
 		const refreshToken = generateRefreshToken(userWithoutPassword);
 
 		setRefreshTokenCookie(res, refreshToken);
-		setAccessTokenCookie(res, accessToken);
-		res.status(200).json({ user: userWithoutPassword });
+		res.status(200).json({ user: userWithoutPassword, accessToken });
 	} catch (error) {
 		console.error("Login error:", error);
 		res.status(500).json({
