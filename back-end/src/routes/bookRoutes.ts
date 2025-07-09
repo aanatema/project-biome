@@ -15,7 +15,7 @@ console.log("📚 bookRoutes loaded");
 
 const router = express.Router();
 
-router.post("/add_book_and_review", verifyToken, createBookAndReview);
+router.post("/book_and_review", verifyToken, createBookAndReview);
 
 router.get("/books", allBooks);
 router.get("/reviews", getAllReviews);
