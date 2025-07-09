@@ -26,12 +26,10 @@ export async function verifyToken(
     const decoded = verify(token, accessToken) as { id: string };
 
     const user = await prisma.user.findUnique({
-      where: {
-        id: decoded.id,
-      },
-    });
-    // if user found, attached to user else undefined
-    // useful for modify a user account
+		where: {
+			id: decoded.id,
+		},
+	});
     req.user = user ?? undefined;
     next();
     console.log("User verified:", req.user?.id);
