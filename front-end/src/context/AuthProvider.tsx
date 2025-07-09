@@ -22,9 +22,8 @@ export const AuthProvider = ({ children }: Props) => {
 		const fetchUserWithRefresh = async () => {
 			try {
 				await authApi.post("/refresh");
-
 				const response = await userApi("/current_user");
-				console.log("Current user data:", response.data);
+
 				setUser(response.data);
 			} catch (err) {
 				console.error("Failed to refresh token or fetch user:", err);
