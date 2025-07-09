@@ -28,8 +28,6 @@ type FormValues = {
 
 export function BookForm() {
 	const { user } = useAuth();
-
-	// handleSubmit will make sure the values inside the inputs are valid before submitting
 	const {
 		register,
 		handleSubmit,
@@ -39,13 +37,12 @@ export function BookForm() {
 		reset,
 	} = useForm<FormValues>();
 
-	// setValue is used to set the value of the inputs
 	const [isLoading, setIsLoading] = useState(false);
 	const watchedISBN = watch("isbn");
 
 	useEffect(() => {
 		const checkAndLoadBook = async () => {
-			if (!watchedISBN || watchedISBN.length < 10) return;
+			if (!watchedISBN) return;
 			setIsLoading(true);
 
 			try {
@@ -56,9 +53,6 @@ export function BookForm() {
 					setValue("author", openLibData.author);
 				} else {
 					// try google books
-					console.log(
-						"Open Library didn't return data, trying Google Books"
-					);
 					const googleData = await fetchGoogleBooks(watchedISBN);
 					if (googleData) {
 						setValue("title", googleData.title);
@@ -68,7 +62,7 @@ export function BookForm() {
 							"No book found for the given ISBN in both APIs"
 						);
 						toast.warning(
-							"No book with this ISBN found in our external resources",
+							"This ISBN was not found in our external resources",
 							{ duration: 4000 }
 						);
 						reset();
@@ -76,6 +70,9 @@ export function BookForm() {
 				}
 			} catch (err) {
 				console.error("Error fetching book data", err);
+				toast.error("Something happened, please try again later", {
+					duration: 4000,
+				});
 			} finally {
 				setIsLoading(false);
 			}
@@ -99,16 +96,12 @@ export function BookForm() {
 				content: data.review,
 			};
 
-			const response = await bookApi.post(
-				"/add_book_and_review",
-				payload
-			);
+			await bookApi.post("/book_and_review", payload);
 
 			toast.success("Your addition has been successful!", {
 				duration: 4000,
 			});
 			reset();
-			console.log("Data sent:", response.data);
 		} catch (error) {
 			console.error("Failed to send:", error);
 			toast.error("Something happened, please try again later");
@@ -116,6 +109,8 @@ export function BookForm() {
 			setIsLoading(false);
 		}
 	};
+
+	const isbnFormat = /^(97(8|9))?\-?\d{1,5}\-?\d{1,7}\-?\d{1,7}\-?(\d|X)$/i;
 
 	return (
 		<>
@@ -137,9 +132,17 @@ export function BookForm() {
 								disabled={isLoading}
 								{...register("isbn", {
 									required: "Incorrect isbn",
+									pattern: {
+										value: isbnFormat,
+										message: "Invalid ISBN format",
+									},
 								})}
 							/>
-							{errors.isbn && <p>{errors.isbn.message}</p>}
+							{errors.isbn && (
+								<p className='text-destructive'>
+									{errors.isbn.message}
+								</p>
+							)}
 						</div>
 						<div className='space-y-1'>
 							<Label htmlFor='title'>Title*</Label>
@@ -151,19 +154,32 @@ export function BookForm() {
 									required: "Incorrect title",
 								})}
 							/>
-							{errors.title && <p>{errors.title.message}</p>}
+							{errors.title && (
+								<p className='text-destructive'>
+									{errors.title.message}
+								</p>
+							)}
 						</div>
 						<div className='space-y-1'>
 							<Label htmlFor='author'>Author*</Label>
 							<Input
 								id='author'
+								type='text'
 								placeholder='Andrea Stewart'
 								disabled={isLoading}
 								{...register("author", {
 									required: "Incorrect author",
+									pattern: {
+										value: /^[A-Za-zÀ-ÖØ-öø-ÿ \-']{2,}$/,
+										message: "Invalid author name",
+									},
 								})}
 							/>
-							{errors.author && <p>{errors.author.message}</p>}
+							{errors.author && (
+								<p className='text-destructive'>
+									{errors.author.message}
+								</p>
+							)}
 						</div>
 						<div className='space-y-1'>
 							<Label htmlFor='review'>Review</Label>
