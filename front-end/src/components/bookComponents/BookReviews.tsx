@@ -4,7 +4,12 @@ import { useParams } from "react-router";
 import { bookApi } from "@/libraries/axios";
 import { PaginationButtons } from "../PaginationButton";
 import { Button } from "../shadcnComponents/button";
-import { Card, CardHeader, CardContent } from "../shadcnComponents/card";
+import {
+	Card,
+	CardHeader,
+	CardContent,
+	CardDescription,
+} from "../shadcnComponents/card";
 
 type Review = {
 	id: string;
@@ -27,10 +32,14 @@ export default function BookReviews() {
 		const fetchReviews = async () => {
 			try {
 				const response = await bookApi.get(
-					`/${bookId}/reviews?page=${page}&limit=15`
+					`/${bookId}/reviews?page=${page}&limit=6`
 				);
-				setReviews(response.data.bookReviews);
-				setTotalPages(response.data.totalPages);
+				if (page > totalPages && totalPages > 0) {
+					setPage(totalPages);
+				} else {
+					setReviews(response.data.bookReviews);
+					setTotalPages(response.data.totalPages);
+				}
 			} catch (err) {
 				console.error(err);
 			} finally {
@@ -55,40 +64,45 @@ export default function BookReviews() {
 				Avis sur ce livre
 			</h1>
 			{reviews.length === 0 ? (
-				<div className='mt-10 text-center '>
-					<Card className='w-90 '>
+				<div className='mt-10 text-center flex flex-1 justify-center'>
+					<Card className='w-100 m-5'>
 						<CardHeader className='font-bold'>
-							This book has been read, but no reviews have been
-							posted about it yet.
+							No reviews
 						</CardHeader>
+						<CardDescription>
+							This book has been added to someone's library, but
+							no reviews have been posted about it yet.
+						</CardDescription>
 						<CardContent>
 							<Button
 								variant='secondary'
-								className='m-5 w-40'>
+								className='m-5 w-50'>
 								<a href='/homepage'>Return to homepage</a>
 							</Button>
 						</CardContent>
 					</Card>
 				</div>
 			) : (
-				<div className='grid grid-cols-2 gap-4'>
-					{reviews.map((review) => (
-						<BookDetailsReviewCard
-							key={review.id}
-							reviewId={review.id}
-							content={review.content}
-							author={review.author}
-							onReviewDeleted={handleReviewDeleted}
+				<>
+					<div className='grid grid-cols-2 gap-4'>
+						{reviews.map((review) => (
+							<BookDetailsReviewCard
+								key={review.id}
+								reviewId={review.id}
+								content={review.content}
+								author={review.author}
+								onReviewDeleted={handleReviewDeleted}
+							/>
+						))}
+					</div>
+					{totalPages > 1 && (
+						<PaginationButtons
+							currentPage={page}
+							totalPages={totalPages}
+							onPageChange={setPage}
 						/>
-					))}
-				</div>
-			)}
-			{totalPages > 1 && (
-				<PaginationButtons
-					currentPage={page}
-					totalPages={totalPages}
-					onPageChange={setPage}
-				/>
+					)}
+				</>
 			)}
 		</div>
 	);

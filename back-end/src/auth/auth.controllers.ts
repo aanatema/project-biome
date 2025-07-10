@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 import { generateAccessToken } from "./auth.tokens";
 import { verify } from "jsonwebtoken";
-import prisma from "../lib/prisma";
+import prisma from "../libraries/prisma";
 
 export async function refreshAccessToken(req: Request, res: Response) {
 	const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET;

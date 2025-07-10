@@ -30,6 +30,8 @@ model Review {
   createdAt DateTime @default(now())
   author    User     @relation(fields: [authorId], references: [id])
   authorId  String
-  book      Book     @relation(fields: [bookId], references: [id]) // one reference to Book
+  book      Book     @relation(fields: [bookId], references: [id])
   bookId    String
 }
+
+
