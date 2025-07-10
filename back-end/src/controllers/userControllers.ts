@@ -4,10 +4,7 @@ import bcrypt from "bcrypt";
 import { generateAccessToken, generateRefreshToken } from "../auth/auth.tokens";
 import prisma from "../lib/prisma";
 import type { User } from "@prisma/client";
-import {
-	setAccessTokenCookie,
-	setRefreshTokenCookie,
-} from "../auth/auth.cookies";
+import { setRefreshTokenCookie } from "../auth/auth.cookies";
 import jwt from "jsonwebtoken";
 import { sendResetPasswordEmail } from "../services/mailgun.service";
 
@@ -35,7 +32,10 @@ export async function createUser(req: Request, res: Response) {
 		const refreshToken = generateRefreshToken(userWithoutPassword);
 
 		setRefreshTokenCookie(res, refreshToken);
-		res.status(201).json({ token: accessToken });
+		res.status(201).json({
+			user: userWithoutPassword,
+			accessToken,
+		});
 	} catch (error) {
 		console.error("Error during user creation", error);
 		res.status(500).json({
@@ -57,15 +57,12 @@ export async function loginUser(req: ExpressRequest, res: Response) {
 		if (!validPassword)
 			return res.status(401).json({ error: "Invalid credentials" });
 
-		// remove password from user object, security measure
 		const { password: _password, ...userWithoutPassword } = user;
-		// accessToken will be used in the front-end to authenticate requests
 		const accessToken = generateAccessToken(userWithoutPassword);
 		const refreshToken = generateRefreshToken(userWithoutPassword);
 
 		setRefreshTokenCookie(res, refreshToken);
-		setAccessTokenCookie(res, accessToken);
-		res.status(200).json({ user: userWithoutPassword });
+		res.status(200).json({ user: userWithoutPassword, accessToken });
 	} catch (error) {
 		console.error("Login error:", error);
 		res.status(500).json({
@@ -76,11 +73,6 @@ export async function loginUser(req: ExpressRequest, res: Response) {
 
 export async function logoutUser(req: ExpressRequest, res: Response) {
 	res.clearCookie("refreshToken", {
-		httpOnly: true,
-		sameSite: "lax",
-		secure: process.env.NODE_ENV === "production",
-	});
-	res.clearCookie("accessToken", {
 		httpOnly: true,
 		sameSite: "lax",
 		secure: process.env.NODE_ENV === "production",
