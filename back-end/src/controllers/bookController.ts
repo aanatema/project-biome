@@ -30,7 +30,6 @@ export async function createBookAndReview(req: ExpressRequest, res: Response) {
 			},
 		});
 		res.status(201).json({ book, review });
-		console.log("New book and review created:", { book, review });
 	} catch (error) {
 		console.error(
 			"Error during the creation of a new book and review",

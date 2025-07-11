@@ -99,16 +99,12 @@ export function BookForm() {
 				content: data.review,
 			};
 
-			const response = await bookApi.post(
-				"/add_book_and_review",
-				payload
-			);
+			await bookApi.post("/add_book_and_review", payload);
 
 			toast.success("Your addition has been successful!", {
 				duration: 4000,
 			});
 			reset();
-			console.log("Data sent:", response.data);
 		} catch (error) {
 			console.error("Failed to send:", error);
 			toast.error("Something happened, please try again later");
