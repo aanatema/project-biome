@@ -18,7 +18,7 @@ export function PaginationButtons({
 				variant='outline'
 				onClick={() => onPageChange(Math.max(currentPage - 1, 1))}
 				disabled={currentPage === 1}
-				className='px-3 py-1 bg-gray-200 rounded disabled:opacity-50'>
+				className='px-1 py-1  disabled:opacity-50'>
 				<ArrowLeft />
 			</Button>
 
@@ -32,7 +32,7 @@ export function PaginationButtons({
 					onPageChange(Math.min(currentPage + 1, totalPages))
 				}
 				disabled={currentPage === totalPages}
-				className='px-3 py-1 bg-gray-200 rounded disabled:opacity-50'>
+				className='px-1 py-1 disabled:opacity-50'>
 				<ArrowRight />
 			</Button>
 		</div>
