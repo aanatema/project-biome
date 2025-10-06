@@ -4,26 +4,23 @@ import type { ExpressRequest } from "../controllers/userControllers";
 import prisma from "../libraries/prisma";
 
 export async function verifyToken(
-  req: ExpressRequest,
-  res: Response,
-  next: NextFunction
+	req: ExpressRequest,
+	res: Response,
+	next: NextFunction
 ) {
-  // extract authorization header from HTTP request
-  const authHeader = req.headers.authorization;
-  const cookieToken = req.cookies?.accessToken;
+	const authHeader = req.headers.authorization;
+	const token = authHeader?.split(" ")[1];
 
-  // extract only the token from the header
-  const token = authHeader?.split(" ")[1] || cookieToken;
+	if (!token) {
+		return res.status(401).json({ error: "No access token provided" });
+	}
+	// check that the token exists
+	const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
+	if (!accessTokenSecret) throw new Error("access token undefined");
 
-  // check that the token exists
-  const accessToken = process.env.ACCESS_TOKEN_SECRET;
-  const refreshToken = process.env.REFRESH_TOKEN_SECRET;
-  if (!accessToken) throw new Error("access token undefined");
-  if (!refreshToken) throw new Error("refresh token undefined");
-
-  try {
-    // check if the signature has not been modified
-    const decoded = verify(token, accessToken) as { id: string };
+	try {
+		// check if the signature has not been modified
+		const decoded = verify(token, accessTokenSecret) as { id: string };
 
     const user = await prisma.user.findUnique({
 		where: {

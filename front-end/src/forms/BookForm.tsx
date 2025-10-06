@@ -96,7 +96,7 @@ export function BookForm() {
 				content: data.review,
 			};
 
-			await bookApi.post("/book_and_review", payload);
+			await bookApi.post("/add_book_and_review", payload);
 
 			toast.success("Your addition has been successful!", {
 				duration: 4000,

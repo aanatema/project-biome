@@ -40,8 +40,10 @@ export async function createUser(req: Request, res: Response) {
 		const refreshToken = generateRefreshToken(userWithoutPassword);
 
 		setRefreshTokenCookie(res, refreshToken);
-
-		res.status(201).json({ userWithoutPassword, accessToken });
+		res.status(201).json({
+			user: userWithoutPassword,
+			accessToken,
+		});
 	} catch (error) {
 		console.error("Error during user creation", error);
 		res.status(500).json({
@@ -79,11 +81,6 @@ export async function loginUser(req: ExpressRequest, res: Response) {
 
 export async function logoutUser(req: ExpressRequest, res: Response) {
 	res.clearCookie("refreshToken", {
-		httpOnly: true,
-		sameSite: "lax",
-		secure: process.env.NODE_ENV === "production",
-	});
-	res.clearCookie("accessToken", {
 		httpOnly: true,
 		sameSite: "lax",
 		secure: process.env.NODE_ENV === "production",
