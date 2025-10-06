@@ -61,7 +61,7 @@ export default function BookReviews() {
 	return (
 		<div className='mt-10 px-5'>
 			<h1 className='text-2xl font-bold mb-6 text-start'>
-				Avis sur ce livre
+				Reviews on this book
 			</h1>
 			{reviews.length === 0 ? (
 				<div className='mt-10 text-center flex flex-1 justify-center'>

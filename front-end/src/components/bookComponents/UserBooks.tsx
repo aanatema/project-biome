@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import BookCard from "./BookCard";
 import { bookApi } from "@/libraries/axios";
-import { Button } from "../shadcnComponents/button";
 import { Card, CardContent, CardHeader } from "../shadcnComponents/card";
 import { Label } from "@radix-ui/react-label";
 import { toast } from "sonner";
 import { PaginationButtons } from "../PaginationButton";
+import AddBookButton from "../buttons/AddBookButton";
 
 type Book = {
 	id: string;
@@ -66,11 +66,7 @@ export default function UserBooks() {
 					</CardHeader>
 					<Label>Add some books to change that!</Label>
 					<CardContent>
-						<Button
-							variant='secondary'
-							className='m-5 w-40'>
-							<a href='/new-book'>Add a book</a>
-						</Button>
+						<AddBookButton />
 					</CardContent>
 				</Card>
 			</div>
