@@ -4,16 +4,16 @@ import * as TabsPrimitive from "@radix-ui/react-tabs"
 import { cn } from "@/libraries/tailwind";
 
 function Tabs({
-  className,
-  ...props
+	className,
+	...props
 }: React.ComponentProps<typeof TabsPrimitive.Root>) {
-  return (
-    <TabsPrimitive.Root
-      data-slot="tabs"
-      className={cn("flex flex-col gap-2", className)}
-      {...props}
-    />
-  )
+	return (
+		<TabsPrimitive.Root
+			data-slot='tabs'
+			className={cn("flex flex-col gap-2 ", className)}
+			{...props}
+		/>
+	);
 }
 
 function TabsList({
@@ -24,7 +24,7 @@ function TabsList({
 		<TabsPrimitive.List
 			data-slot='tabs-list'
 			className={cn(
-				"bg-background text-muted inline-flex h-12 w-fit items-center justify-center rounded-lg ",
+				"bg-background text-muted inline-flex h-12 w-85 items-center justify-center rounded-lg ",
 				className
 			)}
 			{...props}
@@ -49,16 +49,16 @@ function TabsTrigger({
 }
 
 function TabsContent({
-  className,
-  ...props
+	className,
+	...props
 }: React.ComponentProps<typeof TabsPrimitive.Content>) {
-  return (
-    <TabsPrimitive.Content
-      data-slot="tabs-content"
-      className={cn("flex-1 outline-none", className)}
-      {...props}
-    />
-  )
+	return (
+		<TabsPrimitive.Content
+			data-slot='tabs-content'
+			className={cn("pt-5 flex-1 outline-none", className)}
+			{...props}
+		/>
+	);
 }
 
 export { Tabs, TabsList, TabsTrigger, TabsContent }
