@@ -5,9 +5,7 @@ export default function HomePage() {
 	return (
 		<>
 			<Navbar />
-			<div className='flex flex-col items-center justify-center'>
-				<BookReviewTabs />
-			</div>
+			<BookReviewTabs />
 		</>
 	);
 }
