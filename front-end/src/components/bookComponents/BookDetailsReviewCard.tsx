@@ -23,7 +23,7 @@ export default function BookDetailsReviewCard({
 	onReviewDeleted,
 }: ReviewCardProps) {
 	const { user } = useAuth();
-	// so that only the user can delete its own review
+	// only the user can delete its own review
 	const canDelete = user && user.id === author.id;
 
 	return (

@@ -43,11 +43,10 @@ export function ModifyUserForm() {
 				...(data.newPassword && { newPassword: data.newPassword }),
 			};
 
-			const response = await userApi.put("/modify_user", updateData);
+			await userApi.put("/modify_user", updateData);
 
 			toast.success("Account updated successfully!");
 			reset();
-			console.log("User updated:", response.data);
 		} catch (error) {
 			if (axios.isAxiosError(error)) {
 				const status = error.response?.status;

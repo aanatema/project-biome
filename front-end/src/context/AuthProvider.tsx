@@ -23,7 +23,7 @@ export const AuthProvider = ({ children }: Props) => {
 			try {
 				await authApi.post("/refresh");
 				const response = await userApi("/current_user");
-
+				console.log("Current user data:", response.data);
 				setUser(response.data);
 			} catch (err) {
 				console.error("Failed to refresh token or fetch user:", err);
@@ -44,8 +44,9 @@ export const AuthProvider = ({ children }: Props) => {
 				password,
 			});
 
+			localStorage.setItem("accessToken", response.data.accessToken);
 			setUser(response.data.user);
-			console.log(response.data.user);
+
 			return true;
 		} catch (err) {
 			console.error("Login error:", err);
@@ -60,7 +61,9 @@ export const AuthProvider = ({ children }: Props) => {
 			// send a disconnect request
 			await userApi.post("/logout_user");
 			// delete the user from the context
+			localStorage.removeItem("accessToken");
 			setUser(null);
+
 			toast.info("You have been disconnected", { duration: 4000 });
 		} catch (error) {
 			console.error("Error during logout", error);

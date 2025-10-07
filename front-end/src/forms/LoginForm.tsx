@@ -33,8 +33,8 @@ export default function LoginForm() {
 
 	const onLoginSubmit: SubmitHandler<UserProps> = async (data) => {
 		try {
-			// call auth context login method
 			const success = await login(data.email, data.password);
+
 			if (!success) {
 				toast.error("Login failed, please check your credentials", {
 					duration: 4000,
