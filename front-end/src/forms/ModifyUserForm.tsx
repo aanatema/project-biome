@@ -73,7 +73,7 @@ export function ModifyUserForm() {
 
 	return (
 		<form onSubmit={handleSubmit(onModifySubmit)}>
-			<Card className='mt-10 sm:w-90 md:w-140'>
+			<Card className='my-10 sm:w-90 md:w-140'>
 				<CardHeader>
 					<CardTitle>Modify your account</CardTitle>
 					<Label className='m-2 text-center text-sm'>

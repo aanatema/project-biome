@@ -6,7 +6,7 @@ export default function AccountDeletedPage() {
 			<h1 className='text-lg'>
 				Looks like you don't have an account, create one to access Biome.
 			</h1>
-			<div className="mt-10">
+			<div className="my-10">
 				<RegisterForm />
 			</div>
 		</div>
