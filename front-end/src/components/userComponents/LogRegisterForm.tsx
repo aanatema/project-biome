@@ -11,7 +11,7 @@ export default function LogRegisterForm() {
 	return (
 		<Tabs
 			defaultValue='login'
-			className='mt-10 w-140'>
+			className='my-10 w-90'>
 			<TabsList className='grid w-full grid-cols-2'>
 				<TabsTrigger
 					className='rounded-l-md'
