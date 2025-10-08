@@ -2,7 +2,7 @@ import { Button } from "@/components/shadcnComponents/button";
 
 export default function NotConnectedPage() {
 	return (
-		<div className='flex flex-col items-center justify-center mt-20'>
+		<div className='flex flex-col items-center justify-center mx-5 my-20'>
 			<p className='text-lg'>
 				You must be logged in to access this page.
 			</p>
