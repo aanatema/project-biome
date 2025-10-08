@@ -30,7 +30,7 @@ export default function AllReviewsPage() {
 	}, [page]);
 
 	return (
-		<section className='space-y-4'>
+		<section className='mx-5'>
 			<div className='grid grid-cols-1 gap-4'>
 				{reviews.map((review) => (
 					<ReviewCard
