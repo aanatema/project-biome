@@ -47,7 +47,7 @@ export default function UserBooks() {
 
 	if (loading) {
 		return (
-			<div className='text-center mt-10'>
+			<div className='text-center my-10'>
 				<Card>
 					<CardContent>
 						Your books are loading... Please wait...
@@ -59,7 +59,7 @@ export default function UserBooks() {
 
 	if (books.length === 0) {
 		return (
-			<div className='mt-10 text-center '>
+			<div className='my-10 text-center'>
 				<Card className='w-90 '>
 					<CardHeader className='font-bold'>
 						Your library looks empty.
@@ -75,7 +75,7 @@ export default function UserBooks() {
 
 	return (
 		<>
-			<div className='grid grid-cols-1 sm:grid-cols-4 md:grid-cols-3 lg:grid-cols-6 gap-5 mt-10'>
+			<div className='grid grid-cols-1 sm:grid-cols-4 md:grid-cols-3 lg:grid-cols-6 gap-5 my-10'>
 				{books.map((book) => (
 					<BookCard
 						key={book.id}

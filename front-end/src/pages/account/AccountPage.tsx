@@ -14,16 +14,16 @@ export default function AccountPage() {
 	return (
 		<>
 			<Navbar />
-			<div className='flex flex-col items-center p-4'>
-				<div className='w-full flex justify-end mb-4 mr-10 mt-5 gap-5'>
+			<div className='flex flex-col items-center'>
+				<div className='w-full flex justify-end my-5 mr-10 gap-5'>
 					<AddBookButton />
 					<ProfileButton />
 				</div>
-				<div className='w-full flex justify-start mt-5'>
-					<h1 className='ml-10 font-semibold text-lg '>Your books</h1>
+				<div className='w-full flex justify-start my-5'>
+					<h1 className='mx-5 font-semibold text-lg '>Your books</h1>
 				</div>
 
-				<div className='w-full flex justify-center pl-10'>
+				<div className='w-full flex justify-center mx-5'>
 					<UserBooks />
 				</div>
 			</div>

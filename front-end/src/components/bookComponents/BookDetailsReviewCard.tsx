@@ -28,7 +28,7 @@ export default function BookDetailsReviewCard({
 
 	return (
 		<>
-			<Card className='book-card mb-5 min-w-90 max-w-170 min-h-30 max-h-60 overflow-y-scroll'>
+			<Card className='book-card mb-5 min-w-80 min-h-15 max-h-80 overflow-y-scroll'>
 				<CardContent className='space-y-2 text-center'>
 					<div className='grid grid-cols-2'>
 						<div className='text-start'>

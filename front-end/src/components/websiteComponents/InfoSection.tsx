@@ -15,7 +15,7 @@ import { TermsConditions } from "./TermsConditions";
 
 export default function InfoSection() {
 	return (
-		<Card className='mt-10 mb-10 w-140'>
+		<Card className='mt-10 mb-10 min-w-90 max-w-140'>
 			<CardTitle>INFOS</CardTitle>
 			<CardHeader>
 				Here you can find information concerning the terms and

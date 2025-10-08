@@ -115,7 +115,7 @@ export function BookForm() {
 	return (
 		<>
 			<form onSubmit={handleSubmit(onSubmit)}>
-				<Card className='mt-10 w-140 justify-center'>
+				<Card className='my-10 w-90 md:w-140 justify-center'>
 					<CardHeader>
 						<CardTitle>New book</CardTitle>
 						<CardDescription className='m-3'>
@@ -123,7 +123,7 @@ export function BookForm() {
 							for you!
 						</CardDescription>
 					</CardHeader>
-					<CardContent className='space-y-2'>
+					<CardContent className='space-y-4'>
 						<div className='space-y-1'>
 							<Label htmlFor='ISBN'>ISBN*</Label>
 							<Input
@@ -144,7 +144,7 @@ export function BookForm() {
 								</p>
 							)}
 						</div>
-						<div className='space-y-1'>
+						<div className=''>
 							<Label htmlFor='title'>Title*</Label>
 							<Input
 								id='title'

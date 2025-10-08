@@ -57,7 +57,7 @@ export default function ResetPassword() {
 	return (
 		<div className='flex justify-center h-screen items-center gap-4 mt-6 mb-10'>
 			<form onSubmit={handleSubmit}>
-				<Card className='w-140'>
+				<Card className='min-w-90 max-w-140'>
 					<CardHeader>
 						<CardTitle>Change password</CardTitle>
 						<CardDescription>

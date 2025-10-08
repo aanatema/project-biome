@@ -66,7 +66,7 @@ export function RegisterForm() {
 
 	return (
 		<form onSubmit={handleSubmit(onRegisterSubmit)}>
-			<Card className='w-140'>
+			<Card className='w-90 md:w-140'>
 				<CardHeader>
 					<CardTitle>Register</CardTitle>
 					<CardDescription>
