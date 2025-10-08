@@ -6,7 +6,7 @@ export default function LoggedOutPage() {
 			<h1 className='text-lg'>
 				You have been disconnected, log in again to access Biome.
 			</h1>
-			<div className="mt-10">
+			<div className="my-10">
 				<LoginForm />
 			</div>
 		</div>
