@@ -59,7 +59,7 @@ export default function UserBooks() {
 
 	if (books.length === 0) {
 		return (
-			<div className='my-10 text-center '>
+			<div className='my-10 text-center'>
 				<Card className='w-90 '>
 					<CardHeader className='font-bold'>
 						Your library looks empty.

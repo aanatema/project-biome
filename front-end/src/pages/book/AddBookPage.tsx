@@ -5,7 +5,7 @@ export function AddBook() {
 	return (
 		<>
 			<Navbar />
-			<div className='flex flex-col items-center justify-center'>
+			<div className='flex flex-col items-center'>
 				<BookForm />
 			</div>
 		</>
