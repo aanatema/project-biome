@@ -1,5 +1,5 @@
 import Navbar from "@/components/websiteComponents/Navbar";
-import { ModifyUserForm } from "@/forms/ModifyUserForm";
+import { ModifyUserForm } from "@/pages/account/components/ModifyUserForm";
 import InfoSection from "@/components/websiteComponents/InfoSection";
 import { useAuth } from "@/hooks/useAuth";
 import NotConnectedPage from "../connection/NotConnectedPage";
