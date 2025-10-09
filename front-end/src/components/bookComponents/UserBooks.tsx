@@ -4,8 +4,8 @@ import { bookApi } from "@/libraries/axios";
 import { Card, CardContent, CardHeader } from "../shadcnComponents/card";
 import { Label } from "@radix-ui/react-label";
 import { toast } from "sonner";
-import { PaginationButtons } from "../PaginationButton";
 import AddBookButton from "../buttons/AddBookButton";
+import { PaginationButtons } from "../buttons/PaginationButton";
 
 type Book = {
 	id: string;

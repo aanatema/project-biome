@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import BookDetailsReviewCard from "./BookDetailsReviewCard";
 import { useParams } from "react-router";
 import { bookApi } from "@/libraries/axios";
-import { PaginationButtons } from "../PaginationButton";
 import { Button } from "../shadcnComponents/button";
 import {
 	Card,
@@ -10,6 +9,7 @@ import {
 	CardContent,
 	CardDescription,
 } from "../shadcnComponents/card";
+import { PaginationButtons } from "../buttons/PaginationButton";
 
 type Review = {
 	id: string;

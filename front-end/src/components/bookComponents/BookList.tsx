@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import BookCard from "./BookCard";
 import { bookApi } from "@/libraries/axios";
-import { PaginationButtons } from "../PaginationButton";
+import { PaginationButtons } from "../buttons/PaginationButton";
 
 type Book = {
 	id: string;

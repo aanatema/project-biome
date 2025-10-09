@@ -1,5 +1,5 @@
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import { Button } from "./shadcnComponents/button";
+import { Button } from "../shadcnComponents/button";
 
 type PaginationButtonsProps = {
 	currentPage: number;
