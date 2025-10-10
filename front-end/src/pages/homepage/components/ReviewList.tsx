@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import ReviewCard from "../../bookreviews/components/ReviewCard";
+import ReviewCard from "../../../components/bookComponents/ReviewCard";
 import { bookApi } from "@/libraries/axios";
 import { PaginationButtons } from "@/components/buttons/PaginationButton";
 
