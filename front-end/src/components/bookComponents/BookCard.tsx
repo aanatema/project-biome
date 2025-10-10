@@ -1,5 +1,5 @@
+import { Card, CardContent } from "@/components/shadcnComponents/card";
 import { Label } from "@radix-ui/react-label";
-import { Card, CardContent } from "../shadcnComponents/card";
 import { Link } from "react-router";
 
 export type BookCardProps = {
