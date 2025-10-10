@@ -110,6 +110,7 @@ export function BookForm() {
 		}
 	};
 
+	// eslint-disable-next-line no-useless-escape
 	const isbnFormat = /^(97(8|9))?\-?\d{1,5}\-?\d{1,7}\-?\d{1,7}\-?(\d|X)$/i;
 
 	return (
