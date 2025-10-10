@@ -1,5 +1,5 @@
-import LoginForm from "@/forms/LoginForm";
-import { RegisterForm } from "@/forms/RegisterForm";
+import LoginForm from "@/pages/connection/components/LoginForm";
+import { RegisterForm } from "@/pages/connection/components/RegisterForm";
 import {
 	Tabs,
 	TabsContent,

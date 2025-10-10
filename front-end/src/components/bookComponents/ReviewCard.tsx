@@ -1,5 +1,5 @@
+import { Card, CardContent } from "@/components/shadcnComponents/card";
 import { Label } from "@radix-ui/react-label";
-import { Card, CardContent } from "../shadcnComponents/card";
 
 // This card is display all basic info of a review, used in the home page
 
@@ -21,7 +21,7 @@ export default function ReviewCard({
 }: ReviewCardProps) {
 	return (
 		<>
-			<Card className='book-card my-2 min-w-70 max-w-140 min-h-30 max-h-60 overflow-y-scroll'>
+			<Card className='my-2 min-w-70 max-w-140 min-h-30 max-h-60 overflow-y-scroll'>
 				<CardContent className='space-y-2 text-center'>
 					<div className='text-start'>
 						<Label

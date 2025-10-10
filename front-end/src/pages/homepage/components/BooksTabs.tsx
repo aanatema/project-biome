@@ -1,11 +1,11 @@
-import BookList from "../bookComponents/BookList";
-import AllReviewsPage from "../bookComponents/ReviewList";
+import BookList from "@/pages/homepage/components/BookList";
+import AllReviewsPage from "@/pages/homepage/components/ReviewList";
 import {
 	Tabs,
 	TabsContent,
 	TabsList,
 	TabsTrigger,
-} from "../shadcnComponents/tabs";
+} from "../../../components/shadcnComponents/tabs";
 
 export default function BookReviewTabs() {
 	return (

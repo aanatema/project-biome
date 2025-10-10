@@ -1,5 +1,5 @@
 import Navbar from "@/components/websiteComponents/Navbar";
-import { BookForm } from "@/forms/BookForm";
+import { BookForm } from "@/pages/addBook/components/BookForm";
 
 export function AddBook() {
 	return (

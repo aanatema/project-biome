@@ -14,35 +14,30 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.verifyToken = verifyToken;
 const jsonwebtoken_1 = require("jsonwebtoken");
-const prisma_1 = __importDefault(require("../lib/prisma"));
+const prisma_1 = __importDefault(require("../libraries/prisma"));
 function verifyToken(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        var _a, _b;
-        // extract authorization header from HTTP request
+        var _a;
         const authHeader = req.headers.authorization;
-        const cookieToken = (_a = req.cookies) === null || _a === void 0 ? void 0 : _a.accessToken;
-        // extract only the token from the header
-        const token = (authHeader === null || authHeader === void 0 ? void 0 : authHeader.split(" ")[1]) || cookieToken;
+        const token = authHeader === null || authHeader === void 0 ? void 0 : authHeader.split(" ")[1];
+        if (!token) {
+            return res.status(401).json({ error: "No access token provided" });
+        }
         // check that the token exists
-        const accessToken = process.env.ACCESS_TOKEN_SECRET;
-        const refreshToken = process.env.REFRESH_TOKEN_SECRET;
-        if (!accessToken)
+        const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
+        if (!accessTokenSecret)
             throw new Error("access token undefined");
-        if (!refreshToken)
-            throw new Error("refresh token undefined");
         try {
             // check if the signature has not been modified
-            const decoded = (0, jsonwebtoken_1.verify)(token, accessToken);
+            const decoded = (0, jsonwebtoken_1.verify)(token, accessTokenSecret);
             const user = yield prisma_1.default.user.findUnique({
                 where: {
                     id: decoded.id,
                 },
             });
-            // if user found, attached to user else undefined
-            // useful for modify a user account
             req.user = user !== null && user !== void 0 ? user : undefined;
             next();
-            console.log("User verified:", (_b = req.user) === null || _b === void 0 ? void 0 : _b.id);
+            console.log("User verified:", (_a = req.user) === null || _a === void 0 ? void 0 : _a.id);
         }
         catch (err) {
             req.user = undefined;

@@ -1,12 +1,13 @@
 import { Button } from "@/components/shadcnComponents/button";
+
+import { useAuth } from "@/hooks/useAuth";
+import { Link } from "react-router";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuTrigger,
-} from "../shadcnComponents/dropdown-menu";
-import { useAuth } from "@/hooks/useAuth";
-import { Link } from "react-router";
+} from "@/components/shadcnComponents/dropdown-menu";
 
 export function ProfileButton() {
 	const { logout } = useAuth();
