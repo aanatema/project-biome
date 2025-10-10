@@ -3,8 +3,8 @@ import { useParams } from "react-router";
 import { bookApi } from "@/libraries/axios";
 import { PaginationButtons } from "../../../components/buttons/PaginationButton";
 import { Button } from "../../../components/shadcnComponents/button";
-import BookDetailsReviewCard from "./BookDetailsReviewCard";
 import { Card, CardContent, CardDescription, CardHeader } from "../../../components/shadcnComponents/card";
+import BookDetailsReviewCard from "@/pages/specificBookReviews/components/BookDetailsReviewCard";
 
 
 type Review = {

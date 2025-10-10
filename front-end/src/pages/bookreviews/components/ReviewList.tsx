@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import { PaginationButtons } from "../../../components/buttons/PaginationButton";
 import { bookApi } from "@/libraries/axios";
-import ReviewCard from "./ReviewCard";
+import ReviewCard from "@/components/bookComponents/ReviewCard";
 
 type Review = {
 	id: string;
