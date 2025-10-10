@@ -75,7 +75,7 @@ export default function UserBooks() {
 
 	return (
 		<>
-			<div className='grid grid-cols-1 sm:grid-cols-4 md:grid-cols-3 lg:grid-cols-6 gap-5 my-10'>
+			<div className='grid grid-cols-2 sm:grid-cols-4 md:grid-cols-3 lg:grid-cols-6 gap-5 my-10'>
 				{books.map((book) => (
 					<BookCard
 						key={book.id}
