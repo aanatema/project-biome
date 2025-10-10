@@ -103,3 +103,12 @@ Launch dev server
 ## Credits 
 
 Project created by Romane Boireau as part of the **RNCP level 6 qualification - Applications Designer and Developer**.
+
+
+## node_modules and .env issue
+
+During this year, I had personal issues that required my attention, so I neglected the project for several months and rushed its development in order to be able to present it on time. 
+As a result, I did not pay enough attention to my pushes, and on some older branches you can see that the node_modules and .env are present. 
+However, all sensitive information has been removed and changed to ensure the security of this project. This is something I will pay even more attention to in the future.
+
+Translated with DeepL.com (free version)
