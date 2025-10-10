@@ -8,7 +8,7 @@ const bookController_1 = require("../controllers/bookController");
 const auth_middlewares_1 = require("../auth/auth.middlewares");
 console.log("📚 bookRoutes loaded");
 const router = express_1.default.Router();
-router.post("/book_and_review", auth_middlewares_1.verifyToken, bookController_1.createBookAndReview);
+router.post("/add_book_and_review", auth_middlewares_1.verifyToken, bookController_1.createBookAndReview);
 router.get("/books", bookController_1.allBooks);
 router.get("/reviews", bookController_1.getAllReviews);
 router.get("/isbn/:isbn", bookController_1.getBookByIsbn);
