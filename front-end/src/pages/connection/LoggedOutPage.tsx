@@ -1,4 +1,4 @@
-import LoginForm from "@/forms/LoginForm";
+import LoginForm from "@/pages/connection/components/LoginForm";
 
 export default function LoggedOutPage() {
 	return (
