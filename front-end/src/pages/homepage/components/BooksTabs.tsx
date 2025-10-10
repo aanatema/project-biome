@@ -1,5 +1,5 @@
-import BookList from "@/pages/book/components/BookList";
-import AllReviewsPage from "@/pages/book/components/ReviewList";
+import BookList from "@/pages/homepage/components/BookList";
+import AllReviewsPage from "@/pages/homepage/components/ReviewList";
 import {
 	Tabs,
 	TabsContent,
