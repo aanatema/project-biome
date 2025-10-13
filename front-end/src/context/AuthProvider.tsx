@@ -21,10 +21,10 @@ export const AuthProvider = ({ children }: Props) => {
 	useEffect(() => {
 		const fetchUserWithRefresh = async () => {
 			try {
-				await authApi.post("/refresh");
-				const response = await userApi("/current_user");
-				console.log("Current user data:", response.data);
-				setUser(response.data);
+				const refreshResponse = await authApi.post("/refresh");
+				const { accessToken, user } = refreshResponse.data;
+				localStorage.setItem("accessToken", accessToken);
+				setUser(user);
 			} catch (err) {
 				console.error("Failed to refresh token or fetch user:", err);
 				setUser(null);
