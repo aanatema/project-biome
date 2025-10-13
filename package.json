@@ -4,5 +4,8 @@
     "cors": "^2.8.5",
     "git-filter-repo": "^0.0.30",
     "react-router-dom": "^7.5.3"
+  },
+  "devDependencies": {
+    "vitest": "^3.2.4"
   }
 }
