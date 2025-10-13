@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { generateAccessToken } from "./auth.tokens";
+import { generateAccessToken } from "../auth/auth.tokens";
 import { verify } from "jsonwebtoken";
 import prisma from "../libraries/prisma";
 
