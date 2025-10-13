@@ -5,8 +5,6 @@ import { generateAccessToken, generateRefreshToken } from "../auth/auth.tokens";
 import prisma from "../libraries/prisma";
 import type { User } from "@prisma/client";
 import { setRefreshTokenCookie } from "../auth/auth.cookies";
-import jwt from "jsonwebtoken";
-import { sendResetPasswordEmail } from "../services/mailgun.service";
 
 export interface ExpressRequest extends Request {
 	user?: User;
