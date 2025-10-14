@@ -11,7 +11,7 @@ import {
 	DialogTrigger,
 } from "../shadcnComponents/dialog";
 import { useState } from "react";
-import { bookApi } from "@/libraries/axios";
+import { bookApi } from "../../libraries/axios";
 import { toast } from "sonner";
 import axios from "axios";
 
