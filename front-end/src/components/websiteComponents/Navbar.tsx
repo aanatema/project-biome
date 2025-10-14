@@ -2,14 +2,14 @@
 
 import * as React from "react";
 
-import { cn } from "@/libraries/tailwind";
+import { cn } from "../../libraries/tailwind";
 import {
 	NavigationMenu,
 	NavigationMenuItem,
 	NavigationMenuLink,
 	NavigationMenuList,
 	navigationMenuTriggerStyle,
-} from "@/components/shadcnComponents/navigation-menu";
+} from "../shadcnComponents/navigation-menu";
 import { Link } from "react-router";
 
 export default function Navbar() {
