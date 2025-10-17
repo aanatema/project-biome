@@ -1,15 +1,15 @@
-import { Button } from "@/components/shadcnComponents/button";
+import { Button } from "../../../components/shadcnComponents/button";
 import {
 	Card,
 	CardContent,
 	CardFooter,
 	CardHeader,
 	CardTitle,
-} from "@/components/shadcnComponents/card";
-import { Input } from "@/components/shadcnComponents/input";
-import { ConfirmDeletionDialog } from "@/pages/account/components/ConfirmUserDeletion";
-import { useAuth } from "@/hooks/useAuth";
-import { userApi } from "@/libraries/axios";
+} from "../../../components/shadcnComponents/card";
+import { Input } from "../../../components/shadcnComponents/input";
+import { ConfirmDeletionDialog } from "../../../pages/account/components/ConfirmUserDeletion";
+import { useAuth } from "../../../hooks/useAuth";
+import { userApi } from "../../../libraries/axios";
 import { Label } from "@radix-ui/react-label";
 import axios from "axios";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -72,7 +72,9 @@ export function ModifyUserForm() {
 	};
 
 	return (
-		<form onSubmit={handleSubmit(onModifySubmit)}>
+		<form
+			onSubmit={handleSubmit(onModifySubmit)}
+			role='form'>
 			<Card className='my-10 sm:w-90 md:w-140'>
 				<CardHeader>
 					<CardTitle>Modify your account</CardTitle>
