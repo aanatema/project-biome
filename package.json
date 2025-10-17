@@ -1,8 +1,14 @@
 {
-  "dependencies": {
-    "@types/react-router-dom": "^5.3.3",
-    "cors": "^2.8.5",
-    "git-filter-repo": "^0.0.30",
-    "react-router-dom": "^7.5.3"
-  }
+	"dependencies": {
+		"@types/react-router-dom": "^5.3.3",
+		"cors": "^2.8.5",
+		"git-filter-repo": "^0.0.30",
+		"react-router-dom": "^7.5.3"
+	},
+	"scripts": {
+		"build": "tsc",
+		"start": "node dist/server.js",
+		"dev": "ts-node-dev src/server.ts",
+		"test": "jest"
+	}
 }
