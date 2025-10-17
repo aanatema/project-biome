@@ -1,4 +1,4 @@
-import { Card, CardContent } from "@/components/shadcnComponents/card";
+import { Card, CardContent } from "../../components/shadcnComponents/card";
 import { Label } from "@radix-ui/react-label";
 import { Link } from "react-router";
 

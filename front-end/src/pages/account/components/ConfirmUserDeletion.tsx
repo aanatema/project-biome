@@ -1,15 +1,18 @@
-import { Button, buttonVariants } from "@/components/shadcnComponents/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/shadcnComponents/dialog";
-import { AuthContext } from "@/context/AuthContext";
-import { userApi } from "@/libraries/axios";
+	Button,
+	buttonVariants,
+} from "../../../components/shadcnComponents/button";
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from "../../../components/shadcnComponents/dialog";
+import { AuthContext } from "../../../context/AuthContext";
+import { userApi } from "../../../libraries/axios";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { useContext } from "react";
 import { useNavigate } from "react-router";
