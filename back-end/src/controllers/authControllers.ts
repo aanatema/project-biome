@@ -1,15 +1,20 @@
-import type { Request, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 import { generateAccessToken } from "../auth/auth.tokens";
 import { verify } from "jsonwebtoken";
 import prisma from "../libraries/prisma";
 
-export async function refreshAccessToken(req: Request, res: Response) {
+export async function refreshAccessToken(
+	req: Request,
+	res: Response,
+	next: NextFunction
+): Promise<void> {
 	const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET;
 	if (!refreshTokenSecret) throw new Error("refresh token secret undefined");
 
 	const token = req.cookies.refreshToken;
 	if (!token) {
-		return res.status(401).json({ error: "No refresh token provided" });
+		res.status(401).json({ error: "No refresh token provided" });
+		return;
 	}
 
 	try {
@@ -22,13 +27,13 @@ export async function refreshAccessToken(req: Request, res: Response) {
 		const { password: _password, ...userWithoutPassword } = user;
 		const newAccessToken = generateAccessToken(userWithoutPassword);
 
-		return res.status(200).json({
+		res.status(200).json({
 			accessToken: newAccessToken,
 			user: userWithoutPassword,
 		});
+		return;
 	} catch (err) {
-		return res
-			.status(401)
-			.json({ error: "Invalid or expired refresh token" });
+		res.status(401).json({ error: "Invalid or expired refresh token" });
+		return;
 	}
 }

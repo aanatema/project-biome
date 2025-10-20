@@ -1,5 +1,5 @@
 // what we send to create a new user
-import type { Request, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 import bcrypt from "bcrypt";
 import { generateAccessToken, generateRefreshToken } from "../auth/auth.tokens";
 import prisma from "../libraries/prisma";
@@ -10,17 +10,21 @@ export interface ExpressRequest extends Request {
 	user?: User;
 }
 
-export async function createUser(req: Request, res: Response) {
+export async function createUser(
+	req: Request,
+	res: Response,
+	next: NextFunction
+): Promise<void> {
 	const { username, email, password } = req.body;
 
 	try {
 		let newUser = await prisma.user.findUnique({
 			where: { email },
 		});
-		if (newUser)
-			return res
-				.status(409)
-				.json({ error: "This email is already taken" });
+		if (newUser) {
+			res.status(409).json({ error: "This email is already taken" });
+			return;
+		}
 
 		//10 hash round
 		const hashedPassword = await bcrypt.hash(password, 10);
@@ -50,18 +54,28 @@ export async function createUser(req: Request, res: Response) {
 	}
 }
 
-export async function loginUser(req: ExpressRequest, res: Response) {
+export async function loginUser(
+	req: ExpressRequest,
+	res: Response,
+	next: NextFunction
+): Promise<void> {
 	const { email, password } = req.body;
 
 	try {
 		const user = await prisma.user.findUnique({
 			where: { email: email },
 		});
-		if (!user) return res.status(401).json({ error: "Unknown user" });
+		if (!user) {
+			res.status(401).json({ error: "Unknown user" });
+			return;
+		}
 
 		const validPassword = await bcrypt.compare(password, user.password);
-		if (!validPassword)
-			return res.status(401).json({ error: "Invalid credentials" });
+		console.log("Password valid:", validPassword);
+		if (!validPassword) {
+			res.status(401).json({ error: "Invalid credentials" });
+			return;
+		}
 
 		const { password: _password, ...userWithoutPassword } = user;
 		const accessToken = generateAccessToken(userWithoutPassword);
@@ -77,7 +91,7 @@ export async function loginUser(req: ExpressRequest, res: Response) {
 	}
 }
 
-export async function logoutUser(req: ExpressRequest, res: Response) {
+export async function logoutUser(res: Response) {
 	res.clearCookie("refreshToken", {
 		httpOnly: true,
 		sameSite: "lax",
@@ -208,5 +222,3 @@ export async function deleteUser(req: ExpressRequest, res: Response) {
 		res.status(500).json({ error: "Internal server error" });
 	}
 }
-
-
