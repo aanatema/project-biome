@@ -10,11 +10,7 @@ export interface ExpressRequest extends Request {
 	user?: User;
 }
 
-export async function createUser(
-	req: Request,
-	res: Response,
-	next: NextFunction
-): Promise<void> {
+export async function createUser(req: Request, res: Response): Promise<void> {
 	const { username, email, password } = req.body;
 
 	try {
@@ -54,11 +50,7 @@ export async function createUser(
 	}
 }
 
-export async function loginUser(
-	req: ExpressRequest,
-	res: Response,
-	next: NextFunction
-): Promise<void> {
+export async function loginUser(req: ExpressRequest, res: Response): Promise<void> {
 	const { email, password } = req.body;
 
 	try {

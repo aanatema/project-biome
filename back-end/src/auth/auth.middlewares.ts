@@ -7,12 +7,13 @@ export async function verifyToken(
 	req: ExpressRequest,
 	res: Response,
 	next: NextFunction
-) {
+): Promise<void> {
 	const authHeader = req.headers.authorization;
 	const token = authHeader?.split(" ")[1];
 
 	if (!token) {
-		return res.status(401).json({ error: "No access token provided" });
+		res.status(401).json({ error: "No access token provided" });
+		return;
 	}
 	// check that the token exists
 	const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
@@ -22,16 +23,15 @@ export async function verifyToken(
 		// check if the signature has not been modified
 		const decoded = verify(token, accessTokenSecret) as { id: string };
 
-    const user = await prisma.user.findUnique({
-		where: {
-			id: decoded.id,
-		},
-	});
-    req.user = user ?? undefined;
-    next();
-    console.log("User verified:", req.user?.id);
-  } catch (err) {
-    req.user = undefined;
-    res.status(401).json({ error: "Invalid Token" });
-  }
+		const user = await prisma.user.findUnique({
+			where: {
+				id: decoded.id,
+			},
+		});
+		req.user = user ?? undefined;
+		next();
+	} catch (err) {
+		req.user = undefined;
+		res.status(401).json({ error: "Invalid Token" });
+	}
 }

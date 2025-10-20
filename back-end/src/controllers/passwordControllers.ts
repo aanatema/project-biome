@@ -7,8 +7,7 @@ import { ExpressRequest } from "./userControllers";
 
 export async function forgottenPassword(
 	req: ExpressRequest,
-	res: Response,
-	next: NextFunction
+	res: Response
 ): Promise<void> {
 	const { email } = req.body;
 
@@ -40,8 +39,7 @@ export async function forgottenPassword(
 
 export async function resetPassword(
 	req: ExpressRequest,
-	res: Response,
-	next: NextFunction
+	res: Response
 ): Promise<void> {
 	const { token, newPassword } = req.body;
 
