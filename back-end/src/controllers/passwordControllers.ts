@@ -1,19 +1,24 @@
-import type { Response } from "express";
+import type { NextFunction, Response } from "express";
 import bcrypt from "bcrypt";
 import prisma from "../libraries/prisma";
 import jwt from "jsonwebtoken";
 import { sendResetPasswordEmail } from "../services/mailgun.service";
 import { ExpressRequest } from "./userControllers";
 
-export async function forgottenPassword(req: ExpressRequest, res: Response) {
+export async function forgottenPassword(
+	req: ExpressRequest,
+	res: Response,
+	next: NextFunction
+): Promise<void> {
 	const { email } = req.body;
 
 	try {
 		const user = await prisma.user.findUnique({ where: { email } });
 		if (!user) {
-			return res.status(200).json({
+			res.status(200).json({
 				message: "A reset link has been sent.",
 			});
+			return;
 		}
 
 		const resetToken = jwt.sign(
@@ -24,24 +29,32 @@ export async function forgottenPassword(req: ExpressRequest, res: Response) {
 
 		const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
 		await sendResetPasswordEmail(email, resetLink);
-		return res.status(200).json({ message: "Reset email sent" });
+		res.status(200).json({ message: "Reset email sent" });
+		return;
 	} catch (err) {
 		console.error("Forgotten password error:", err);
-		return res.status(500).json({ error: "Internal server error" });
+		res.status(500).json({ error: "Internal server error" });
+		return;
 	}
 }
 
-export async function resetPassword(req: ExpressRequest, res: Response) {
+export async function resetPassword(
+	req: ExpressRequest,
+	res: Response,
+	next: NextFunction
+): Promise<void> {
 	const { token, newPassword } = req.body;
 
 	if (!token || !newPassword) {
-		return res.status(400).json({ error: "Missing token or new password" });
+		res.status(400).json({ error: "Missing token or new password" });
+		return;
 	}
 
 	if (newPassword.length < 8) {
-		return res
-			.status(400)
-			.json({ error: "Password must be at least 8 characters" });
+		res.status(400).json({
+			error: "Password must be at least 8 characters",
+		});
+		return;
 	}
 
 	try {
