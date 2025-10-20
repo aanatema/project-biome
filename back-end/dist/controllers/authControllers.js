@@ -34,7 +34,8 @@ function refreshAccessToken(req, res) {
             throw new Error("refresh token secret undefined");
         const token = req.cookies.refreshToken;
         if (!token) {
-            return res.status(401).json({ error: "No refresh token provided" });
+            res.status(401).json({ error: "No refresh token provided" });
+            return;
         }
         try {
             const payload = (0, jsonwebtoken_1.verify)(token, refreshTokenSecret);
@@ -45,15 +46,15 @@ function refreshAccessToken(req, res) {
                 throw new Error("user not found");
             const { password: _password } = user, userWithoutPassword = __rest(user, ["password"]);
             const newAccessToken = (0, auth_tokens_1.generateAccessToken)(userWithoutPassword);
-            return res.status(200).json({
+            res.status(200).json({
                 accessToken: newAccessToken,
                 user: userWithoutPassword,
             });
+            return;
         }
         catch (err) {
-            return res
-                .status(401)
-                .json({ error: "Invalid or expired refresh token" });
+            res.status(401).json({ error: "Invalid or expired refresh token" });
+            return;
         }
     });
 }

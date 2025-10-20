@@ -24,18 +24,21 @@ function forgottenPassword(req, res) {
         try {
             const user = yield prisma_1.default.user.findUnique({ where: { email } });
             if (!user) {
-                return res.status(200).json({
+                res.status(200).json({
                     message: "A reset link has been sent.",
                 });
+                return;
             }
             const resetToken = jsonwebtoken_1.default.sign({ id: user.id, email: user.email }, process.env.JWT_RESET_SECRET, { expiresIn: "1h" });
             const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
             yield (0, mailgun_service_1.sendResetPasswordEmail)(email, resetLink);
-            return res.status(200).json({ message: "Reset email sent" });
+            res.status(200).json({ message: "Reset email sent" });
+            return;
         }
         catch (err) {
             console.error("Forgotten password error:", err);
-            return res.status(500).json({ error: "Internal server error" });
+            res.status(500).json({ error: "Internal server error" });
+            return;
         }
     });
 }
@@ -43,12 +46,14 @@ function resetPassword(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const { token, newPassword } = req.body;
         if (!token || !newPassword) {
-            return res.status(400).json({ error: "Missing token or new password" });
+            res.status(400).json({ error: "Missing token or new password" });
+            return;
         }
         if (newPassword.length < 8) {
-            return res
-                .status(400)
-                .json({ error: "Password must be at least 8 characters" });
+            res.status(400).json({
+                error: "Password must be at least 8 characters",
+            });
+            return;
         }
         try {
             // verify and decode token
