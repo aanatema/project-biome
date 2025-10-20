@@ -1,12 +1,16 @@
-import type { Response } from "express";
+import type { NextFunction, Response } from "express";
 import { PrismaClient } from "@prisma/client";
 import type { ExpressRequest } from "../controllers/userControllers";
 
 const prisma = new PrismaClient();
 
-export async function createBookAndReview(req: ExpressRequest, res: Response) {
+export async function createBookAndReview(
+	req: ExpressRequest,
+	res: Response
+): Promise<void> {
 	if (!req.user) {
-		return res.status(401).json({ error: "user is not authenticated" });
+		res.status(401).json({ error: "user is not authenticated" });
+		return;
 	}
 	const { isbn, title, author, content } = req.body;
 
@@ -83,14 +87,20 @@ export async function allBooks(req: ExpressRequest, res: Response) {
 	}
 }
 
-export async function getBookByIsbn(req: ExpressRequest, res: Response) {
+export async function getBookByIsbn(
+	req: ExpressRequest,
+	res: Response
+): Promise<void> {
 	try {
 		const { isbn } = req.params;
 		const book = await prisma.book.findUnique({
 			where: { isbn },
 		});
 
-		if (!book) return res.status(404).json({ error: "Book not found" });
+		if (!book) {
+			res.status(404).json({ error: "Book not found" });
+			return;
+		}
 		res.json(book);
 	} catch (error) {
 		res.status(500).json({ error: "Internal server error" });
@@ -144,9 +154,13 @@ export async function getReviewsByBookId(req: ExpressRequest, res: Response) {
 	}
 }
 
-export async function getUserBooks(req: ExpressRequest, res: Response) {
+export async function getUserBooks(
+	req: ExpressRequest,
+	res: Response
+): Promise<void> {
 	if (!req.user) {
-		return res.status(401).json({ error: "User is not authenticated" });
+		res.status(401).json({ error: "User is not authenticated" });
+		return;
 	}
 
 	const page = parseInt(req.query.page as string) || 1;
@@ -181,7 +195,7 @@ export async function getUserBooks(req: ExpressRequest, res: Response) {
 			},
 		});
 
-		return res.status(200).json({
+		res.status(200).json({
 			books: uniqueBooks,
 			pagination: {
 				page,
@@ -190,16 +204,21 @@ export async function getUserBooks(req: ExpressRequest, res: Response) {
 				totalPages: Math.ceil(totalReviews / limit),
 			},
 		});
+		return;
 	} catch (error) {
 		console.error("Error retrieving user books:", error);
-		return res.status(500).json({ error: "Error retrieving user books" });
+		res.status(500).json({ error: "Error retrieving user books" });
+		return;
 	}
 }
 
-
-export async function deleteReview(req: ExpressRequest, res: Response) {
+export async function deleteReview(
+	req: ExpressRequest,
+	res: Response
+): Promise<void> {
 	if (!req.user) {
-		return res.status(401).json({ error: "user is not authenticated" });
+		res.status(401).json({ error: "user is not authenticated" });
+		return;
 	}
 
 	try {
@@ -212,9 +231,10 @@ export async function deleteReview(req: ExpressRequest, res: Response) {
 		});
 
 		if (!review) {
-			return res.status(404).json({
+			res.status(404).json({
 				error: "Review not found or you don't have permission to delete it",
 			});
+			return;
 		}
 
 		await prisma.review.delete({

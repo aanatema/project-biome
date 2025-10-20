@@ -22,7 +22,8 @@ const prisma = new client_1.PrismaClient();
 function createBookAndReview(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         if (!req.user) {
-            return res.status(401).json({ error: "user is not authenticated" });
+            res.status(401).json({ error: "user is not authenticated" });
+            return;
         }
         const { isbn, title, author, content } = req.body;
         try {
@@ -99,8 +100,10 @@ function getBookByIsbn(req, res) {
             const book = yield prisma.book.findUnique({
                 where: { isbn },
             });
-            if (!book)
-                return res.status(404).json({ error: "Book not found" });
+            if (!book) {
+                res.status(404).json({ error: "Book not found" });
+                return;
+            }
             res.json(book);
         }
         catch (error) {
@@ -161,7 +164,8 @@ function getReviewsByBookId(req, res) {
 function getUserBooks(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         if (!req.user) {
-            return res.status(401).json({ error: "User is not authenticated" });
+            res.status(401).json({ error: "User is not authenticated" });
+            return;
         }
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 15;
@@ -188,7 +192,7 @@ function getUserBooks(req, res) {
                     authorId: req.user.id,
                 },
             });
-            return res.status(200).json({
+            res.status(200).json({
                 books: uniqueBooks,
                 pagination: {
                     page,
@@ -197,17 +201,20 @@ function getUserBooks(req, res) {
                     totalPages: Math.ceil(totalReviews / limit),
                 },
             });
+            return;
         }
         catch (error) {
             console.error("Error retrieving user books:", error);
-            return res.status(500).json({ error: "Error retrieving user books" });
+            res.status(500).json({ error: "Error retrieving user books" });
+            return;
         }
     });
 }
 function deleteReview(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         if (!req.user) {
-            return res.status(401).json({ error: "user is not authenticated" });
+            res.status(401).json({ error: "user is not authenticated" });
+            return;
         }
         try {
             const reviewId = req.params.id;
@@ -218,9 +225,10 @@ function deleteReview(req, res) {
                 },
             });
             if (!review) {
-                return res.status(404).json({
+                res.status(404).json({
                     error: "Review not found or you don't have permission to delete it",
                 });
+                return;
             }
             yield prisma.review.delete({
                 where: {

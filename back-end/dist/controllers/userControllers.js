@@ -40,10 +40,10 @@ function createUser(req, res) {
             let newUser = yield prisma_1.default.user.findUnique({
                 where: { email },
             });
-            if (newUser)
-                return res
-                    .status(409)
-                    .json({ error: "This email is already taken" });
+            if (newUser) {
+                res.status(409).json({ error: "This email is already taken" });
+                return;
+            }
             //10 hash round
             const hashedPassword = yield bcrypt_1.default.hash(password, 10);
             const user = yield prisma_1.default.user.create({
@@ -77,11 +77,16 @@ function loginUser(req, res) {
             const user = yield prisma_1.default.user.findUnique({
                 where: { email: email },
             });
-            if (!user)
-                return res.status(401).json({ error: "Unknown user" });
+            if (!user) {
+                res.status(401).json({ error: "Unknown user" });
+                return;
+            }
             const validPassword = yield bcrypt_1.default.compare(password, user.password);
-            if (!validPassword)
-                return res.status(401).json({ error: "Invalid credentials" });
+            console.log("Password valid:", validPassword);
+            if (!validPassword) {
+                res.status(401).json({ error: "Invalid credentials" });
+                return;
+            }
             const { password: _password } = user, userWithoutPassword = __rest(user, ["password"]);
             const accessToken = (0, auth_tokens_1.generateAccessToken)(userWithoutPassword);
             const refreshToken = (0, auth_tokens_1.generateRefreshToken)(userWithoutPassword);
@@ -96,7 +101,7 @@ function loginUser(req, res) {
         }
     });
 }
-function logoutUser(req, res) {
+function logoutUser(res) {
     return __awaiter(this, void 0, void 0, function* () {
         res.clearCookie("refreshToken", {
             httpOnly: true,
@@ -113,7 +118,8 @@ function modifyUser(req, res) {
         const userId = (_a = req.user) === null || _a === void 0 ? void 0 : _a.id;
         try {
             if (!userId) {
-                return res.status(401).json({ error: "User not authenticated" });
+                res.status(401).json({ error: "User not authenticated" });
+                return;
             }
             // if (!username || !currentPassword) {
             // 	return res.status(400).json({
@@ -124,13 +130,13 @@ function modifyUser(req, res) {
                 where: { id: userId },
             });
             if (!user) {
-                return res.status(404).json({ error: "User not found" });
+                res.status(404).json({ error: "User not found" });
+                return;
             }
             const isCurrentPasswordValid = yield bcrypt_1.default.compare(currentPassword, user.password);
             if (!isCurrentPasswordValid) {
-                return res
-                    .status(401)
-                    .json({ error: "Incorrect current password" });
+                res.status(401).json({ error: "Incorrect current password" });
+                return;
             }
             // check if email is not already in use, apart from current user
             if (email !== user.email) {
@@ -141,7 +147,8 @@ function modifyUser(req, res) {
                     },
                 });
                 if (existingUser) {
-                    return res.status(409).json({ error: "Email already in use" });
+                    res.status(409).json({ error: "Email already in use" });
+                    return;
                 }
             }
             const updateData = {
@@ -182,7 +189,8 @@ function getCurrentUser(req, res) {
         try {
             // user undefined = token invalid
             if (!req.user) {
-                return res.status(401).json({ error: "Invalid token" });
+                res.status(401).json({ error: "Invalid token" });
+                return;
             }
             const _a = req.user, { password: _password } = _a, userWithoutPassword = __rest(_a, ["password"]);
             res.status(200).json(userWithoutPassword);
@@ -197,9 +205,10 @@ function deleteUser(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             if (!req.user) {
-                return res.status(401).json({
+                res.status(401).json({
                     error: "Invalid token, the user appears to not be connected",
                 });
+                return;
             }
             // delete reviews then user
             yield prisma_1.default.review.deleteMany({
