@@ -4,9 +4,13 @@ import type { ExpressRequest } from "../controllers/userControllers";
 
 const prisma = new PrismaClient();
 
-export async function createBookAndReview(req: ExpressRequest, res: Response) {
+export async function createBookAndReview(
+	req: ExpressRequest,
+	res: Response
+): Promise<void> {
 	if (!req.user) {
-		return res.status(401).json({ error: "user is not authenticated" });
+		res.status(401).json({ error: "user is not authenticated" });
+		return;
 	}
 	const { isbn, title, author, content } = req.body;
 
@@ -208,9 +212,13 @@ export async function getUserBooks(
 	}
 }
 
-export async function deleteReview(req: ExpressRequest, res: Response) {
+export async function deleteReview(
+	req: ExpressRequest,
+	res: Response
+): Promise<void> {
 	if (!req.user) {
-		return res.status(401).json({ error: "user is not authenticated" });
+		res.status(401).json({ error: "user is not authenticated" });
+		return;
 	}
 
 	try {
@@ -223,9 +231,10 @@ export async function deleteReview(req: ExpressRequest, res: Response) {
 		});
 
 		if (!review) {
-			return res.status(404).json({
+			res.status(404).json({
 				error: "Review not found or you don't have permission to delete it",
 			});
+			return;
 		}
 
 		await prisma.review.delete({

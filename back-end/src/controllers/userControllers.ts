@@ -50,7 +50,10 @@ export async function createUser(req: Request, res: Response): Promise<void> {
 	}
 }
 
-export async function loginUser(req: ExpressRequest, res: Response): Promise<void> {
+export async function loginUser(
+	req: ExpressRequest,
+	res: Response
+): Promise<void> {
 	const { email, password } = req.body;
 
 	try {
@@ -92,12 +95,16 @@ export async function logoutUser(res: Response) {
 	res.status(200).json({ message: "Successful logout" });
 }
 
-export async function modifyUser(req: ExpressRequest, res: Response) {
+export async function modifyUser(
+	req: ExpressRequest,
+	res: Response
+): Promise<void> {
 	const { username, email, currentPassword, newPassword } = req.body;
 	const userId = req.user?.id;
 	try {
 		if (!userId) {
-			return res.status(401).json({ error: "User not authenticated" });
+			res.status(401).json({ error: "User not authenticated" });
+			return;
 		}
 
 		// if (!username || !currentPassword) {
@@ -110,7 +117,8 @@ export async function modifyUser(req: ExpressRequest, res: Response) {
 			where: { id: userId },
 		});
 		if (!user) {
-			return res.status(404).json({ error: "User not found" });
+			res.status(404).json({ error: "User not found" });
+			return;
 		}
 
 		const isCurrentPasswordValid = await bcrypt.compare(
@@ -118,9 +126,8 @@ export async function modifyUser(req: ExpressRequest, res: Response) {
 			user.password
 		);
 		if (!isCurrentPasswordValid) {
-			return res
-				.status(401)
-				.json({ error: "Incorrect current password" });
+			res.status(401).json({ error: "Incorrect current password" });
+			return;
 		}
 
 		// check if email is not already in use, apart from current user
@@ -132,7 +139,8 @@ export async function modifyUser(req: ExpressRequest, res: Response) {
 				},
 			});
 			if (existingUser) {
-				return res.status(409).json({ error: "Email already in use" });
+				res.status(409).json({ error: "Email already in use" });
+				return;
 			}
 		}
 
@@ -171,11 +179,15 @@ export async function modifyUser(req: ExpressRequest, res: Response) {
 	}
 }
 
-export async function getCurrentUser(req: ExpressRequest, res: Response) {
+export async function getCurrentUser(
+	req: ExpressRequest,
+	res: Response
+): Promise<void> {
 	try {
 		// user undefined = token invalid
 		if (!req.user) {
-			return res.status(401).json({ error: "Invalid token" });
+			res.status(401).json({ error: "Invalid token" });
+			return;
 		}
 		const { password: _password, ...userWithoutPassword } = req.user;
 		res.status(200).json(userWithoutPassword);
@@ -185,12 +197,16 @@ export async function getCurrentUser(req: ExpressRequest, res: Response) {
 	}
 }
 
-export async function deleteUser(req: ExpressRequest, res: Response) {
+export async function deleteUser(
+	req: ExpressRequest,
+	res: Response
+): Promise<void> {
 	try {
 		if (!req.user) {
-			return res.status(401).json({
+			res.status(401).json({
 				error: "Invalid token, the user appears to not be connected",
 			});
+			return;
 		}
 
 		// delete reviews then user
