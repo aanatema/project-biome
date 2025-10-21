@@ -27,4 +27,4 @@ jobs:
         run: cd back-end && yarn build
 
       - name: Run tests
-        run: cd back-end && yarn test
+        run: cd front-end && yarn test
