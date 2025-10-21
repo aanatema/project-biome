@@ -24,7 +24,7 @@ jobs:
         run: yarn install --frozen-lockfile
 
       - name: Build TypeScript
-        run: yarn build
+        run: cd back-end && yarn build
 
       - name: Run tests
         run: yarn test
