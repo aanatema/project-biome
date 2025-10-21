@@ -29,14 +29,10 @@ exports.logoutUser = logoutUser;
 exports.modifyUser = modifyUser;
 exports.getCurrentUser = getCurrentUser;
 exports.deleteUser = deleteUser;
-exports.forgottenPassword = forgottenPassword;
-exports.resetPassword = resetPassword;
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const auth_tokens_1 = require("../auth/auth.tokens");
 const prisma_1 = __importDefault(require("../libraries/prisma"));
 const auth_cookies_1 = require("../auth/auth.cookies");
-const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const mailgun_service_1 = require("../services/mailgun.service");
 function createUser(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const { username, email, password } = req.body;
@@ -44,10 +40,10 @@ function createUser(req, res) {
             let newUser = yield prisma_1.default.user.findUnique({
                 where: { email },
             });
-            if (newUser)
-                return res
-                    .status(409)
-                    .json({ error: "This email is already taken" });
+            if (newUser) {
+                res.status(409).json({ error: "This email is already taken" });
+                return;
+            }
             //10 hash round
             const hashedPassword = yield bcrypt_1.default.hash(password, 10);
             const user = yield prisma_1.default.user.create({
@@ -81,11 +77,16 @@ function loginUser(req, res) {
             const user = yield prisma_1.default.user.findUnique({
                 where: { email: email },
             });
-            if (!user)
-                return res.status(401).json({ error: "Unknown user" });
+            if (!user) {
+                res.status(401).json({ error: "Unknown user" });
+                return;
+            }
             const validPassword = yield bcrypt_1.default.compare(password, user.password);
-            if (!validPassword)
-                return res.status(401).json({ error: "Invalid credentials" });
+            console.log("Password valid:", validPassword);
+            if (!validPassword) {
+                res.status(401).json({ error: "Invalid credentials" });
+                return;
+            }
             const { password: _password } = user, userWithoutPassword = __rest(user, ["password"]);
             const accessToken = (0, auth_tokens_1.generateAccessToken)(userWithoutPassword);
             const refreshToken = (0, auth_tokens_1.generateRefreshToken)(userWithoutPassword);
@@ -100,7 +101,7 @@ function loginUser(req, res) {
         }
     });
 }
-function logoutUser(req, res) {
+function logoutUser(res) {
     return __awaiter(this, void 0, void 0, function* () {
         res.clearCookie("refreshToken", {
             httpOnly: true,
@@ -117,7 +118,8 @@ function modifyUser(req, res) {
         const userId = (_a = req.user) === null || _a === void 0 ? void 0 : _a.id;
         try {
             if (!userId) {
-                return res.status(401).json({ error: "User not authenticated" });
+                res.status(401).json({ error: "User not authenticated" });
+                return;
             }
             // if (!username || !currentPassword) {
             // 	return res.status(400).json({
@@ -128,13 +130,13 @@ function modifyUser(req, res) {
                 where: { id: userId },
             });
             if (!user) {
-                return res.status(404).json({ error: "User not found" });
+                res.status(404).json({ error: "User not found" });
+                return;
             }
             const isCurrentPasswordValid = yield bcrypt_1.default.compare(currentPassword, user.password);
             if (!isCurrentPasswordValid) {
-                return res
-                    .status(401)
-                    .json({ error: "Incorrect current password" });
+                res.status(401).json({ error: "Incorrect current password" });
+                return;
             }
             // check if email is not already in use, apart from current user
             if (email !== user.email) {
@@ -145,7 +147,8 @@ function modifyUser(req, res) {
                     },
                 });
                 if (existingUser) {
-                    return res.status(409).json({ error: "Email already in use" });
+                    res.status(409).json({ error: "Email already in use" });
+                    return;
                 }
             }
             const updateData = {
@@ -165,7 +168,7 @@ function modifyUser(req, res) {
                     username: true,
                     email: true,
                     createdAt: true,
-                    // password exclu automatiquement
+                    // password automatically excluded
                 },
             });
             res.status(200).json({
@@ -184,9 +187,10 @@ function modifyUser(req, res) {
 function getCurrentUser(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            // if user is undefined, it means the token is invalid
+            // user undefined = token invalid
             if (!req.user) {
-                return res.status(401).json({ error: "Invalid token" });
+                res.status(401).json({ error: "Invalid token" });
+                return;
             }
             const _a = req.user, { password: _password } = _a, userWithoutPassword = __rest(_a, ["password"]);
             res.status(200).json(userWithoutPassword);
@@ -201,9 +205,10 @@ function deleteUser(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             if (!req.user) {
-                return res.status(401).json({
+                res.status(401).json({
                     error: "Invalid token, the user appears to not be connected",
                 });
+                return;
             }
             // delete reviews then user
             yield prisma_1.default.review.deleteMany({
@@ -223,54 +228,6 @@ function deleteUser(req, res) {
         catch (err) {
             console.error("Error while deleting user:", err);
             res.status(500).json({ error: "Internal server error" });
-        }
-    });
-}
-function forgottenPassword(req, res) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const { email } = req.body;
-        try {
-            const user = yield prisma_1.default.user.findUnique({ where: { email } });
-            if (!user) {
-                return res.status(200).json({
-                    message: "A reset link has been sent.",
-                });
-            }
-            const resetToken = jsonwebtoken_1.default.sign({ id: user.id, email: user.email }, process.env.JWT_RESET_SECRET, { expiresIn: "1h" });
-            const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
-            yield (0, mailgun_service_1.sendResetPasswordEmail)(email, resetLink);
-            return res.status(200).json({ message: "Reset email sent" });
-        }
-        catch (err) {
-            console.error("Forgotten password error:", err);
-            return res.status(500).json({ error: "Internal server error" });
-        }
-    });
-}
-function resetPassword(req, res) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const { token, newPassword } = req.body;
-        if (!token || !newPassword) {
-            return res.status(400).json({ error: "Missing token or new password" });
-        }
-        if (newPassword.length < 8) {
-            return res
-                .status(400)
-                .json({ error: "Password must be at least 8 characters" });
-        }
-        try {
-            // verify and decode token
-            const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_RESET_SECRET);
-            const hashedPassword = yield bcrypt_1.default.hash(newPassword, 10);
-            yield prisma_1.default.user.update({
-                where: { id: decoded.id },
-                data: { password: hashedPassword },
-            });
-            res.status(200).json({ message: "Password updated successfully" });
-        }
-        catch (err) {
-            console.error("Reset password error:", err);
-            res.status(400).json({ error: "Invalid or expired token" });
         }
     });
 }

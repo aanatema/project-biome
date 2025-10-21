@@ -1,18 +1,21 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.generateRefreshToken = exports.generateAccessToken = void 0;
-const jsonwebtoken_1 = require("jsonwebtoken");
-const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
-if (!accessTokenSecret)
-    throw new Error("Access token secret undefined");
-const generateAccessToken = (user) => {
-    return (0, jsonwebtoken_1.sign)({ id: user.id }, accessTokenSecret, { expiresIn: "15m" });
-};
 exports.generateAccessToken = generateAccessToken;
-const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET;
-if (!refreshTokenSecret)
-    throw new Error("Access token secret undefined");
-const generateRefreshToken = (user) => {
-    return (0, jsonwebtoken_1.sign)({ id: user.id }, refreshTokenSecret, { expiresIn: "7d" });
-};
 exports.generateRefreshToken = generateRefreshToken;
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+require("dotenv").config();
+function generateAccessToken(user) {
+    const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
+    if (!accessTokenSecret)
+        throw new Error("Access token secret undefined");
+    return jsonwebtoken_1.default.sign(user, accessTokenSecret, { expiresIn: "1m" });
+}
+function generateRefreshToken(user) {
+    const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET;
+    if (!refreshTokenSecret)
+        throw new Error("Access token secret undefined");
+    return jsonwebtoken_1.default.sign(user, refreshTokenSecret, { expiresIn: "30d" });
+}

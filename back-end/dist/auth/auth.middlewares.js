@@ -17,11 +17,11 @@ const jsonwebtoken_1 = require("jsonwebtoken");
 const prisma_1 = __importDefault(require("../libraries/prisma"));
 function verifyToken(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        var _a;
         const authHeader = req.headers.authorization;
         const token = authHeader === null || authHeader === void 0 ? void 0 : authHeader.split(" ")[1];
         if (!token) {
-            return res.status(401).json({ error: "No access token provided" });
+            res.status(401).json({ error: "No access token provided" });
+            return;
         }
         // check that the token exists
         const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
@@ -37,7 +37,6 @@ function verifyToken(req, res, next) {
             });
             req.user = user !== null && user !== void 0 ? user : undefined;
             next();
-            console.log("User verified:", (_a = req.user) === null || _a === void 0 ? void 0 : _a.id);
         }
         catch (err) {
             req.user = undefined;
