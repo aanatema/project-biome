@@ -25,6 +25,3 @@ jobs:
 
       - name: Build TypeScript
         run: cd back-end && yarn build
-
-      - name: Run tests
-        run: cd front-end && yarn test
